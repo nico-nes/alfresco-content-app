@@ -24,6 +24,7 @@
  */
 
 import { LoginPage, BrowsingPage, ContentNodeSelectorDialog, RepoClient, Utils, AdminActions } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Destination picker dialog : ', () => {
   const random = Utils.random();
@@ -70,7 +71,7 @@ describe('Destination picker dialog : ', () => {
 
   const dialog = new ContentNodeSelectorDialog();
   const breadcrumb = dialog.breadcrumb;
-  const dataTable = dialog.dataTable;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async () => {
     await adminApiActions.createUser({ username });
@@ -130,7 +131,7 @@ describe('Destination picker dialog : ', () => {
     });
 
     beforeEach(async () => {
-      await page.dataTable.selectItem(file);
+      await documentListPage.selectRow(file);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();
     });
@@ -140,46 +141,46 @@ describe('Destination picker dialog : ', () => {
       expect(await dialog.searchInput.isPresent()).toBe(true, 'Search input is not displayed');
       expect(await dialog.isSelectLocationDropdownDisplayed()).toBe(true, 'Select Location dropdown not displayed');
       expect(await breadcrumb.currentFolder.getText()).toEqual('Personal Files');
-      expect(await dataTable.isItemPresent(destination)).toBe(true, 'Personal Files content not displayed');
+      expect(await documentListPage.isItemPresent(destination)).toBe(true, 'Personal Files content not displayed');
       expect(await dialog.isCopyButtonEnabled()).toBe(true, 'Copy button is not disabled');
       expect(await dialog.isCancelButtonEnabled()).toBe(true, 'Cancel button is not enabled');
     });
 
     it('[C263880] Files are not displayed', async () => {
       await dialog.selectLocation('Personal Files');
-      expect(await dataTable.isItemPresent(destination)).toBe(true, 'destination folder not displayed');
+      expect(await documentListPage.isItemPresent(destination)).toBe(true, 'destination folder not displayed');
 
-      await dataTable.doubleClickOnRowByName(destination);
-      expect(await dataTable.isItemPresent(folderInDestination)).toBe(true, 'folder is not displayed');
-      expect(await dataTable.isItemPresent(fileInDestination)).toBe(false, 'file is displayed');
+      await documentListPage.doubleClickRow(destination);
+      expect(await documentListPage.isItemPresent(folderInDestination)).toBe(true, 'folder is not displayed');
+      expect(await documentListPage.isItemPresent(fileInDestination)).toBe(false, 'file is displayed');
     });
 
     it('[C263881] Folder links are not displayed', async () => {
       await dialog.selectLocation('Personal Files');
-      await dataTable.doubleClickOnRowByName(destination);
+      await documentListPage.doubleClickRow(destination);
 
-      expect(await dataTable.isItemPresent(folderInDestination)).toBe(true, `${folderInDestination} is not displayed`);
-      expect(await dataTable.isItemPresent(folder2InDestination)).toBe(true, `${folder2InDestination} is not displayed`);
-      expect(await dataTable.isItemPresent(folderLink)).toBe(false, 'Link to folder is displayed');
+      expect(await documentListPage.isItemPresent(folderInDestination)).toBe(true, `${folderInDestination} is not displayed`);
+      expect(await documentListPage.isItemPresent(folder2InDestination)).toBe(true, `${folder2InDestination} is not displayed`);
+      expect(await documentListPage.isItemPresent(folderLink)).toBe(false, 'Link to folder is displayed');
     });
 
     it('[C263885] User can see his Libraries', async () => {
       await dialog.selectLocation('My Libraries');
-      expect(await dataTable.isItemPresent(site)).toBe(true, 'user site is not displayed');
+      expect(await documentListPage.isItemPresent(site)).toBe(true, 'user site is not displayed');
     });
 
     it('[C263889] Search - No results displayed', async () => {
       await dialog.searchFor('nonexistent-folder');
 
-      expect(await dataTable.isEmpty()).toBe(true, 'datatable not empty');
-      expect(await dataTable.getEmptyListText()).toEqual('No results found');
+      expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'datatable not empty');
+      expect(await documentListPage.dataTable.getEmptyListText()).toEqual('No results found');
     });
 
     it('[C263888] Search - results found', async () => {
       await dialog.searchFor(searchFolder);
 
-      expect(await dataTable.isItemPresent(searchFolder, username)).toBe(true, 'folder from Personal Files not displayed');
-      expect(await dataTable.isItemPresent(searchFolder, site)).toBe(true, 'folder from site not displayed');
+      expect(await documentListPage.isItemPresent(searchFolder, username)).toBe(true, 'folder from Personal Files not displayed');
+      expect(await documentListPage.isItemPresent(searchFolder, site)).toBe(true, 'folder from site not displayed');
     });
   });
 
@@ -189,7 +190,7 @@ describe('Destination picker dialog : ', () => {
     });
 
     beforeEach(async () => {
-      await page.dataTable.selectMultipleItems([file, destination]);
+      await documentListPage.selectMultipleItems([file, destination]);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();
     });
@@ -205,7 +206,7 @@ describe('Destination picker dialog : ', () => {
     });
 
     beforeEach(async () => {
-      await page.dataTable.selectItem(file);
+      await documentListPage.selectRow(file);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();
     });
@@ -227,20 +228,20 @@ describe('Destination picker dialog : ', () => {
 
     it('[C263900] Search results breadcrumb when selecting a folder', async () => {
       await dialog.searchFor(searchFolder);
-      await dataTable.selectItem(searchFolder, site);
+      await documentListPage.selectRow(searchFolder, site);
       expect(await breadcrumb.currentFolder.getText()).toEqual(searchFolder);
     });
 
     it('[C263897] Personal Files breadcrumb - folder structure', async () => {
       await dialog.selectLocation('Personal Files');
-      await dataTable.doubleClickOnRowByName(destination);
+      await documentListPage.doubleClickRow(destination);
 
       expect(await breadcrumb.currentFolder.getText()).toEqual(destination);
-      await dataTable.doubleClickOnRowByName(searchFolder);
+      await documentListPage.doubleClickRow(searchFolder);
       expect(await breadcrumb.currentFolder.getText()).toEqual(searchFolder);
-      await dataTable.doubleClickOnRowByName(searchSubFolder1);
+      await documentListPage.doubleClickRow(searchSubFolder1);
       expect(await breadcrumb.currentFolder.getText()).toEqual(searchSubFolder1);
-      await dataTable.doubleClickOnRowByName(searchSubFolder2);
+      await documentListPage.doubleClickRow(searchSubFolder2);
       expect(await breadcrumb.currentFolder.getText()).toEqual(searchSubFolder2);
       await breadcrumb.openPath();
       expect(await breadcrumb.getPathItems()).toEqual([searchSubFolder1, searchFolder, destination, 'Personal Files']);
@@ -249,19 +250,19 @@ describe('Destination picker dialog : ', () => {
     it('[C263898] File Libraries breadcrumb - folder structure', async () => {
       await dialog.selectLocation('My Libraries');
 
-      await dataTable.doubleClickOnRowByName(site);
+      await documentListPage.doubleClickRow(site);
       expect(await breadcrumb.currentFolder.getText()).toEqual(site);
 
-      await dataTable.doubleClickOnRowByName('documentLibrary');
+      await documentListPage.doubleClickRow('documentLibrary');
       expect(await breadcrumb.currentFolder.getText()).toEqual(site);
 
-      await dataTable.doubleClickOnRowByName(searchFolder);
+      await documentListPage.doubleClickRow(searchFolder);
       expect(await breadcrumb.currentFolder.getText()).toEqual(searchFolder);
 
-      await dataTable.doubleClickOnRowByName(searchSubFolder1);
+      await documentListPage.doubleClickRow(searchSubFolder1);
       expect(await breadcrumb.currentFolder.getText()).toEqual(searchSubFolder1);
 
-      await dataTable.doubleClickOnRowByName(searchSubFolder2);
+      await documentListPage.doubleClickRow(searchSubFolder2);
       expect(await breadcrumb.currentFolder.getText()).toEqual(searchSubFolder2);
 
       await breadcrumb.openPath();
@@ -270,64 +271,64 @@ describe('Destination picker dialog : ', () => {
 
     it('[C263895] Select a node from the breadcrumb path', async () => {
       await dialog.selectLocation('Personal Files');
-      await dataTable.doubleClickOnRowByName(destination);
-      await dataTable.doubleClickOnRowByName(searchFolder);
-      await dataTable.doubleClickOnRowByName(searchSubFolder1);
-      await dataTable.doubleClickOnRowByName(searchSubFolder2);
+      await documentListPage.doubleClickRow(destination);
+      await documentListPage.doubleClickRow(searchFolder);
+      await documentListPage.doubleClickRow(searchSubFolder1);
+      await documentListPage.doubleClickRow(searchSubFolder2);
       await breadcrumb.openPath();
 
       await breadcrumb.clickPathItem(destination);
       expect(await breadcrumb.currentFolder.getText()).toEqual(destination);
-      expect(await dataTable.isItemPresent(searchFolder)).toBe(true, 'folder not displayed');
+      expect(await documentListPage.isItemPresent(searchFolder)).toBe(true, 'folder not displayed');
     });
   });
 
   describe('Users with different permissions', () => {
     it('[C263876] Consumer user cannot select the folder as destination', async () => {
       await loginPage.loginWith(consumer);
-      await page.dataTable.selectItem(file);
+      await documentListPage.selectRow(file);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();
 
       await dialog.selectLocation('My Libraries');
-      await dataTable.doubleClickOnRowByName(site);
-      await dataTable.doubleClickOnRowByName('documentLibrary');
-      await dataTable.selectItem(searchFolder);
+      await documentListPage.doubleClickRow(site);
+      await documentListPage.doubleClickRow('documentLibrary');
+      await documentListPage.selectRow(searchFolder);
 
       expect(await dialog.isCopyButtonEnabled()).toBe(false, 'Copy should be disabled');
     });
 
     it('[C263877] Contributor user can select the folder as destination', async () => {
       await loginPage.loginWith(contributor);
-      await page.dataTable.selectItem(file);
+      await documentListPage.selectRow(file);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();
 
       await dialog.selectLocation('My Libraries');
-      await dataTable.doubleClickOnRowByName(site);
-      await dataTable.doubleClickOnRowByName('documentLibrary');
-      await dataTable.selectItem(searchFolder);
+      await documentListPage.doubleClickRow(site);
+      await documentListPage.doubleClickRow('documentLibrary');
+      await documentListPage.selectRow(searchFolder);
 
       expect(await dialog.isCopyButtonEnabled()).toBe(true, 'Copy should be disabled');
     });
 
     it('[C263878] Collaborator user can select the folder as destination', async () => {
       await loginPage.loginWith(collaborator);
-      await page.dataTable.selectItem(file);
+      await documentListPage.selectRow(file);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();
 
       await dialog.selectLocation('My Libraries');
-      await dataTable.doubleClickOnRowByName(site);
-      await dataTable.doubleClickOnRowByName('documentLibrary');
-      await dataTable.selectItem(searchFolder);
+      await documentListPage.doubleClickRow(site);
+      await documentListPage.doubleClickRow('documentLibrary');
+      await documentListPage.selectRow(searchFolder);
 
       expect(await dialog.isCopyButtonEnabled()).toBe(true, 'Copy should be disabled');
     });
 
     it('[C263892] Admin user - Personal Files breadcrumb main node', async () => {
       await loginPage.loginWithAdmin();
-      await page.dataTable.selectItem(adminFolder);
+      await documentListPage.selectRow(adminFolder);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();
 

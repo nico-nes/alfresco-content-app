@@ -24,6 +24,7 @@
  */
 
 import { SITE_VISIBILITY, SITE_ROLES, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Favorites', () => {
   const username = `user-${Utils.random()}`;
@@ -43,7 +44,8 @@ describe('Favorites', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, breadcrumb } = page;
+  const { breadcrumb } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -86,56 +88,56 @@ describe('Favorites', () => {
 
   it('[C280482] has the correct columns', async () => {
     const expectedColumns = ['Name', 'Location', 'Size', 'Modified', 'Modified by'];
-    const actualColumns = await dataTable.getColumnHeadersText();
+    const actualColumns = await documentListPage.dataTable.getColumnHeadersText();
 
     expect(actualColumns).toEqual(expectedColumns);
   });
 
   it('[C213226] displays the favorite files and folders', async () => {
-    expect(await dataTable.getRowsCount()).toEqual(4, 'Incorrect number of items displayed');
-    expect(await dataTable.isItemPresent(fileName1)).toBe(true, `${fileName1} not displayed`);
-    expect(await dataTable.isItemPresent(fileName2)).toBe(true, `${fileName2} not displayed`);
-    expect(await dataTable.isItemPresent(favFolderName)).toBe(true, `${favFolderName} not displayed`);
+    expect(await documentListPage.dataTable.numberOfRows()).toEqual(4, 'Incorrect number of items displayed');
+    expect(await documentListPage.isItemPresent(fileName1)).toBe(true, `${fileName1} not displayed`);
+    expect(await documentListPage.isItemPresent(fileName2)).toBe(true, `${fileName2} not displayed`);
+    expect(await documentListPage.isItemPresent(favFolderName)).toBe(true, `${favFolderName} not displayed`);
   });
 
   it(`[C213228] deleted favorite file does not appear`, async () => {
-    expect(await dataTable.isItemPresent(fileName3)).not.toBe(true, `${fileName3} is displayed`);
+    expect(await documentListPage.isItemPresent(fileName3)).not.toBe(true, `${fileName3} is displayed`);
   });
 
   it(`[C213229] file is displayed after it is restored from Trashcan`, async () => {
-    expect(await dataTable.isItemPresent(fileName4)).toBe(true, `${fileName4} not displayed`);
+    expect(await documentListPage.isItemPresent(fileName4)).toBe(true, `${fileName4} not displayed`);
   });
 
   it('[C213231] Location column displays the parent folder of the files', async () => {
-    expect(await dataTable.getItemLocation(fileName1)).toEqual(siteName);
-    expect(await dataTable.getItemLocation(fileName2)).toEqual(parentFolder);
-    expect(await dataTable.getItemLocation(favFolderName)).toEqual('Personal Files');
+    expect(await documentListPage.getItemLocation(fileName1)).toEqual(siteName);
+    expect(await documentListPage.getItemLocation(fileName2)).toEqual(parentFolder);
+    expect(await documentListPage.getItemLocation(favFolderName)).toEqual('Personal Files');
   });
 
   it('[C213671] Location column displays a tooltip with the entire path of the file', async () => {
-    expect(await dataTable.getItemLocationTooltip(fileName1)).toEqual(`File Libraries/${siteName}`);
-    expect(await dataTable.getItemLocationTooltip(fileName2)).toEqual(`Personal Files/${parentFolder}`);
-    expect(await dataTable.getItemLocationTooltip(favFolderName)).toEqual('Personal Files');
+    expect(await documentListPage.getItemLocationTooltip(fileName1)).toEqual(`File Libraries/${siteName}`);
+    expect(await documentListPage.getItemLocationTooltip(fileName2)).toEqual(`Personal Files/${parentFolder}`);
+    expect(await documentListPage.getItemLocationTooltip(favFolderName)).toEqual('Personal Files');
   });
 
   it('[C213650] Location column redirect - item in user Home', async () => {
-    await dataTable.clickItemLocation(favFolderName);
+    await documentListPage.clickItemLocation(favFolderName);
     expect(await breadcrumb.getAllItems()).toEqual(['Personal Files']);
   });
 
   it('[C280484] Location column redirect - file in folder', async () => {
-    await dataTable.clickItemLocation(fileName2);
+    await documentListPage.clickItemLocation(fileName2);
     expect(await breadcrumb.getAllItems()).toEqual(['Personal Files', parentFolder]);
   });
 
   it('[C280485] Location column redirect - file in site', async () => {
-    await dataTable.clickItemLocation(fileName1);
+    await documentListPage.clickItemLocation(fileName1);
     expect(await breadcrumb.getAllItems()).toEqual(['My Libraries', siteName]);
   });
 
   it('[C213230] Navigate into folder from Favorites', async () => {
-    await dataTable.doubleClickOnRowByName(favFolderName);
-    await dataTable.waitForEmptyState();
+    await documentListPage.doubleClickRow(favFolderName);
+    await documentListPage.waitForEmptyState();
     expect(await breadcrumb.currentItem.getText()).toBe(favFolderName);
   });
 });

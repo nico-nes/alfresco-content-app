@@ -84,12 +84,12 @@ describe('Extensions - Info Drawer', () => {
 
     beforeEach(async (done) => {
       await page.clickPersonalFilesAndWait();
-      await page.dataTable.clearSelection();
+      await documentListPage.dataTable.clearSelection();
       done();
     });
 
     it('[C284646] Add a new tab with icon and title', async () => {
-      await page.dataTable.selectItem(file);
+      await documentListPage.selectRow(file);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -99,7 +99,7 @@ describe('Extensions - Info Drawer', () => {
     });
 
     it('[C284647] Remove existing tab', async () => {
-      await page.dataTable.selectItem(file);
+      await documentListPage.selectRow(file);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -107,7 +107,7 @@ describe('Extensions - Info Drawer', () => {
     });
 
     it('[C284648] Change tab title', async () => {
-      await page.dataTable.selectItem(file);
+      await documentListPage.selectRow(file);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -116,7 +116,7 @@ describe('Extensions - Info Drawer', () => {
     });
 
     it('[C284649] Tab with icon and no title', async () => {
-      await page.dataTable.selectItem(file);
+      await documentListPage.selectRow(file);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -125,7 +125,7 @@ describe('Extensions - Info Drawer', () => {
     });
 
     it('[C284651] Insert new component in tab', async () => {
-      await page.dataTable.selectItem(file);
+      await documentListPage.selectRow(file);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -145,7 +145,7 @@ describe('Extensions - Info Drawer', () => {
     });
 
     it('[C284650] Remove all tabs', async () => {
-      await page.dataTable.selectItem(file);
+      await documentListPage.selectRow(file);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
 

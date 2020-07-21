@@ -57,7 +57,7 @@ describe('Extensions - DocumentList presets', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -82,7 +82,7 @@ describe('Extensions - DocumentList presets', () => {
 
   it('[C286700] Sets the columns to display', async () => {
     const expectedColumns = testData.filter((item) => !item.disabled).map((data) => data.label);
-    const actualColumns = await dataTable.getColumnHeadersText();
+    const actualColumns = await documentListPage.dataTable.getColumnHeadersText();
 
     expect(actualColumns).toEqual(expectedColumns);
   });

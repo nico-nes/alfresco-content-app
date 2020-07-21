@@ -325,7 +325,7 @@ export class DataTable extends Component {
   async getEmptyListText(): Promise<string> {
     const isEmpty = await this.isEmpty();
     if (isEmpty) {
-      return this.byCss('adf-custom-empty-content-template').getText();
+      return this.by.css('adf-custom-empty-content-template').getText();
     }
     return '';
   }

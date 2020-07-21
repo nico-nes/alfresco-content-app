@@ -25,6 +25,7 @@
 
 import { browser } from 'protractor';
 import { LoginPage, BrowsingPage, SITE_VISIBILITY, RepoClient, ShareDialog, Viewer, Utils } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Share a file', () => {
   const username = `user-${Utils.random()}`;
@@ -52,8 +53,9 @@ describe('Share a file', () => {
 
   const viewer = new Viewer();
   const page = new BrowsingPage();
-  const { dataTable, toolbar } = page;
+  const { toolbar } = page;
   const shareLinkPreUrl = `/#/preview/s/`;
+  const documentListPage = new DocumentListPage();
 
   const apis = {
     admin: new RepoClient(),
@@ -103,7 +105,7 @@ describe('Share a file', () => {
 
     const loginPage = new LoginPage();
     const shareDialog = new ShareDialog();
-    const contextMenu = dataTable.menu;
+    const contextMenu = new Menu();
     const { searchInput } = page.header;
 
     beforeAll(async (done) => {
@@ -130,8 +132,8 @@ describe('Share a file', () => {
 
       beforeEach(async (done) => {
         await page.clickPersonalFilesAndWait();
-        await dataTable.doubleClickOnRowByName(parent);
-        await dataTable.waitForHeader();
+        await documentListPage.doubleClickRow(parent);
+        await documentListPage.dataTable.waitForTableBody();
         done();
       });
 
@@ -155,7 +157,7 @@ describe('Share a file', () => {
       });
 
       it('[C286327] Share dialog default values', async () => {
-        await dataTable.selectItem(file1);
+        await documentListPage.selectRow(file1);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -171,7 +173,7 @@ describe('Share a file', () => {
       });
 
       it('[C286328] Close dialog', async () => {
-        await dataTable.selectItem(file2);
+        await documentListPage.selectRow(file2);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -181,7 +183,7 @@ describe('Share a file', () => {
       });
 
       it('[C286329] Share a file', async () => {
-        await dataTable.selectItem(file3);
+        await documentListPage.selectRow(file3);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -193,7 +195,7 @@ describe('Share a file', () => {
       });
 
       it('[C286330] Copy shared file URL', async () => {
-        await dataTable.selectItem(file4);
+        await documentListPage.selectRow(file4);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
         const url = await shareDialog.getLinkUrl();
@@ -210,7 +212,7 @@ describe('Share a file', () => {
       });
 
       it('[C286332] Share a file with expiration date', async () => {
-        await dataTable.selectItem(file5);
+        await documentListPage.selectRow(file5);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -232,7 +234,7 @@ describe('Share a file', () => {
       });
 
       it('[C286337] Expire date is displayed correctly', async () => {
-        await dataTable.selectItem(file6);
+        await documentListPage.selectRow(file6);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -243,7 +245,7 @@ describe('Share a file', () => {
       });
 
       it('[C286333] Disable the share link expiration', async () => {
-        await dataTable.selectItem(file7);
+        await documentListPage.selectRow(file7);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -259,15 +261,15 @@ describe('Share a file', () => {
       });
 
       it('[C286335] Shared file URL is not changed when Share dialog is closed and opened again', async () => {
-        await dataTable.selectItem(file8);
+        await documentListPage.selectRow(file8);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
         const url1 = await shareDialog.getLinkUrl();
         await shareDialog.clickClose();
         await shareDialog.waitForDialogToClose();
 
-        await page.dataTable.clearSelection();
-        await dataTable.selectItem(file8);
+        await documentListPage.dataTable.clearSelection();
+        await documentListPage.selectRow(file8);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
         const url2 = await shareDialog.getLinkUrl();
@@ -276,7 +278,7 @@ describe('Share a file', () => {
       });
 
       it('[C286345] Share a file from the context menu', async () => {
-        await dataTable.rightClickOnItem(file9);
+        await documentListPage.rightClickOnRow(file9);
         await contextMenu.waitForMenuToOpen();
         await contextMenu.shareAction.click();
         await shareDialog.waitForDialogToOpen();
@@ -316,10 +318,10 @@ describe('Share a file', () => {
 
       beforeEach(async (done) => {
         await page.goToMyLibrariesAndWait();
-        await dataTable.doubleClickOnRowByName(siteName);
-        await dataTable.waitForHeader();
-        await dataTable.doubleClickOnRowByName(parentInSite);
-        await dataTable.waitForHeader();
+        await documentListPage.doubleClickRow(siteName);
+        await documentListPage.dataTable.waitForTableBody();
+        await documentListPage.doubleClickRow(parentInSite);
+        await documentListPage.dataTable.waitForTableBody();
         done();
       });
 
@@ -336,7 +338,7 @@ describe('Share a file', () => {
       });
 
       it('[C286639] Share dialog default values', async () => {
-        await dataTable.selectItem(file1);
+        await documentListPage.selectRow(file1);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -352,7 +354,7 @@ describe('Share a file', () => {
       });
 
       it('[C286640] Close dialog', async () => {
-        await dataTable.selectItem(file2);
+        await documentListPage.selectRow(file2);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -362,7 +364,7 @@ describe('Share a file', () => {
       });
 
       it('[C286641] Share a file', async () => {
-        await dataTable.selectItem(file3);
+        await documentListPage.selectRow(file3);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -374,7 +376,7 @@ describe('Share a file', () => {
       });
 
       it('[C286642] Copy shared file URL', async () => {
-        await dataTable.selectItem(file4);
+        await documentListPage.selectRow(file4);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
         const url = await shareDialog.getLinkUrl();
@@ -391,7 +393,7 @@ describe('Share a file', () => {
       });
 
       it('[C286643] Share a file with expiration date', async () => {
-        await dataTable.selectItem(file5);
+        await documentListPage.selectRow(file5);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -413,7 +415,7 @@ describe('Share a file', () => {
       });
 
       it('[C286644] Expire date is displayed correctly', async () => {
-        await dataTable.selectItem(file6);
+        await documentListPage.selectRow(file6);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -424,7 +426,7 @@ describe('Share a file', () => {
       });
 
       it('[C286645] Disable the share link expiration', async () => {
-        await dataTable.selectItem(file7);
+        await documentListPage.selectRow(file7);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -440,15 +442,15 @@ describe('Share a file', () => {
       });
 
       it('[C286646] Shared file URL is not changed when Share dialog is closed and opened again', async () => {
-        await dataTable.selectItem(file8);
+        await documentListPage.selectRow(file8);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
         const url1 = await shareDialog.getLinkUrl();
         await shareDialog.clickClose();
         await shareDialog.waitForDialogToClose();
 
-        await page.dataTable.clearSelection();
-        await dataTable.selectItem(file8);
+        await documentListPage.dataTable.clearSelection();
+        await documentListPage.selectRow(file8);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
         const url2 = await shareDialog.getLinkUrl();
@@ -457,7 +459,7 @@ describe('Share a file', () => {
       });
 
       it('[C286647] Share a file from the context menu', async () => {
-        await dataTable.rightClickOnItem(file9);
+        await documentListPage.rightClickOnRow(file9);
         await contextMenu.waitForMenuToOpen();
         await contextMenu.shareAction.click();
         await shareDialog.waitForDialogToOpen();
@@ -513,7 +515,7 @@ describe('Share a file', () => {
       });
 
       it('[C286657] Share dialog default values', async () => {
-        await dataTable.selectItem(file1);
+        await documentListPage.selectRow(file1);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -529,7 +531,7 @@ describe('Share a file', () => {
       });
 
       it('[C286658] Close dialog', async () => {
-        await dataTable.selectItem(file2);
+        await documentListPage.selectRow(file2);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -539,7 +541,7 @@ describe('Share a file', () => {
       });
 
       it('[C286659] Share a file', async () => {
-        await dataTable.selectItem(file3);
+        await documentListPage.selectRow(file3);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -551,7 +553,7 @@ describe('Share a file', () => {
       });
 
       it('[C286660] Copy shared file URL', async () => {
-        await dataTable.selectItem(file4);
+        await documentListPage.selectRow(file4);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
         const url = await shareDialog.getLinkUrl();
@@ -568,7 +570,7 @@ describe('Share a file', () => {
       });
 
       it('[C286661] Share a file with expiration date', async () => {
-        await dataTable.selectItem(file5);
+        await documentListPage.selectRow(file5);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -590,7 +592,7 @@ describe('Share a file', () => {
       });
 
       it('[C286662] Expire date is displayed correctly', async () => {
-        await dataTable.selectItem(file6);
+        await documentListPage.selectRow(file6);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -601,7 +603,7 @@ describe('Share a file', () => {
       });
 
       it('[C286663] Disable the share link expiration', async () => {
-        await dataTable.selectItem(file7);
+        await documentListPage.selectRow(file7);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -617,15 +619,15 @@ describe('Share a file', () => {
       });
 
       it('[C286664] Shared file URL is not changed when Share dialog is closed and opened again', async () => {
-        await dataTable.selectItem(file8);
+        await documentListPage.selectRow(file8);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
         const url1 = await shareDialog.getLinkUrl();
         await shareDialog.clickClose();
         await shareDialog.waitForDialogToClose();
 
-        await page.dataTable.clearSelection();
-        await dataTable.selectItem(file8);
+        await documentListPage.dataTable.clearSelection();
+        await documentListPage.selectRow(file8);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
         const url2 = await shareDialog.getLinkUrl();
@@ -634,7 +636,7 @@ describe('Share a file', () => {
       });
 
       it('[C286665] Share a file from the context menu', async () => {
-        await dataTable.rightClickOnItem(file9);
+        await documentListPage.rightClickOnRow(file9);
         await contextMenu.waitForMenuToOpen();
         await contextMenu.shareAction.click();
         await shareDialog.waitForDialogToOpen();
@@ -692,7 +694,7 @@ describe('Share a file', () => {
       });
 
       it('[C286648] Share dialog default values', async () => {
-        await dataTable.selectItem(file1);
+        await documentListPage.selectRow(file1);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -708,7 +710,7 @@ describe('Share a file', () => {
       });
 
       it('[C286649] Close dialog', async () => {
-        await dataTable.selectItem(file2);
+        await documentListPage.selectRow(file2);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -718,7 +720,7 @@ describe('Share a file', () => {
       });
 
       it('[C286651] Copy shared file URL', async () => {
-        await dataTable.selectItem(file3);
+        await documentListPage.selectRow(file3);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
         const url = await shareDialog.getLinkUrl();
@@ -735,7 +737,7 @@ describe('Share a file', () => {
       });
 
       it('[C286653] Expire date is displayed correctly', async () => {
-        await dataTable.selectItem(file4);
+        await documentListPage.selectRow(file4);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -746,7 +748,7 @@ describe('Share a file', () => {
       });
 
       it('[C286654] Disable the share link expiration', async () => {
-        await dataTable.selectItem(file5);
+        await documentListPage.selectRow(file5);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -762,15 +764,15 @@ describe('Share a file', () => {
       });
 
       it('[C286655] Shared file URL is not changed when Share dialog is closed and opened again', async () => {
-        await dataTable.selectItem(file6);
+        await documentListPage.selectRow(file6);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
         const url1 = await shareDialog.getLinkUrl();
         await shareDialog.clickClose();
         await shareDialog.waitForDialogToClose();
 
-        await page.dataTable.clearSelection();
-        await dataTable.selectItem(file6);
+        await documentListPage.dataTable.clearSelection();
+        await documentListPage.selectRow(file6);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
         const url2 = await shareDialog.getLinkUrl();
@@ -779,7 +781,7 @@ describe('Share a file', () => {
       });
 
       it('[C286656] Open Share dialog from context menu', async () => {
-        await dataTable.rightClickOnItem(file7);
+        await documentListPage.rightClickOnRow(file7);
         await contextMenu.waitForMenuToOpen();
         await contextMenu.shareEditAction.click();
         await shareDialog.waitForDialogToOpen();
@@ -851,7 +853,7 @@ describe('Share a file', () => {
       });
 
       it('[C286666] Share dialog default values', async () => {
-        await dataTable.selectItem(file1);
+        await documentListPage.selectRow(file1);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -867,7 +869,7 @@ describe('Share a file', () => {
       });
 
       it('[C286667] Close dialog', async () => {
-        await dataTable.selectItem(file2);
+        await documentListPage.selectRow(file2);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -877,7 +879,7 @@ describe('Share a file', () => {
       });
 
       it('[C286668] Share a file', async () => {
-        await dataTable.selectItem(file3);
+        await documentListPage.selectRow(file3);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -889,7 +891,7 @@ describe('Share a file', () => {
       });
 
       it('[C286669] Copy shared file URL', async () => {
-        await dataTable.selectItem(file4);
+        await documentListPage.selectRow(file4);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
         const url = await shareDialog.getLinkUrl();
@@ -906,7 +908,7 @@ describe('Share a file', () => {
       });
 
       it('[C286670] Share a file with expiration date', async () => {
-        await dataTable.selectItem(file5);
+        await documentListPage.selectRow(file5);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -928,7 +930,7 @@ describe('Share a file', () => {
       });
 
       it('[C286671] Expire date is displayed correctly', async () => {
-        await dataTable.selectItem(file6);
+        await documentListPage.selectRow(file6);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -939,7 +941,7 @@ describe('Share a file', () => {
       });
 
       it('[C286672] Disable the share link expiration', async () => {
-        await dataTable.selectItem(file7);
+        await documentListPage.selectRow(file7);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -955,15 +957,15 @@ describe('Share a file', () => {
       });
 
       it('[C286673] Shared file URL is not changed when Share dialog is closed and opened again', async () => {
-        await dataTable.selectItem(file8);
+        await documentListPage.selectRow(file8);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
         const url1 = await shareDialog.getLinkUrl();
         await shareDialog.clickClose();
         await shareDialog.waitForDialogToClose();
 
-        await page.dataTable.clearSelection();
-        await dataTable.selectItem(file8);
+        await documentListPage.dataTable.clearSelection();
+        await documentListPage.selectRow(file8);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
         const url2 = await shareDialog.getLinkUrl();
@@ -972,7 +974,7 @@ describe('Share a file', () => {
       });
 
       it('[C286674] Share a file from the context menu', async () => {
-        await dataTable.rightClickOnItem(file9);
+        await documentListPage.rightClickOnRow(file9);
         await contextMenu.waitForMenuToOpen();
         await contextMenu.shareAction.click();
         await shareDialog.waitForDialogToOpen();
@@ -1009,7 +1011,7 @@ describe('Share a file', () => {
         await searchInput.clickSearchButton();
         await searchInput.checkFilesAndFolders();
         await searchInput.searchFor('search-f');
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
         done();
       });
 
@@ -1030,7 +1032,7 @@ describe('Share a file', () => {
       });
 
       it('[C306975] Share a file', async () => {
-        await dataTable.selectItem(file3);
+        await documentListPage.selectRow(file3);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -1042,7 +1044,7 @@ describe('Share a file', () => {
       });
 
       it('[C306977] Share a file with expiration date', async () => {
-        await dataTable.selectItem(file5);
+        await documentListPage.selectRow(file5);
         await toolbar.shareButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -1064,7 +1066,7 @@ describe('Share a file', () => {
       });
 
       it('[C306978] Expire date is displayed correctly', async () => {
-        await dataTable.selectItem(file6);
+        await documentListPage.selectRow(file6);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -1075,7 +1077,7 @@ describe('Share a file', () => {
       });
 
       it('[C306979] Disable the share link expiration', async () => {
-        await dataTable.selectItem(file7);
+        await documentListPage.selectRow(file7);
         await toolbar.shareEditButton.click();
         await shareDialog.waitForDialogToOpen();
 
@@ -1091,7 +1093,7 @@ describe('Share a file', () => {
       });
 
       it('[C306981] Share a file from the context menu', async () => {
-        await dataTable.rightClickOnItem(file9);
+        await documentListPage.rightClickOnRow(file9);
         await contextMenu.waitForMenuToOpen();
         await contextMenu.shareAction.click();
         await shareDialog.waitForDialogToOpen();

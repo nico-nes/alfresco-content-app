@@ -40,7 +40,7 @@ describe('Viewer - password protected file', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
   const viewer = new Viewer();
   const passwordDialog = new PasswordDialog();
 
@@ -55,9 +55,8 @@ describe('Viewer - password protected file', () => {
   beforeEach(async () => {
     await page.header.expandSideNav();
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(parent);
-    await dataTable.waitForHeader();
-    await dataTable.doubleClickOnRowByName(protectedFile.name);
+    await documentListPage.doubleClickRow(parent);
+    await documentListPage.doubleClickRow(protectedFile.name);
     await viewer.waitForViewerToOpen();
     await passwordDialog.waitForDialogToOpen();
   });

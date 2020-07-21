@@ -114,7 +114,7 @@ describe('Create file from template', () => {
     await selectTemplateDialog.waitForDialogToOpen();
 
     expect(await selectTemplateDialog.getTitle()).toEqual('Select a document template');
-    expect(await selectTemplateDialog.dataTable.isEmpty()).toBe(true, 'Datatable is not empty');
+    expect(await selectTemplateDialog.documentListPage.isEmpty()).toBe(true, 'Datatable is not empty');
     expect(await selectTemplateDialog.dataTable.getEmptyListText()).toEqual('No results found');
     expect(await selectTemplateDialog.breadcrumb.currentFolder.getText()).toEqual('Node Templates');
     expect(await selectTemplateDialog.isNextButtonEnabled()).toBe(false, 'Next button is not disabled');
@@ -160,35 +160,35 @@ describe('Create file from template', () => {
 
       it('[C325043] Select template - dialog UI - with existing templates', async () => {
         expect(await selectTemplateDialog.getTitle()).toEqual('Select a document template');
-        expect(await selectTemplateDialog.dataTable.isEmpty()).toBe(false, 'Datatable is empty');
-        expect(await selectTemplateDialog.dataTable.isItemPresent(templatesFolder1)).toBe(true, 'template folder not displayed');
-        expect(await selectTemplateDialog.dataTable.isItemPresent(templatesFolder2)).toBe(true, 'template folder not displayed');
-        expect(await selectTemplateDialog.dataTable.isItemPresent(template1InRootFolder)).toBe(true, 'template not displayed');
-        expect(await selectTemplateDialog.dataTable.isItemPresent(template2InRootFolder)).toBe(true, 'template not displayed');
+        expect(await selectTemplateDialog.documentListPage.isEmpty()).toBe(false, 'Datatable is empty');
+        expect(await selectTemplateDialog.documentListPage.isItemPresent(templatesFolder1)).toBe(true, 'template folder not displayed');
+        expect(await selectTemplateDialog.documentListPage.isItemPresent(templatesFolder2)).toBe(true, 'template folder not displayed');
+        expect(await selectTemplateDialog.documentListPage.isItemPresent(template1InRootFolder)).toBe(true, 'template not displayed');
+        expect(await selectTemplateDialog.documentListPage.isItemPresent(template2InRootFolder)).toBe(true, 'template not displayed');
         expect(await selectTemplateDialog.breadcrumb.currentFolder.getText()).toEqual('Node Templates');
         expect(await selectTemplateDialog.isNextButtonEnabled()).toBe(false, 'Next button is not disabled');
         expect(await selectTemplateDialog.isCancelButtonEnabled()).toBe(true, 'Cancel button is not enabled');
       });
 
       it(`[C325044] Templates don't appear if user doesn't have permissions to see them`, async () => {
-        expect(await selectTemplateDialog.dataTable.isItemPresent(restrictedTemplateFolder)).toBe(false, 'restricted templates folder is displayed');
+        expect(await selectTemplateDialog.documentListPage.isItemPresent(restrictedTemplateFolder)).toBe(false, 'restricted templates folder is displayed');
       });
 
       it('[C325045] Navigate through the templates list with folder hierarchy', async () => {
-        expect(await selectTemplateDialog.dataTable.isItemPresent(templatesFolder2)).toBe(true, 'template folder not displayed');
+        expect(await selectTemplateDialog.documentListPage.isItemPresent(templatesFolder2)).toBe(true, 'template folder not displayed');
 
-        await selectTemplateDialog.dataTable.doubleClickOnRowByName(templatesFolder2);
+        await selectTemplateDialog.documentListPage.doubleClickRow(templatesFolder2);
 
-        expect(await selectTemplateDialog.dataTable.isItemPresent(templatesSubFolder)).toBe(true, 'template sub-folder not displayed');
-        expect(await selectTemplateDialog.dataTable.isItemPresent(template1InFolder2)).toBe(true, 'template not displayed');
-        expect(await selectTemplateDialog.dataTable.isItemPresent(template1InRootFolder)).toBe(false, 'template is displayed');
-        expect(await selectTemplateDialog.dataTable.isItemPresent(template2InRootFolder)).toBe(false, 'template is displayed');
+        expect(await selectTemplateDialog.documentListPage.isItemPresent(templatesSubFolder)).toBe(true, 'template sub-folder not displayed');
+        expect(await selectTemplateDialog.documentListPage.isItemPresent(template1InFolder2)).toBe(true, 'template not displayed');
+        expect(await selectTemplateDialog.documentListPage.isItemPresent(template1InRootFolder)).toBe(false, 'template is displayed');
+        expect(await selectTemplateDialog.documentListPage.isItemPresent(template2InRootFolder)).toBe(false, 'template is displayed');
         expect(await selectTemplateDialog.breadcrumb.currentFolder.getText()).toEqual(templatesFolder2);
 
-        await selectTemplateDialog.dataTable.doubleClickOnRowByName(templatesSubFolder);
+        await selectTemplateDialog.documentListPage.doubleClickRow(templatesSubFolder);
 
         expect(await selectTemplateDialog.breadcrumb.currentFolder.getText()).toEqual(templatesSubFolder);
-        expect(await selectTemplateDialog.dataTable.isEmpty()).toBe(true, 'datatable is not empty');
+        expect(await selectTemplateDialog.documentListPage.isEmpty()).toBe(true, 'datatable is not empty');
 
         await selectTemplateDialog.breadcrumb.openPath();
 
@@ -198,12 +198,12 @@ describe('Create file from template', () => {
       it(`[C325047] Templates list doesn't allow multiple selection`, async () => {
         expect(await selectTemplateDialog.dataTable.getSelectedRowsCount()).toEqual(0, 'Incorrect number of selected rows');
 
-        await selectTemplateDialog.dataTable.selectItem(template1InRootFolder);
+        await selectTemplateDialog.documentListPage.selectRow(template1InRootFolder);
         expect(await selectTemplateDialog.dataTable.getSelectedRowsCount()).toEqual(1, 'Incorrect number of selected rows');
         expect(await selectTemplateDialog.dataTable.getSelectedRowsNames()).toEqual([template1InRootFolder], 'Incorrect selected item');
 
         await Utils.pressCmd();
-        await selectTemplateDialog.dataTable.selectItem(template2InRootFolder);
+        await selectTemplateDialog.documentListPage.selectRow(template2InRootFolder);
         await Utils.releaseKeyPressed();
 
         expect(await selectTemplateDialog.dataTable.getSelectedRowsCount()).toEqual(1, 'Incorrect number of selected rows');
@@ -211,7 +211,7 @@ describe('Create file from template', () => {
       });
 
       it('[C325050] Links to files are not displayed', async () => {
-        expect(await selectTemplateDialog.dataTable.isItemPresent(link)).toBe(false, 'Link to file is displayed');
+        expect(await selectTemplateDialog.documentListPage.isItemPresent(link)).toBe(false, 'Link to file is displayed');
       });
 
       it('[C325048] Cancel the Select template dialog', async () => {
@@ -225,7 +225,7 @@ describe('Create file from template', () => {
       it('[C216339] Next button is disabled when selecting a folder', async () => {
         expect(await selectTemplateDialog.isNextButtonEnabled()).toBe(false, 'Next button is enabled');
 
-        await selectTemplateDialog.dataTable.selectItem(templatesFolder1);
+        await selectTemplateDialog.documentListPage.selectRow(templatesFolder1);
 
         expect(await selectTemplateDialog.isNextButtonEnabled()).toBe(false, 'Next button is enabled');
       });
@@ -235,7 +235,7 @@ describe('Create file from template', () => {
       beforeEach(async () => {
         await sidenav.openCreateFileFromTemplateDialog();
         await selectTemplateDialog.waitForDialogToOpen();
-        await selectTemplateDialog.dataTable.selectItem(template1InRootFolder);
+        await selectTemplateDialog.documentListPage.selectRow(template1InRootFolder);
         await selectTemplateDialog.clickNext();
         await createFromTemplateDialog.waitForDialogToOpen();
       });
@@ -301,10 +301,10 @@ describe('Create file from template', () => {
     describe('On Personal Files', () => {
       beforeEach(async () => {
         await page.clickPersonalFilesAndWait();
-        await page.dataTable.doubleClickOnRowByName(parent);
+        await documentListPage.doubleClickRow(parent);
         await sidenav.openCreateFileFromTemplateDialog();
         await selectTemplateDialog.waitForDialogToOpen();
-        await selectTemplateDialog.dataTable.selectItem(template1InRootFolder);
+        await selectTemplateDialog.documentListPage.selectRow(template1InRootFolder);
         await selectTemplateDialog.clickNext();
         await createFromTemplateDialog.waitForDialogToOpen();
       });
@@ -313,9 +313,9 @@ describe('Create file from template', () => {
         await createFromTemplateDialog.enterName(file1.name);
         await createFromTemplateDialog.createButton.click();
         await createFromTemplateDialog.waitForDialogToClose();
-        await page.dataTable.waitForHeader();
+        await documentListPage.dataTable.waitForTableBody();
 
-        expect(await page.dataTable.isItemPresent(file1.name)).toBe(true, 'File not displayed in list view');
+        expect(await documentListPage.isItemPresent(file1.name)).toBe(true, 'File not displayed in list view');
       });
 
       it('[C325026] Create a file from a template - with a Name, Title and Description', async () => {
@@ -324,9 +324,9 @@ describe('Create file from template', () => {
         await createFromTemplateDialog.enterDescription(file2.description);
         await createFromTemplateDialog.createButton.click();
         await createFromTemplateDialog.waitForDialogToClose();
-        await page.dataTable.waitForHeader();
+        await documentListPage.dataTable.waitForTableBody();
 
-        expect(await page.dataTable.isItemPresent(file2.name)).toBe(true, 'File not displayed in list view');
+        expect(await documentListPage.isItemPresent(file2.name)).toBe(true, 'File not displayed in list view');
         const desc = await userApi.nodes.getNodeDescription(file2.name, parentId);
         expect(desc).toEqual(file2.description);
         const title = await userApi.nodes.getNodeTitle(file2.name, parentId);
@@ -346,16 +346,16 @@ describe('Create file from template', () => {
         await createFromTemplateDialog.clickCancel();
 
         expect(await createFromTemplateDialog.isDialogOpen()).not.toBe(true, 'dialog is not closed');
-        expect(await page.dataTable.isItemPresent('test')).toBe(false, 'File should not appear in the list');
+        expect(await documentListPage.isItemPresent('test')).toBe(false, 'File should not appear in the list');
       });
 
       it('[C325042] Trim spaces from file Name', async () => {
         await createFromTemplateDialog.enterName(nameWithSpaces);
         await createFromTemplateDialog.createButton.click();
         await createFromTemplateDialog.waitForDialogToClose();
-        await page.dataTable.waitForHeader();
+        await documentListPage.dataTable.waitForTableBody();
 
-        expect(await page.dataTable.isItemPresent(nameWithSpaces.trim())).toBe(true, 'File not displayed in list view');
+        expect(await documentListPage.isItemPresent(nameWithSpaces.trim())).toBe(true, 'File not displayed in list view');
       });
     });
 
@@ -364,10 +364,10 @@ describe('Create file from template', () => {
 
       beforeEach(async () => {
         await fileLibrariesPage.goToMyLibrariesAndWait();
-        await page.dataTable.doubleClickOnRowByName(siteName);
+        await documentListPage.doubleClickRow(siteName);
         await sidenav.openCreateFileFromTemplateDialog();
         await selectTemplateDialog.waitForDialogToOpen();
-        await selectTemplateDialog.dataTable.selectItem(template1InRootFolder);
+        await selectTemplateDialog.documentListPage.selectRow(template1InRootFolder);
         await selectTemplateDialog.clickNext();
         await createFromTemplateDialog.waitForDialogToOpen();
       });
@@ -378,9 +378,9 @@ describe('Create file from template', () => {
         await createFromTemplateDialog.enterDescription(fileSite.description);
         await createFromTemplateDialog.createButton.click();
         await createFromTemplateDialog.waitForDialogToClose();
-        await page.dataTable.waitForHeader();
+        await documentListPage.dataTable.waitForTableBody();
 
-        expect(await page.dataTable.isItemPresent(fileSite.name)).toBe(true, 'File not displayed in list view');
+        expect(await documentListPage.isItemPresent(fileSite.name)).toBe(true, 'File not displayed in list view');
         const desc = await userApi.nodes.getNodeDescription(fileSite.name, docLibUserSite);
         expect(desc).toEqual(fileSite.description);
         const title = await userApi.nodes.getNodeTitle(fileSite.name, docLibUserSite);
@@ -392,7 +392,7 @@ describe('Create file from template', () => {
         await createFromTemplateDialog.clickCancel();
 
         expect(await createFromTemplateDialog.isDialogOpen()).not.toBe(true, 'dialog is not closed');
-        expect(await page.dataTable.isItemPresent('test')).toBe(false, 'File should not appear in the list');
+        expect(await documentListPage.isItemPresent('test')).toBe(false, 'File should not appear in the list');
       });
 
       it('[C325025] Create a file with a duplicate name', async () => {

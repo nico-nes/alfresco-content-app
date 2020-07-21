@@ -37,7 +37,7 @@ describe('Personal Files', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   const adminFolder = `admin-folder-${Utils.random()}`;
 
@@ -68,8 +68,8 @@ describe('Personal Files', () => {
     });
 
     it('[C213241] has Data Dictionary and created content', async () => {
-      expect(await dataTable.isItemPresent('Data Dictionary')).toBe(true, 'Data Dictionary not displayed');
-      expect(await dataTable.isItemPresent(adminFolder)).toBe(true, 'admin folder not displayed');
+      expect(await documentListPage.isItemPresent('Data Dictionary')).toBe(true, 'Data Dictionary not displayed');
+      expect(await documentListPage.isItemPresent(adminFolder)).toBe(true, 'admin folder not displayed');
     });
   });
 
@@ -86,7 +86,7 @@ describe('Personal Files', () => {
 
     it('[C217142] has the correct columns', async () => {
       const expectedColumns = ['Name', 'Size', 'Modified', 'Modified by'];
-      const actualColumns = await dataTable.getColumnHeadersText();
+      const actualColumns = await documentListPage.dataTable.getColumnHeadersText();
 
       expect(actualColumns).toEqual(expectedColumns);
     });
@@ -96,21 +96,21 @@ describe('Personal Files', () => {
     });
 
     it('[C213242] has user created content', async () => {
-      expect(await dataTable.isItemPresent(userFolder)).toBe(true, 'user folder not displayed');
+      expect(await documentListPage.isItemPresent(userFolder)).toBe(true, 'user folder not displayed');
     });
 
     it('[C213244] navigates to folder', async () => {
       const nodeId = (await apis.user.nodes.getNodeByPath(`/${userFolder}`)).entry.id;
 
-      await dataTable.doubleClickOnRowByName(userFolder);
-      await dataTable.waitForHeader();
+      await documentListPage.doubleClickRow(userFolder);
+      await documentListPage.dataTable.waitForTableBody();
 
       expect(await browser.getCurrentUrl()).toContain(nodeId, 'Node ID is not in the URL');
-      expect(await dataTable.isItemPresent(userFile)).toBe(true, 'user file is missing');
+      expect(await documentListPage.isItemPresent(userFile)).toBe(true, 'user file is missing');
     });
 
     it('[C213245] redirects to Personal Files on clicking the link from sidebar', async () => {
-      await page.dataTable.doubleClickOnRowByName(userFolder);
+      await documentListPage.doubleClickRow(userFolder);
       await page.clickPersonalFiles();
       const url = await browser.getCurrentUrl();
       expect(url.endsWith(APP_ROUTES.PERSONAL_FILES)).toBe(true, 'incorrect url');

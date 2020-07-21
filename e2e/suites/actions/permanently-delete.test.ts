@@ -24,6 +24,7 @@
  */
 
 import { LoginPage, BrowsingPage, ConfirmDialog, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Permanently delete from Trash', () => {
   const username = `user-${Utils.random()}`;
@@ -46,7 +47,8 @@ describe('Permanently delete from Trash', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, toolbar } = page;
+  const { toolbar } = page;
+  const documentListPage = new DocumentListPage();
 
   const confirmDialog = new ConfirmDialog();
 
@@ -75,48 +77,48 @@ describe('Permanently delete from Trash', () => {
   });
 
   it('[C217091] delete a file', async () => {
-    await dataTable.selectItem(file1);
+    await documentListPage.selectRow(file1);
     await toolbar.permanentlyDeleteButton.click();
     await page.waitForDialog();
     await confirmDialog.deleteButton.click();
 
     expect(await page.getSnackBarMessage()).toEqual(`${file1} deleted`);
-    expect(await dataTable.isItemPresent(file1)).toBe(false, 'Item was not deleted');
+    expect(await documentListPage.isItemPresent(file1)).toBe(false, 'Item was not deleted');
   });
 
   it('[C280416] delete a folder', async () => {
-    await dataTable.selectItem(folder1);
+    await documentListPage.selectRow(folder1);
     await toolbar.permanentlyDeleteButton.click();
     await page.waitForDialog();
     await confirmDialog.deleteButton.click();
 
     expect(await page.getSnackBarMessage()).toEqual(`${folder1} deleted`);
-    expect(await dataTable.isItemPresent(folder1)).toBe(false, 'Item was not deleted');
+    expect(await documentListPage.isItemPresent(folder1)).toBe(false, 'Item was not deleted');
   });
 
   it('[C290103] delete a library', async () => {
-    await dataTable.selectItem(site);
+    await documentListPage.selectRow(site);
     await toolbar.permanentlyDeleteButton.click();
     await page.waitForDialog();
     await confirmDialog.deleteButton.click();
 
     expect(await page.getSnackBarMessage()).toEqual(`${site} deleted`);
-    expect(await dataTable.isItemPresent(site)).toBe(false, `${site} was not deleted`);
+    expect(await documentListPage.isItemPresent(site)).toBe(false, `${site} was not deleted`);
   });
 
   it('[C280417] delete multiple items', async () => {
-    await dataTable.selectMultipleItems([file2, folder2]);
+    await documentListPage.selectMultipleItems([file2, folder2]);
     await toolbar.permanentlyDeleteButton.click();
     await page.waitForDialog();
     await confirmDialog.deleteButton.click();
 
     expect(await page.getSnackBarMessage()).toEqual(`2 items deleted`);
-    expect(await dataTable.isItemPresent(file2)).toBe(false, 'Item was not deleted');
-    expect(await dataTable.isItemPresent(folder2)).toBe(false, 'Item was not deleted');
+    expect(await documentListPage.isItemPresent(file2)).toBe(false, 'Item was not deleted');
+    expect(await documentListPage.isItemPresent(folder2)).toBe(false, 'Item was not deleted');
   });
 
   it('[C269113] Confirmation dialog UI', async () => {
-    await dataTable.selectItem(file3);
+    await documentListPage.selectRow(file3);
     await toolbar.permanentlyDeleteButton.click();
     await page.waitForDialog();
 
@@ -127,16 +129,16 @@ describe('Permanently delete from Trash', () => {
     expect(await confirmDialog.isKeepEnabled()).toBe(true, 'KEEP button is not enabled');
 
     await Utils.pressEscape();
-    await dataTable.clearSelection();
+    await documentListPage.dataTable.clearSelection();
   });
 
   it('[C269115] Keep action cancels the deletion', async () => {
-    await dataTable.selectItem(file3);
+    await documentListPage.selectRow(file3);
     await toolbar.permanentlyDeleteButton.click();
     await page.waitForDialog();
 
     expect(await confirmDialog.isKeepEnabled()).toBe(true, 'KEEP button is not enabled');
     await confirmDialog.keepButton.click();
-    expect(await dataTable.isItemPresent(file3)).toBe(true, 'Item was deleted');
+    expect(await documentListPage.isItemPresent(file3)).toBe(true, 'Item was deleted');
   });
 });

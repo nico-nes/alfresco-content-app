@@ -33,6 +33,7 @@ import {
   Utils,
   clearTextWithBackspace
 } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Edit folder', () => {
   const username = `user-${Utils.random()}`;
@@ -78,8 +79,9 @@ describe('Edit folder', () => {
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
   const editDialog = new CreateOrEditFolderDialog();
-  const { dataTable, toolbar } = page;
+  const { toolbar } = page;
   const { searchInput } = page.header;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -133,8 +135,8 @@ describe('Edit folder', () => {
   });
 
   it('[C216331] dialog UI defaults', async () => {
-    await dataTable.doubleClickOnRowByName(parent);
-    await dataTable.selectItem(folderName);
+    await documentListPage.doubleClickRow(parent);
+    await documentListPage.selectRow(folderName);
     await toolbar.openMoreMenu();
     await toolbar.menu.editFolderAction.click();
 
@@ -148,13 +150,13 @@ describe('Edit folder', () => {
   describe('on Personal Files', () => {
     beforeEach(async (done) => {
       await page.clickPersonalFilesAndWait();
-      await dataTable.doubleClickOnRowByName(parent);
-      await dataTable.waitForHeader();
+      await documentListPage.doubleClickRow(parent);
+      await documentListPage.dataTable.waitForTableBody();
       done();
     });
 
     it('[C216335] properties are modified when pressing OK', async (done) => {
-      await dataTable.selectItem(folderNameToEdit);
+      await documentListPage.selectRow(folderNameToEdit);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await editDialog.waitForDialogToOpen();
@@ -162,16 +164,16 @@ describe('Edit folder', () => {
       await editDialog.enterName(folderNameEdited);
       await editDialog.updateButton.click();
       await editDialog.waitForDialogToClose();
-      await dataTable.waitForHeader();
+      await documentListPage.dataTable.waitForTableBody();
 
-      expect(await dataTable.isItemPresent(folderNameEdited)).toBe(true, 'Folder not displayed');
+      expect(await documentListPage.isItemPresent(folderNameEdited)).toBe(true, 'Folder not displayed');
       const desc = await apis.user.nodes.getNodeDescription(folderNameEdited, parentId);
       expect(desc).toEqual(folderDescriptionEdited);
       done();
     });
 
     it('[C216332] with empty folder name', async () => {
-      await dataTable.selectItem(folderName);
+      await documentListPage.selectRow(folderName);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await clearTextWithBackspace(editDialog.nameInput);
@@ -183,7 +185,7 @@ describe('Edit folder', () => {
     it('[C216333] with name with special characters', async () => {
       const namesWithSpecialChars = ['a*a', 'a"a', 'a<a', 'a>a', `a\\a`, 'a/a', 'a?a', 'a:a', 'a|a'];
 
-      await dataTable.selectItem(folderName);
+      await documentListPage.selectRow(folderName);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
 
@@ -195,7 +197,7 @@ describe('Edit folder', () => {
     });
 
     it('[C216334] with name ending with a dot', async () => {
-      await dataTable.selectItem(folderName);
+      await documentListPage.selectRow(folderName);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await editDialog.waitForDialogToOpen();
@@ -206,7 +208,7 @@ describe('Edit folder', () => {
     });
 
     it('[C216336] Cancel button', async () => {
-      await dataTable.selectItem(folderName);
+      await documentListPage.selectRow(folderName);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await editDialog.waitForDialogToOpen();
@@ -216,7 +218,7 @@ describe('Edit folder', () => {
     });
 
     it('[C216337] with duplicate folder name', async () => {
-      await dataTable.selectItem(folderName);
+      await documentListPage.selectRow(folderName);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await editDialog.waitForDialogToOpen();
@@ -228,7 +230,7 @@ describe('Edit folder', () => {
     });
 
     it('[C216338] trim ending spaces', async () => {
-      await dataTable.selectItem(folderName);
+      await documentListPage.selectRow(folderName);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await editDialog.nameInput.sendKeys('   ');
@@ -236,7 +238,7 @@ describe('Edit folder', () => {
       await editDialog.waitForDialogToClose();
 
       expect(await page.snackBar.isPresent()).not.toBe(true, 'notification appears');
-      expect(await dataTable.isItemPresent(folderName)).toBe(true, 'Folder not displayed in list view');
+      expect(await documentListPage.isItemPresent(folderName)).toBe(true, 'Folder not displayed in list view');
     });
   });
 
@@ -247,7 +249,7 @@ describe('Edit folder', () => {
     });
 
     it('[C280384] properties are modified when pressing OK', async (done) => {
-      await dataTable.selectItem(folderFavoriteToEdit);
+      await documentListPage.selectRow(folderFavoriteToEdit);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await editDialog.waitForDialogToOpen();
@@ -255,16 +257,16 @@ describe('Edit folder', () => {
       await editDialog.enterName(folderNameEdited);
       await editDialog.updateButton.click();
       await editDialog.waitForDialogToClose();
-      await dataTable.waitForHeader();
+      await documentListPage.dataTable.waitForTableBody();
 
-      expect(await dataTable.isItemPresent(folderNameEdited)).toBe(true, 'Folder not displayed');
+      expect(await documentListPage.isItemPresent(folderNameEdited)).toBe(true, 'Folder not displayed');
       const desc = await apis.user.nodes.getNodeProperty(folderFavoriteToEditId, 'cm:description');
       expect(desc).toEqual(folderDescriptionEdited);
       done();
     });
 
     it('[C280386] with duplicate folder name', async () => {
-      await dataTable.selectItem(folderFavorite);
+      await documentListPage.selectRow(folderFavorite);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await editDialog.waitForDialogToOpen();
@@ -279,12 +281,12 @@ describe('Edit folder', () => {
   describe('on My Libraries', () => {
     beforeEach(async (done) => {
       await page.goToMyLibrariesAndWait();
-      await dataTable.doubleClickOnRowByName(siteName);
+      await documentListPage.doubleClickRow(siteName);
       done();
     });
 
     it('[C280509] properties are modified when pressing OK', async (done) => {
-      await dataTable.selectItem(folderSiteToEdit);
+      await documentListPage.selectRow(folderSiteToEdit);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await editDialog.waitForDialogToOpen();
@@ -292,16 +294,16 @@ describe('Edit folder', () => {
       await editDialog.enterName(folderNameEdited);
       await editDialog.updateButton.click();
       await editDialog.waitForDialogToClose();
-      await dataTable.waitForHeader();
+      await documentListPage.dataTable.waitForTableBody();
 
-      expect(await dataTable.isItemPresent(folderNameEdited)).toBe(true, 'Folder not displayed');
+      expect(await documentListPage.isItemPresent(folderNameEdited)).toBe(true, 'Folder not displayed');
       const desc = await apis.user.nodes.getNodeProperty(folderSiteToEditId, 'cm:description');
       expect(desc).toEqual(folderDescriptionEdited);
       done();
     });
 
     it('[C280511] with duplicate folder name', async () => {
-      await dataTable.selectItem(folderSite);
+      await documentListPage.selectRow(folderSite);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await editDialog.waitForDialogToOpen();
@@ -324,9 +326,9 @@ describe('Edit folder', () => {
       await searchInput.clickSearchButton();
       await searchInput.checkOnlyFolders();
       await searchInput.searchFor(folderSearchToEdit);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
 
-      await dataTable.selectItem(folderSearchToEdit);
+      await documentListPage.selectRow(folderSearchToEdit);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await editDialog.waitForDialogToOpen();
@@ -336,7 +338,7 @@ describe('Edit folder', () => {
       await editDialog.waitForDialogToClose();
 
       await page.refresh();
-      expect(await dataTable.isItemPresent(folderNameEdited2)).toBe(true, 'Folder not displayed');
+      expect(await documentListPage.isItemPresent(folderNameEdited2)).toBe(true, 'Folder not displayed');
       const desc = await apis.user.nodes.getNodeProperty(folderSearchToEditId, 'cm:description');
       expect(desc).toEqual(folderDescriptionEdited);
     });
@@ -346,9 +348,9 @@ describe('Edit folder', () => {
       await searchInput.clickSearchButton();
       await searchInput.checkOnlyFolders();
       await searchInput.searchFor(folderSearch);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
 
-      await dataTable.selectItem(folderSearch);
+      await documentListPage.selectRow(folderSearch);
       await toolbar.openMoreMenu();
       await toolbar.menu.editFolderAction.click();
       await editDialog.waitForDialogToOpen();

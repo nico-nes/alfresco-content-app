@@ -24,6 +24,7 @@
  */
 
 import { SITE_VISIBILITY, SITE_ROLES, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Trash', () => {
   const username = `user-${Utils.random()}`;
@@ -59,7 +60,8 @@ describe('Trash', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, breadcrumb } = page;
+  const { breadcrumb } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -102,19 +104,19 @@ describe('Trash', () => {
 
     it('[C213217] has the correct columns', async () => {
       const expectedColumns = ['Name', 'Location', 'Size', 'Deleted', 'Deleted by'];
-      const actualColumns = await dataTable.getColumnHeadersText();
+      const actualColumns = await documentListPage.dataTable.getColumnHeadersText();
 
       expect(actualColumns).toEqual(expectedColumns);
     });
 
     it('[C280493] displays the files and folders deleted by everyone', async () => {
-      expect(await dataTable.getRowsCount()).toEqual(8, 'Incorrect number of deleted items displayed');
+      expect(await documentListPage.dataTable.numberOfRows()).toEqual(8, 'Incorrect number of deleted items displayed');
 
-      expect(await dataTable.isItemPresent(fileAdmin)).toBe(true, `${fileAdmin} not displayed`);
-      expect(await dataTable.isItemPresent(folderAdmin)).toBe(true, `${folderAdmin} not displayed`);
-      expect(await dataTable.isItemPresent(fileUser)).toBe(true, `${fileUser} not displayed`);
-      expect(await dataTable.isItemPresent(folderUser)).toBe(true, `${folderUser} not displayed`);
-      expect(await dataTable.isItemPresent(fileSite)).toBe(true, `${fileSite} not displayed`);
+      expect(await documentListPage.isItemPresent(fileAdmin)).toBe(true, `${fileAdmin} not displayed`);
+      expect(await documentListPage.isItemPresent(folderAdmin)).toBe(true, `${folderAdmin} not displayed`);
+      expect(await documentListPage.isItemPresent(fileUser)).toBe(true, `${fileUser} not displayed`);
+      expect(await documentListPage.isItemPresent(folderUser)).toBe(true, `${folderUser} not displayed`);
+      expect(await documentListPage.isItemPresent(fileSite)).toBe(true, `${fileSite} not displayed`);
     });
   });
 
@@ -131,18 +133,18 @@ describe('Trash', () => {
 
     it('[C280494] has the correct columns', async () => {
       const expectedColumns = ['Name', 'Location', 'Size', 'Deleted'];
-      const actualColumns = await dataTable.getColumnHeadersText();
+      const actualColumns = await documentListPage.dataTable.getColumnHeadersText();
 
       expect(actualColumns).toEqual(expectedColumns);
     });
 
     it('[C213218] displays the files and folders deleted by the user', async () => {
-      expect(await dataTable.getRowsCount()).toEqual(6, 'Incorrect number of deleted items displayed');
+      expect(await documentListPage.dataTable.numberOfRows()).toEqual(6, 'Incorrect number of deleted items displayed');
 
-      expect(await dataTable.isItemPresent(fileSite)).toBe(true, `${fileSite} not displayed`);
-      expect(await dataTable.isItemPresent(fileUser)).toBe(true, `${fileUser} not displayed`);
-      expect(await dataTable.isItemPresent(folderUser)).toBe(true, `${folderUser} not displayed`);
-      expect(await dataTable.isItemPresent(fileAdmin)).toBe(false, `${fileAdmin} is displayed`);
+      expect(await documentListPage.isItemPresent(fileSite)).toBe(true, `${fileSite} not displayed`);
+      expect(await documentListPage.isItemPresent(fileUser)).toBe(true, `${fileUser} not displayed`);
+      expect(await documentListPage.isItemPresent(folderUser)).toBe(true, `${folderUser} not displayed`);
+      expect(await documentListPage.isItemPresent(fileAdmin)).toBe(false, `${fileAdmin} is displayed`);
     });
 
     it('[C213219] default sorting column', async () => {
@@ -151,33 +153,33 @@ describe('Trash', () => {
     });
 
     it('[C280498] Location column displays the parent folder of the file', async () => {
-      expect(await dataTable.getItemLocation(fileInFolder)).toEqual(folderNotDeleted);
-      expect(await dataTable.getItemLocation(fileUser)).toEqual('Personal Files');
-      expect(await dataTable.getItemLocation(fileSite)).toEqual(siteName);
+      expect(await documentListPage.getItemLocation(fileInFolder)).toEqual(folderNotDeleted);
+      expect(await documentListPage.getItemLocation(fileUser)).toEqual('Personal Files');
+      expect(await documentListPage.getItemLocation(fileSite)).toEqual(siteName);
     });
 
     it('[C280499] Location column displays a tooltip with the entire path of the file', async () => {
-      expect(await dataTable.getItemLocationTooltip(fileInFolder)).toEqual(`Personal Files/${folderNotDeleted}`);
-      expect(await dataTable.getItemLocationTooltip(fileUser)).toEqual('Personal Files');
-      expect(await dataTable.getItemLocationTooltip(fileSite)).toEqual(`File Libraries/${siteName}`);
+      expect(await documentListPage.getItemLocationTooltip(fileInFolder)).toEqual(`Personal Files/${folderNotDeleted}`);
+      expect(await documentListPage.getItemLocationTooltip(fileUser)).toEqual('Personal Files');
+      expect(await documentListPage.getItemLocationTooltip(fileSite)).toEqual(`File Libraries/${siteName}`);
     });
 
     it('[C280500] Location column is empty if parent folder no longer exists', async () => {
-      expect(await dataTable.getItemLocation(fileDeleted)).toEqual('');
+      expect(await documentListPage.getItemLocation(fileDeleted)).toEqual('');
     });
 
     it('[C217144] Location column redirect - file in user Home', async () => {
-      await dataTable.clickItemLocation(fileUser);
+      await documentListPage.clickItemLocation(fileUser);
       expect(await breadcrumb.getAllItems()).toEqual(['Personal Files']);
     });
 
     it('[C280496] Location column redirect - file in folder', async () => {
-      await dataTable.clickItemLocation(fileInFolder);
+      await documentListPage.clickItemLocation(fileInFolder);
       expect(await breadcrumb.getAllItems()).toEqual(['Personal Files', folderNotDeleted]);
     });
 
     it('[C280497] Location column redirect - file in site', async () => {
-      await dataTable.clickItemLocation(fileSite);
+      await documentListPage.clickItemLocation(fileSite);
       expect(await breadcrumb.getAllItems()).toEqual(['My Libraries', siteName]);
     });
   });

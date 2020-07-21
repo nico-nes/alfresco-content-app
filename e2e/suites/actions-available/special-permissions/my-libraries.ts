@@ -29,13 +29,13 @@ import * as testUtil from '../test-util';
 
 export function librariesTests(siteName?: string) {
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   describe('available actions : ', () => {
     beforeAll(async () => {
       await page.goToMyLibrariesAndWait();
-      await dataTable.doubleClickOnRowByName(siteName);
-      await dataTable.waitForHeader();
+      await documentListPage.doubleClickRow(siteName);
+      await documentListPage.dataTable.waitForTableBody();
     });
 
     beforeEach(async () => {

@@ -24,6 +24,7 @@
  */
 
 import { SITE_VISIBILITY, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Recent Files', () => {
   const username = `user-${Utils.random()}`;
@@ -47,7 +48,8 @@ describe('Recent Files', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, breadcrumb } = page;
+  const { breadcrumb } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -82,7 +84,7 @@ describe('Recent Files', () => {
 
   it('[C213168] has the correct columns', async () => {
     const expectedColumns = ['Name', 'Location', 'Size', 'Modified'];
-    const actualColumns = await dataTable.getColumnHeadersText();
+    const actualColumns = await documentListPage.dataTable.getColumnHeadersText();
 
     expect(actualColumns).toEqual(expectedColumns);
   });
@@ -93,40 +95,40 @@ describe('Recent Files', () => {
   });
 
   it('[C213170] displays the files added by the current user in the last 30 days', async () => {
-    expect(await dataTable.getRowsCount()).toEqual(3, 'Incorrect number of files displayed');
-    expect(await dataTable.isItemPresent(fileName1)).toBe(true, `${fileName1} not displayed`);
-    expect(await dataTable.isItemPresent(fileName2)).toBe(true, `${fileName2} not displayed`);
-    expect(await dataTable.isItemPresent(fileSite)).toBe(true, `${fileSite} not displayed`);
+    expect(await documentListPage.dataTable.numberOfRows()).toEqual(3, 'Incorrect number of files displayed');
+    expect(await documentListPage.isItemPresent(fileName1)).toBe(true, `${fileName1} not displayed`);
+    expect(await documentListPage.isItemPresent(fileName2)).toBe(true, `${fileName2} not displayed`);
+    expect(await documentListPage.isItemPresent(fileSite)).toBe(true, `${fileSite} not displayed`);
   });
 
   it(`[C213174] file not displayed if it's been deleted`, async () => {
-    expect(await dataTable.isItemPresent(fileName3)).not.toBe(true, `${fileName3} is displayed`);
+    expect(await documentListPage.isItemPresent(fileName3)).not.toBe(true, `${fileName3} is displayed`);
   });
 
   it('[C213175] Location column displays the parent folder of the file', async () => {
-    expect(await dataTable.getItemLocation(fileName1)).toEqual(folderName);
-    expect(await dataTable.getItemLocation(fileName2)).toEqual('Personal Files');
-    expect(await dataTable.getItemLocation(fileSite)).toEqual(folderSite);
+    expect(await documentListPage.getItemLocation(fileName1)).toEqual(folderName);
+    expect(await documentListPage.getItemLocation(fileName2)).toEqual('Personal Files');
+    expect(await documentListPage.getItemLocation(fileSite)).toEqual(folderSite);
   });
 
   it('[C213177] Location column displays a tooltip with the entire path of the file', async () => {
-    expect(await dataTable.getItemLocationTooltip(fileName1)).toEqual(`Personal Files/${folderName}`);
-    expect(await dataTable.getItemLocationTooltip(fileName2)).toEqual('Personal Files');
-    expect(await dataTable.getItemLocationTooltip(fileSite)).toEqual(`File Libraries/${siteName}/${folderSite}`);
+    expect(await documentListPage.getItemLocationTooltip(fileName1)).toEqual(`Personal Files/${folderName}`);
+    expect(await documentListPage.getItemLocationTooltip(fileName2)).toEqual('Personal Files');
+    expect(await documentListPage.getItemLocationTooltip(fileSite)).toEqual(`File Libraries/${siteName}/${folderSite}`);
   });
 
   it('[C213176] Location column redirect - file in user Home', async () => {
-    await dataTable.clickItemLocation(fileName2);
+    await documentListPage.clickItemLocation(fileName2);
     expect(await breadcrumb.getAllItems()).toEqual(['Personal Files']);
   });
 
   it('[C280486] Location column redirect - file in folder', async () => {
-    await dataTable.clickItemLocation(fileName1);
+    await documentListPage.clickItemLocation(fileName1);
     expect(await breadcrumb.getAllItems()).toEqual(['Personal Files', folderName]);
   });
 
   it('[C280487] Location column redirect - file in site', async () => {
-    await dataTable.clickItemLocation(fileSite);
+    await documentListPage.clickItemLocation(fileSite);
     expect(await breadcrumb.getAllItems()).toEqual(['My Libraries', siteName, folderSite]);
   });
 });

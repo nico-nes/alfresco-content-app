@@ -35,6 +35,7 @@ import {
   Viewer,
   Utils
 } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Unshare a file from Search Results', () => {
   const username = `user-${Utils.random()}`;
@@ -65,12 +66,13 @@ describe('Unshare a file from Search Results', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, toolbar } = page;
+  const { toolbar } = page;
   const shareDialog = new ShareDialog();
   const confirmDialog = new ConfirmDialog();
-  const contextMenu = dataTable.menu;
+  const contextMenu = new Menu();
   const viewer = new Viewer();
   const { searchInput } = page.header;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -120,9 +122,9 @@ describe('Unshare a file from Search Results', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor(file1);
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    await dataTable.selectItem(file1);
+    await documentListPage.selectRow(file1);
     await toolbar.shareEditButton.click();
     await shareDialog.waitForDialogToOpen();
 
@@ -140,9 +142,9 @@ describe('Unshare a file from Search Results', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor(file2);
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    await dataTable.selectItem(file2);
+    await documentListPage.selectRow(file2);
     await toolbar.shareEditButton.click();
     await shareDialog.waitForDialogToOpen();
     const url = await shareDialog.getLinkUrl();
@@ -165,9 +167,9 @@ describe('Unshare a file from Search Results', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor(file3);
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    await dataTable.selectItem(file3);
+    await documentListPage.selectRow(file3);
     await toolbar.shareEditButton.click();
     await shareDialog.waitForDialogToOpen();
 
@@ -187,9 +189,9 @@ describe('Unshare a file from Search Results', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor(file4);
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    await dataTable.rightClickOnItem(file4);
+    await documentListPage.rightClickOnRow(file4);
     await contextMenu.waitForMenuToOpen();
     await contextMenu.shareEditAction.click();
     await shareDialog.waitForDialogToOpen();
@@ -213,8 +215,8 @@ describe('Unshare a file from Search Results', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor(fileSite1);
-    await dataTable.waitForBody();
-    await dataTable.selectItem(fileSite1);
+    await documentListPage.dataTable.waitForTableBody();
+    await documentListPage.selectRow(fileSite1);
     await toolbar.shareEditButton.click();
     await shareDialog.waitForDialogToOpen();
 
@@ -231,8 +233,8 @@ describe('Unshare a file from Search Results', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor(fileSite2);
-    await dataTable.waitForBody();
-    await dataTable.selectItem(fileSite2);
+    await documentListPage.dataTable.waitForTableBody();
+    await documentListPage.selectRow(fileSite2);
     await toolbar.shareEditButton.click();
     await shareDialog.waitForDialogToOpen();
 

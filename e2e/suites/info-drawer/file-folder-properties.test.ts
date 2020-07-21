@@ -67,7 +67,7 @@ describe('File / Folder properties', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -87,13 +87,13 @@ describe('File / Folder properties', () => {
 
   beforeEach(async (done) => {
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(parent);
+    await documentListPage.doubleClickRow(parent);
     done();
   });
 
   describe('View properties', () => {
     it('[C299162] Default tabs', async () => {
-      await dataTable.selectItem(file1.name);
+      await documentListPage.selectRow(file1.name);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -131,7 +131,7 @@ describe('File / Folder properties', () => {
         file1.description
       ];
 
-      await dataTable.selectItem(file1.name);
+      await documentListPage.selectRow(file1.name);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -156,7 +156,7 @@ describe('File / Folder properties', () => {
         folder1.description
       ];
 
-      await dataTable.selectItem(folder1.name);
+      await documentListPage.selectRow(folder1.name);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -167,7 +167,7 @@ describe('File / Folder properties', () => {
     });
 
     it('[C269004] Less / More information buttons', async () => {
-      await dataTable.selectItem(file1.name);
+      await documentListPage.selectRow(file1.name);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -220,7 +220,7 @@ describe('File / Folder properties', () => {
         properties['exif:software']
       ];
 
-      await dataTable.selectItem(image1.name);
+      await documentListPage.selectRow(image1.name);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
 

@@ -24,6 +24,7 @@
  */
 
 import { LoginPage, BrowsingPage, SearchResultsPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Empty list views', () => {
   const username = `user-${Utils.random()}`;
@@ -37,8 +38,9 @@ describe('Empty list views', () => {
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
   const searchResultsPage = new SearchResultsPage();
-  const { dataTable, pagination } = page;
+  const { pagination } = page;
   const { searchInput } = page.header;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -48,51 +50,51 @@ describe('Empty list views', () => {
 
   it('[C280131] empty Personal Files', async () => {
     await page.clickPersonalFiles();
-    expect(await dataTable.isEmpty()).toBe(true, 'list is not empty');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
     expect(await dataTable.getEmptyDragAndDropText()).toContain('Drag and drop');
   });
 
   it('[C217099] empty My Libraries', async () => {
     await page.goToMyLibraries();
-    expect(await dataTable.isEmpty()).toBe(true, 'list is not empty');
-    expect(await dataTable.getEmptyStateTitle()).toContain(`You aren't a member of any File Libraries yet`);
-    expect(await dataTable.getEmptyStateSubtitle()).toContain('Join libraries to upload, view, and share files.');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
+    expect(await documentListPage.dataTable.getEmptyStateTitle()).toContain(`You aren't a member of any File Libraries yet`);
+    expect(await documentListPage.dataTable.getEmptyStateSubtitle()).toContain('Join libraries to upload, view, and share files.');
   });
 
   it('[C289911] empty Favorite Libraries', async () => {
     await page.goToFavoriteLibraries();
-    expect(await dataTable.isEmpty()).toBe(true, 'list is not empty');
-    expect(await dataTable.getEmptyStateTitle()).toContain(`No Favorite Libraries`);
-    expect(await dataTable.getEmptyStateSubtitle()).toContain('Favorite a library that you want to find easily later.');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
+    expect(await documentListPage.dataTable.getEmptyStateTitle()).toContain(`No Favorite Libraries`);
+    expect(await documentListPage.dataTable.getEmptyStateSubtitle()).toContain('Favorite a library that you want to find easily later.');
   });
 
   it('[C280132] empty Shared Files', async () => {
     await page.clickSharedFiles();
-    expect(await dataTable.isEmpty()).toBe(true, 'list is not empty');
-    expect(await dataTable.getEmptyStateTitle()).toContain('No shared files or folders');
-    expect(await dataTable.getEmptyStateSubtitle()).toContain('Items you share using the Share option are shown here.');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
+    expect(await documentListPage.dataTable.getEmptyStateTitle()).toContain('No shared files or folders');
+    expect(await documentListPage.dataTable.getEmptyStateSubtitle()).toContain('Items you share using the Share option are shown here.');
   });
 
   it('[C213169] empty Recent Files', async () => {
     await page.clickRecentFiles();
-    expect(await dataTable.isEmpty()).toBe(true, 'list is not empty');
-    expect(await dataTable.getEmptyStateTitle()).toContain('No recent files');
-    expect(await dataTable.getEmptyStateSubtitle()).toContain('Items you uploaded or edited in the last 30 days are shown here.');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
+    expect(await documentListPage.dataTable.getEmptyStateTitle()).toContain('No recent files');
+    expect(await documentListPage.dataTable.getEmptyStateSubtitle()).toContain('Items you uploaded or edited in the last 30 days are shown here.');
   });
 
   it('[C280133] empty Favorites', async () => {
     await page.clickFavorites();
-    expect(await dataTable.isEmpty()).toBe(true, 'list is not empty');
-    expect(await dataTable.getEmptyStateTitle()).toContain('No favorite files or folders');
-    expect(await dataTable.getEmptyStateSubtitle()).toContain('Favorite items that you want to easily find later.');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
+    expect(await documentListPage.dataTable.getEmptyStateTitle()).toContain('No favorite files or folders');
+    expect(await documentListPage.dataTable.getEmptyStateSubtitle()).toContain('Favorite items that you want to easily find later.');
   });
 
   it('[C280134] empty Trash', async () => {
     await page.clickTrash();
-    expect(await dataTable.isEmpty()).toBe(true, 'list is not empty');
-    expect(await dataTable.getEmptyStateTitle()).toContain('Trash is empty');
-    expect(await dataTable.getEmptyListText()).toContain('Items you delete are moved to the Trash.');
-    expect(await dataTable.getEmptyListText()).toContain('Empty Trash to permanently delete items.');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
+    expect(await documentListPage.dataTable.getEmptyStateTitle()).toContain('Trash is empty');
+    expect(await documentListPage.dataTable.getEmptyListText()).toContain('Items you delete are moved to the Trash.');
+    expect(await documentListPage.dataTable.getEmptyListText()).toContain('Empty Trash to permanently delete items.');
   });
 
   it('[C280111] Favorites - pagination controls not displayed', async () => {
@@ -169,7 +171,7 @@ describe('Empty list views', () => {
     await searchInput.clickSearchButton();
     /* cspell:disable-next-line */
     await searchInput.searchFor('qwertyuiop');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
     expect(await pagination.isRangePresent()).toBe(false, 'Range is present');
     expect(await pagination.isMaxItemsPresent()).toBe(false, 'Max items is present');
@@ -183,7 +185,7 @@ describe('Empty list views', () => {
     await searchInput.clickSearchButton();
     /* cspell:disable-next-line */
     await searchInput.searchFor('qwertyuiop');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
     expect(await searchResultsPage.filters.isSearchFiltersPanelDisplayed()).toBe(false, 'Search filters panel is present');
   });
@@ -193,9 +195,9 @@ describe('Empty list views', () => {
     await searchInput.checkLibraries();
     /* cspell:disable-next-line */
     await searchInput.searchFor('qwertyuiop');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    expect(await dataTable.isEmpty()).toBe(true, 'list is not empty');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
     expect(await dataTable.emptySearchText.getText()).toContain('Your search returned 0 results');
   });
 
@@ -204,9 +206,9 @@ describe('Empty list views', () => {
     await searchInput.checkFilesAndFolders();
     /* cspell:disable-next-line */
     await searchInput.searchFor('qwertyuiop');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    expect(await dataTable.isEmpty()).toBe(true, 'list is not empty');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
     expect(await dataTable.emptySearchText.getText()).toContain('Your search returned 0 results');
   });
 });

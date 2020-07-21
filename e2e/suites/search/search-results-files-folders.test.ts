@@ -24,6 +24,7 @@
  */
 
 import { LoginPage, SearchResultsPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 const moment = require('moment');
 
 describe('Search results - files and folders', () => {
@@ -53,7 +54,8 @@ describe('Search results - files and folders', () => {
   const loginPage = new LoginPage();
   const page = new SearchResultsPage();
   const { searchInput } = page.header;
-  const { dataTable, breadcrumb } = page;
+  const { breadcrumb } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -90,7 +92,7 @@ describe('Search results - files and folders', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor('test-');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
     expect(await page.breadcrumb.currentItem.getText()).toEqual('Search Results');
   });
@@ -99,14 +101,14 @@ describe('Search results - files and folders', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor('test-');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
     const fileEntry = await apis.user.nodes.getNodeById(fileId);
     const modifiedDate = moment(fileEntry.entry.modifiedAt).format('MMM D, YYYY, h:mm:ss A');
     const modifiedBy = fileEntry.entry.modifiedByUser.displayName;
     const size = fileEntry.entry.content.sizeInBytes;
 
-    expect(await dataTable.isItemPresent(file)).toBe(true, `${file} is not displayed`);
+    expect(await documentListPage.isItemPresent(file)).toBe(true, `${file} is not displayed`);
     expect(await dataTable.getRowCellsCount(file)).toEqual(2, 'incorrect number of columns');
     expect(await dataTable.getSearchResultLinesCount(file)).toEqual(4, 'incorrect number of lines for search result');
     expect(await dataTable.getSearchResultNameAndTitle(file)).toBe(`${file} ( ${fileTitle} )`);
@@ -119,13 +121,13 @@ describe('Search results - files and folders', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor('test-');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
     const folderEntry = await apis.user.nodes.getNodeById(folderId);
     const modifiedDate = moment(folderEntry.entry.modifiedAt).format('MMM D, YYYY, h:mm:ss A');
     const modifiedBy = folderEntry.entry.modifiedByUser.displayName;
 
-    expect(await dataTable.isItemPresent(folder)).toBe(true, `${folder} is not displayed`);
+    expect(await documentListPage.isItemPresent(folder)).toBe(true, `${folder} is not displayed`);
     expect(await dataTable.getRowCellsCount(folder)).toEqual(2, 'incorrect number of columns');
     expect(await dataTable.getSearchResultLinesCount(folder)).toEqual(4, 'incorrect number of lines for search result');
     expect(await dataTable.getSearchResultNameAndTitle(folder)).toBe(`${folder} ( ${folderTitle} )`);
@@ -138,18 +140,18 @@ describe('Search results - files and folders', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor(fileRussian);
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    expect(await dataTable.isItemPresent(fileRussian)).toBe(true, `${fileRussian} is not displayed`);
+    expect(await documentListPage.isItemPresent(fileRussian)).toBe(true, `${fileRussian} is not displayed`);
   });
 
   it('[C279177] Location column redirect - file in user Home', async () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor(file);
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    await dataTable.clickItemLocation(file);
+    await documentListPage.clickItemLocation(file);
     expect(await breadcrumb.getAllItems()).toEqual(['Personal Files']);
   });
 });

@@ -50,8 +50,8 @@ describe('Extensions - Context submenu', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
-  const contextMenu = dataTable.menu;
+  const documentListPage = new DocumentListPage();
+  const contextMenu = new Menu();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -67,7 +67,6 @@ describe('Extensions - Context submenu', () => {
 
   beforeEach(async (done) => {
     await Utils.pressEscape();
-    await dataTable.clearSelection();
     await page.clickPersonalFilesAndWait();
     done();
   });
@@ -79,7 +78,7 @@ describe('Extensions - Context submenu', () => {
   });
 
   it('[C286717] Displays the submenu actions set from config', async () => {
-    await dataTable.rightClickOnItem(file);
+    await documentListPage.rightClickOnRow(file);
     expect(await contextMenu.isMenuItemPresent(menuItem1.label)).toBe(true, `${menuItem1.label} is not displayed for ${file}`);
     expect(await contextMenu.hasSubMenu(menuItem1.label)).toBe(true, 'Menu does not have submenu');
     await contextMenu.mouseOverMenuItem(menuItem1.label);
@@ -91,7 +90,7 @@ describe('Extensions - Context submenu', () => {
   });
 
   it('[C286718] Does not display submenu actions without permissions', async () => {
-    await dataTable.rightClickOnItem(folder);
+    await documentListPage.rightClickOnRow(folder);
     expect(await contextMenu.isMenuItemPresent(menuItem1.label)).toBe(true, `${menuItem1.label} is not displayed for ${folder}`);
     await contextMenu.mouseOverMenuItem(menuItem1.label);
 
@@ -105,7 +104,7 @@ describe('Extensions - Context submenu', () => {
   });
 
   it('[C287784] The parent item is not displayed if all its children have no permission to be displayed', async () => {
-    await dataTable.rightClickOnItem(folder);
+    await documentListPage.rightClickOnRow(folder);
     expect(await contextMenu.isMenuItemPresent(menuItem2.label)).toBe(false, `${menuItem2.label} menu is displayed for ${folder}`);
   });
 });

@@ -24,6 +24,7 @@
  */
 
 import { LoginPage, BrowsingPage, Viewer, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Single click on item name', () => {
   const username = `user-${Utils.random()}`;
@@ -48,9 +49,10 @@ describe('Single click on item name', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, breadcrumb } = page;
+  const { breadcrumb } = page;
   const viewer = new Viewer();
   const { searchInput } = page.header;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -88,8 +90,8 @@ describe('Single click on item name', () => {
   it('[C284899] Hyperlink does not appear for items in the Trash', async () => {
     await page.clickTrashAndWait();
 
-    expect(await dataTable.hasLinkOnName(deletedFile1)).toBe(false, 'Link on name is present');
-    expect(await dataTable.hasLinkOnName(deletedFolder1)).toBe(false, 'Link on name is present');
+    expect(await documentListPage.dataTable.getFileHyperlink(deletedFile1).isPresent()).toBe(false, 'Link on name is present');
+    expect(await documentListPage.dataTable.getFileHyperlink(deletedFolder1).isPresent()).toBe(false, 'Link on name is present');
   });
 
   describe('on Personal Files', () => {
@@ -99,11 +101,11 @@ describe('Single click on item name', () => {
     });
 
     it('[C280032] Hyperlink appears when mouse over a file/folder', async () => {
-      expect(await dataTable.hasLinkOnName(file1)).toBe(true, 'Link on name is missing');
+      expect(await documentListPage.dataTable.getFileHyperlink(file1).isPresent()).toBe(true, 'Link on name is missing');
     });
 
     it('[C280033] File preview opens when clicking the hyperlink', async () => {
-      await dataTable.clickNameLink(file1);
+      await documentListPage.clickNameLink(file1);
 
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
 
@@ -111,7 +113,7 @@ describe('Single click on item name', () => {
     });
 
     it('[C280034] Navigate inside the folder when clicking the hyperlink', async () => {
-      await dataTable.clickNameLink(folder1);
+      await documentListPage.clickNameLink(folder1);
 
       expect(await breadcrumb.currentItem.getText()).toBe(folder1);
     });
@@ -124,14 +126,14 @@ describe('Single click on item name', () => {
     });
 
     it('[C284901] Hyperlink appears when mouse over a library', async () => {
-      expect(await dataTable.hasLinkOnName(siteName)).toBe(true, 'Link on site name is missing');
+      expect(await documentListPage.dataTable.getFileHyperlink(siteName).isPresent()).toBe(true, 'Link on site name is missing');
     });
 
     it('[C284902] Navigate inside the library when clicking the hyperlink', async () => {
-      await dataTable.clickNameLink(siteName);
+      await documentListPage.clickNameLink(siteName);
 
       expect(await breadcrumb.currentItem.getText()).toBe(siteName);
-      expect(await dataTable.isItemPresent(fileSite)).toBe(true, `${fileSite} not displayed`);
+      expect(await documentListPage.dataTable.getFileHyperlink(fileSite).isPresent()).toBe(true, `${fileSite} not displayed`);
     });
   });
 
@@ -142,11 +144,11 @@ describe('Single click on item name', () => {
     });
 
     it('[C284905] Hyperlink appears when mouse over a file', async () => {
-      expect(await dataTable.hasLinkOnName(file1)).toBe(true, 'Link on name is missing');
+      expect(await documentListPage.dataTable.getFileHyperlink(file1).isPresent()).toBe(true, 'Link on name is missing');
     });
 
     it('[C284906] File preview opens when clicking the hyperlink', async () => {
-      await dataTable.clickNameLink(file1);
+      await documentListPage.clickNameLink(file1);
 
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
 
@@ -161,11 +163,11 @@ describe('Single click on item name', () => {
     });
 
     it('[C284907] Hyperlink appears when mouse over a file', async () => {
-      expect(await dataTable.hasLinkOnName(file1)).toBe(true, 'Link on name is missing');
+      expect(await documentListPage.dataTable.getFileHyperlink(file1).isPresent()).toBe(true, 'Link on name is missing');
     });
 
     it('[C284908] File preview opens when clicking the hyperlink', async () => {
-      await dataTable.clickNameLink(file1);
+      await documentListPage.clickNameLink(file1);
 
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
 
@@ -180,11 +182,11 @@ describe('Single click on item name', () => {
     });
 
     it('[C284909] Hyperlink appears when mouse over a file/folder', async () => {
-      expect(await dataTable.hasLinkOnName(file1)).toBe(true, 'Link on name is missing');
+      expect(await documentListPage.dataTable.getFileHyperlink(file1).isPresent()).toBe(true, 'Link on name is missing');
     });
 
     it('[C284910] File preview opens when clicking the hyperlink', async () => {
-      await dataTable.clickNameLink(file1);
+      await documentListPage.clickNameLink(file1);
 
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
 
@@ -192,7 +194,7 @@ describe('Single click on item name', () => {
     });
 
     it('[C284911] Navigate inside the folder when clicking the hyperlink', async () => {
-      await dataTable.clickNameLink(folder1);
+      await documentListPage.clickNameLink(folder1);
 
       expect(await breadcrumb.currentItem.getText()).toBe(folder1);
     });
@@ -213,14 +215,14 @@ describe('Single click on item name', () => {
 
     it('[C306988] Hyperlink appears when mouse over a file', async () => {
       await searchInput.searchFor(file1);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
 
       expect(await dataTable.hasLinkOnSearchResultName(file1)).toBe(true, 'Link on name is missing');
     });
 
     it('[C306989] File preview opens when clicking the hyperlink', async () => {
       await searchInput.searchFor(file1);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
       await dataTable.clickSearchResultNameLink(file1);
 
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
@@ -230,7 +232,7 @@ describe('Single click on item name', () => {
 
     it('[C306990] Navigate inside the folder when clicking the hyperlink', async () => {
       await searchInput.searchFor(folder1);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
       await dataTable.clickSearchResultNameLink(folder1);
 
       expect(await breadcrumb.currentItem.getText()).toBe(folder1);

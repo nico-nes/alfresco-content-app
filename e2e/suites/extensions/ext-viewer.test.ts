@@ -101,13 +101,13 @@ describe('Extensions - Viewer', () => {
 
   describe('content', () => {
     it('[C284659] Insert new component in a content viewer', async () => {
-      await page.dataTable.doubleClickOnRowByName(pdfFile.file_name);
+      await documentListPage.doubleClickRow(pdfFile.file_name);
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
       expect(await viewer.isCustomContentPresent()).toBe(true, 'Custom content is not present');
       expect(await viewer.getComponentIdOfView()).toEqual(pdfFile.component);
       await viewer.closeButton.click();
 
-      await page.dataTable.doubleClickOnRowByName(docxFile.file_name);
+      await documentListPage.doubleClickRow(docxFile.file_name);
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
       expect(await viewer.isCustomContentPresent()).toBe(true, 'Custom content is not present');
       expect(await viewer.getComponentIdOfView()).toEqual(docxFile.component);
@@ -116,7 +116,7 @@ describe('Extensions - Viewer', () => {
 
   describe('toolbar actions', () => {
     it('[C286416] Add a new action in the toolbar', async () => {
-      await page.dataTable.doubleClickOnRowByName(pdfFile.file_name);
+      await documentListPage.doubleClickRow(pdfFile.file_name);
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
 
       expect(await toolbar.isButtonPresent(customAction.title)).toBe(true, 'Custom action is not present');
@@ -125,14 +125,14 @@ describe('Extensions - Viewer', () => {
     });
 
     it('[C286417] Modify title of action from toolbar', async () => {
-      await page.dataTable.doubleClickOnRowByName(pdfFile.file_name);
+      await documentListPage.doubleClickRow(pdfFile.file_name);
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
 
       expect(await toolbar.getButtonById(downloadButton.id).getAttribute('title')).toEqual(downloadButton.title);
     });
 
     it('[C286419] Remove action from toolbar', async () => {
-      await page.dataTable.doubleClickOnRowByName(pdfFile.file_name);
+      await documentListPage.doubleClickRow(pdfFile.file_name);
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
 
       expect(await toolbar.isPrintPresent()).toBe(false, 'Print button is still displayed');
@@ -141,7 +141,7 @@ describe('Extensions - Viewer', () => {
 
   describe('toolbar More actions menu', () => {
     it('[C286420] Add a new action', async () => {
-      await page.dataTable.doubleClickOnRowByName(pdfFile.file_name);
+      await documentListPage.doubleClickRow(pdfFile.file_name);
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
 
       await toolbar.openMoreMenu();
@@ -151,7 +151,7 @@ describe('Extensions - Viewer', () => {
     });
 
     it('[C286421] Modify title of action from More actions menu', async () => {
-      await page.dataTable.doubleClickOnRowByName(pdfFile.file_name);
+      await documentListPage.doubleClickRow(pdfFile.file_name);
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
 
       await toolbar.openMoreMenu();
@@ -159,7 +159,7 @@ describe('Extensions - Viewer', () => {
     });
 
     it('[C286423] Remove action from More actions menu', async () => {
-      await page.dataTable.doubleClickOnRowByName(pdfFile.file_name);
+      await documentListPage.doubleClickRow(pdfFile.file_name);
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
 
       await toolbar.openMoreMenu();

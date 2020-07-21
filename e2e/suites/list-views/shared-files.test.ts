@@ -24,6 +24,7 @@
  */
 
 import { SITE_VISIBILITY, SITE_ROLES, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Shared Files', () => {
   const username = `user-${Utils.random()}`;
@@ -50,7 +51,8 @@ describe('Shared Files', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, breadcrumb } = page;
+  const { breadcrumb } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -90,7 +92,7 @@ describe('Shared Files', () => {
 
   it('[C213113] has the correct columns', async () => {
     const expectedColumns = ['Name', 'Location', 'Size', 'Modified', 'Modified by', 'Shared by'];
-    const actualColumns = await dataTable.getColumnHeadersText();
+    const actualColumns = await documentListPage.dataTable.getColumnHeadersText();
 
     expect(actualColumns).toEqual(expectedColumns);
   });
@@ -101,41 +103,41 @@ describe('Shared Files', () => {
   });
 
   it('[C213114] displays the files shared by everyone', async () => {
-    expect(await dataTable.isItemPresent(fileAdmin)).toBe(true, `${fileAdmin} not displayed`);
-    expect(await dataTable.isItemPresent(file1User)).toBe(true, `${file1User} not displayed`);
+    expect(await documentListPage.isItemPresent(fileAdmin)).toBe(true, `${fileAdmin} not displayed`);
+    expect(await documentListPage.isItemPresent(file1User)).toBe(true, `${file1User} not displayed`);
   });
 
   it(`[C213117] file not displayed if it's been deleted`, async () => {
-    expect(await dataTable.isItemPresent(file2User)).toBe(false, `${file2User} is displayed`);
+    expect(await documentListPage.isItemPresent(file2User)).toBe(false, `${file2User} is displayed`);
   });
 
   it('[C213118] unshared file is not displayed', async () => {
-    expect(await dataTable.isItemPresent(file3User)).toBe(false, `${file3User} is displayed`);
+    expect(await documentListPage.isItemPresent(file3User)).toBe(false, `${file3User} is displayed`);
   });
 
   it('[C213665] Location column displays the parent folder of the file', async () => {
-    expect(await dataTable.getItemLocationTooltip(file4User)).toEqual('Personal Files');
-    expect(await dataTable.getItemLocation(fileAdmin)).toEqual(siteName);
-    expect(await dataTable.getItemLocation(file1User)).toEqual(folderUser);
+    expect(await documentListPage.getItemLocationTooltip(file4User)).toEqual('Personal Files');
+    expect(await documentListPage.getItemLocation(fileAdmin)).toEqual(siteName);
+    expect(await documentListPage.getItemLocation(file1User)).toEqual(folderUser);
   });
 
   it('[C213666] Location column redirect - file in user Home', async () => {
-    await dataTable.clickItemLocation(file4User);
+    await documentListPage.clickItemLocation(file4User);
     expect(await breadcrumb.getAllItems()).toEqual(['Personal Files']);
   });
 
   it('[C280490] Location column redirect - file in folder', async () => {
-    await dataTable.clickItemLocation(file1User);
+    await documentListPage.clickItemLocation(file1User);
     expect(await breadcrumb.getAllItems()).toEqual(['Personal Files', folderUser]);
   });
 
   it('[C280491] Location column redirect - file in site', async () => {
-    await dataTable.clickItemLocation(fileAdmin);
+    await documentListPage.clickItemLocation(fileAdmin);
     expect(await breadcrumb.getAllItems()).toEqual(['My Libraries', siteName]);
   });
 
   it('[C213667] Location column displays a tooltip with the entire path of the file', async () => {
-    expect(await dataTable.getItemLocationTooltip(fileAdmin)).toEqual(`File Libraries/${siteName}`);
-    expect(await dataTable.getItemLocationTooltip(file1User)).toEqual(`Personal Files/${folderUser}`);
+    expect(await documentListPage.getItemLocationTooltip(fileAdmin)).toEqual(`File Libraries/${siteName}`);
+    expect(await documentListPage.getItemLocationTooltip(file1User)).toEqual(`Personal Files/${folderUser}`);
   });
 });

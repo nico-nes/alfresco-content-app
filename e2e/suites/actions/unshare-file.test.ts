@@ -35,6 +35,7 @@ import {
   Viewer,
   Utils
 } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Unshare a file', () => {
   const username = `user-${Utils.random()}`;
@@ -49,11 +50,12 @@ describe('Unshare a file', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, toolbar } = page;
+  const { toolbar } = page;
   const shareDialog = new ShareDialog();
   const confirmDialog = new ConfirmDialog();
-  const contextMenu = dataTable.menu;
+  const contextMenu = new Menu();
   const viewer = new Viewer();
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -93,8 +95,8 @@ describe('Unshare a file', () => {
     beforeEach(async (done) => {
       await page.closeOpenDialogs();
       await page.clickPersonalFilesAndWait();
-      await dataTable.doubleClickOnRowByName(parent);
-      await dataTable.waitForHeader();
+      await documentListPage.doubleClickRow(parent);
+      await documentListPage.dataTable.waitForTableBody();
       done();
     });
 
@@ -113,7 +115,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286339] Unshare dialog UI', async () => {
-      await dataTable.selectItem(file1);
+      await documentListPage.selectRow(file1);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -128,7 +130,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286340] Unshare a file', async () => {
-      await dataTable.selectItem(file2);
+      await documentListPage.selectRow(file2);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
       const url = await shareDialog.getLinkUrl();
@@ -148,7 +150,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286341] Cancel the Unshare action', async () => {
-      await dataTable.selectItem(file3);
+      await documentListPage.selectRow(file3);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -165,7 +167,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286359] Unshare a file from the context menu', async () => {
-      await dataTable.rightClickOnItem(file4);
+      await documentListPage.rightClickOnRow(file4);
       await contextMenu.shareEditAction.click();
       await shareDialog.waitForDialogToOpen();
       const url = await shareDialog.getLinkUrl();
@@ -219,10 +221,10 @@ describe('Unshare a file', () => {
     beforeEach(async (done) => {
       await page.closeOpenDialogs();
       await page.goToMyLibrariesAndWait();
-      await dataTable.doubleClickOnRowByName(siteName);
-      await dataTable.waitForHeader();
-      await dataTable.doubleClickOnRowByName(parentInSite);
-      await dataTable.waitForHeader();
+      await documentListPage.doubleClickRow(siteName);
+      await documentListPage.dataTable.waitForTableBody();
+      await documentListPage.doubleClickRow(parentInSite);
+      await documentListPage.dataTable.waitForTableBody();
       done();
     });
 
@@ -238,7 +240,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286679] Unshare dialog UI', async () => {
-      await dataTable.selectItem(file1);
+      await documentListPage.selectRow(file1);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -253,7 +255,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286680] Unshare a file', async () => {
-      await dataTable.selectItem(file2);
+      await documentListPage.selectRow(file2);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
       const url = await shareDialog.getLinkUrl();
@@ -273,7 +275,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286681] Cancel the Unshare action', async () => {
-      await dataTable.selectItem(file3);
+      await documentListPage.selectRow(file3);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -290,7 +292,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286683] Unshare a file from the context menu', async () => {
-      await dataTable.rightClickOnItem(file4);
+      await documentListPage.rightClickOnRow(file4);
       await contextMenu.shareEditAction.click();
       await shareDialog.waitForDialogToOpen();
       const url = await shareDialog.getLinkUrl();
@@ -354,7 +356,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286689] Unshare dialog UI', async () => {
-      await dataTable.selectItem(file1);
+      await documentListPage.selectRow(file1);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -369,7 +371,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286690] Unshare a file', async () => {
-      await dataTable.selectItem(file2);
+      await documentListPage.selectRow(file2);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
       const url = await shareDialog.getLinkUrl();
@@ -389,7 +391,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286691] Cancel the Unshare action', async () => {
-      await dataTable.selectItem(file3);
+      await documentListPage.selectRow(file3);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -406,7 +408,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286693] Unshare a file from the context menu', async () => {
-      await dataTable.rightClickOnItem(file4);
+      await documentListPage.rightClickOnRow(file4);
       await contextMenu.shareEditAction.click();
       await shareDialog.waitForDialogToOpen();
       const url = await shareDialog.getLinkUrl();
@@ -470,7 +472,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286684] Unshare dialog UI', async () => {
-      await dataTable.selectItem(file1);
+      await documentListPage.selectRow(file1);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -485,7 +487,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286685] Unshare a file', async () => {
-      await dataTable.selectItem(file2);
+      await documentListPage.selectRow(file2);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
       const url = await shareDialog.getLinkUrl();
@@ -505,7 +507,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286686] Cancel the Unshare action', async () => {
-      await dataTable.selectItem(file3);
+      await documentListPage.selectRow(file3);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -522,7 +524,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286688] Unshare a file from the context menu', async () => {
-      await dataTable.rightClickOnItem(file4);
+      await documentListPage.rightClickOnRow(file4);
       await contextMenu.shareEditAction.click();
       await shareDialog.waitForDialogToOpen();
       const url = await shareDialog.getLinkUrl();
@@ -593,7 +595,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286694] Unshare dialog UI', async () => {
-      await dataTable.selectItem(file1);
+      await documentListPage.selectRow(file1);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -608,7 +610,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286695] Unshare a file', async () => {
-      await dataTable.selectItem(file2);
+      await documentListPage.selectRow(file2);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
       const url = await shareDialog.getLinkUrl();
@@ -628,7 +630,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286696] Cancel the Unshare action', async () => {
-      await dataTable.selectItem(file3);
+      await documentListPage.selectRow(file3);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -645,7 +647,7 @@ describe('Unshare a file', () => {
     });
 
     it('[C286698] Unshare a file from the context menu', async () => {
-      await dataTable.rightClickOnItem(file4);
+      await documentListPage.rightClickOnRow(file4);
       await contextMenu.shareEditAction.click();
       await shareDialog.waitForDialogToOpen();
       const url = await shareDialog.getLinkUrl();
@@ -723,9 +725,9 @@ describe('Unshare a file', () => {
 
     it('[C286682] on File Libraries - file shared by other user', async () => {
       await page.goToMyLibrariesAndWait();
-      await dataTable.doubleClickOnRowByName(sitePrivate);
-      await dataTable.waitForHeader();
-      await dataTable.selectItem(file1FileLib);
+      await documentListPage.doubleClickRow(sitePrivate);
+      await documentListPage.dataTable.waitForTableBody();
+      await documentListPage.selectRow(file1FileLib);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -740,9 +742,9 @@ describe('Unshare a file', () => {
 
     it('[C286701] on File Libraries - file shared by the user', async () => {
       await page.goToMyLibrariesAndWait();
-      await dataTable.doubleClickOnRowByName(sitePrivate);
-      await dataTable.waitForHeader();
-      await dataTable.selectItem(file2FileLib);
+      await documentListPage.doubleClickRow(sitePrivate);
+      await documentListPage.dataTable.waitForTableBody();
+      await documentListPage.selectRow(file2FileLib);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -759,7 +761,7 @@ describe('Unshare a file', () => {
 
     it('[C286687] on Shared Files - file shared by other user', async () => {
       await page.clickSharedFilesAndWait();
-      await dataTable.selectItem(file1Shared);
+      await documentListPage.selectRow(file1Shared);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -774,7 +776,7 @@ describe('Unshare a file', () => {
 
     it('[C286702] on Shared Files - file shared by the user', async () => {
       await page.clickSharedFilesAndWait();
-      await dataTable.selectItem(file2Shared);
+      await documentListPage.selectRow(file2Shared);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -791,7 +793,7 @@ describe('Unshare a file', () => {
 
     it('[C286697] on Favorites - file shared by other user', async () => {
       await page.clickFavoritesAndWait();
-      await dataTable.selectItem(file1Fav);
+      await documentListPage.selectRow(file1Fav);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 
@@ -806,7 +808,7 @@ describe('Unshare a file', () => {
 
     it('[C286703] on Favorites - file shared by the user', async () => {
       await page.clickFavoritesAndWait();
-      await dataTable.selectItem(file2Fav);
+      await documentListPage.selectRow(file2Fav);
       await toolbar.shareEditButton.click();
       await shareDialog.waitForDialogToOpen();
 

@@ -24,6 +24,7 @@
  */
 
 import { LoginPage, BrowsingPage, FILES, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Edit offline', () => {
   const username = `user-${Utils.random()}`;
@@ -60,8 +61,9 @@ describe('Edit offline', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, toolbar } = page;
+  const { toolbar } = page;
   const { searchInput } = page.header;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async () => {
     await apis.admin.people.createUser({ username });
@@ -83,7 +85,7 @@ describe('Edit offline', () => {
 
     beforeEach(async () => {
       await page.clickPersonalFilesAndWait();
-      await dataTable.doubleClickOnRowByName(parentPF);
+      await documentListPage.doubleClickRow(parentPF);
     });
 
     afterEach(async () => {
@@ -95,7 +97,7 @@ describe('Edit offline', () => {
     });
 
     it('[C297538] File is locked and downloaded when clicking Edit Offline', async () => {
-      await dataTable.selectItem(file1);
+      await documentListPage.selectRow(file1);
       await toolbar.clickMoreActionsEditOffline();
 
       expect(await Utils.fileExistsOnOS(file1)).toBe(true, 'File not found in download location');
@@ -103,18 +105,18 @@ describe('Edit offline', () => {
     });
 
     it('[C297539] Lock information is displayed', async () => {
-      expect(await dataTable.isItemPresent(fileLocked2)).toBe(true, `${fileLocked2} is not displayed`);
-      expect(await dataTable.hasLockIcon(fileLocked2)).toBe(true, `${fileLocked2} does not have a lock icon`);
+      expect(await documentListPage.isItemPresent(fileLocked2)).toBe(true, `${fileLocked2} is not displayed`);
+      expect(await documentListPage.hasLockedIcon(fileLocked2)).toBe(true, `${fileLocked2} does not have a lock icon`);
       expect(await dataTable.getLockOwner(fileLocked2)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
     });
 
     it('[C297540] Cancel Editing unlocks the file', async () => {
-      await dataTable.selectItem(fileLocked);
+      await documentListPage.selectRow(fileLocked);
       await toolbar.clickMoreActionsCancelEditing();
       await dataTable.unselectItem(fileLocked);
 
       expect(await apis.user.nodes.isFileLockedWrite(fileLockedId)).toBe(false, `${fileLocked} is still locked`);
-      expect(await dataTable.hasLockIcon(fileLocked)).toBe(false, `${fileLocked} has a lock icon`);
+      expect(await documentListPage.hasLockedIcon(fileLocked)).toBe(false, `${fileLocked} has a lock icon`);
     });
   });
 
@@ -148,7 +150,7 @@ describe('Edit offline', () => {
     });
 
     it('[C306950] File is locked and downloaded when clicking Edit Offline', async () => {
-      await dataTable.selectItem(file1, parentSF);
+      await documentListPage.selectRow(file1, parentSF);
       await toolbar.clickMoreActionsEditOffline();
 
       expect(await Utils.fileExistsOnOS(file1)).toBe(true, 'File not found in download location');
@@ -156,18 +158,18 @@ describe('Edit offline', () => {
     });
 
     it('[C306951] Lock information is displayed', async () => {
-      expect(await dataTable.isItemPresent(fileLocked2, parentSF)).toBe(true, `${fileLocked2} is not displayed`);
-      expect(await dataTable.hasLockIcon(fileLocked2, parentSF)).toBe(true, `${fileLocked2} does not have a lock icon`);
+      expect(await documentListPage.isItemPresent(fileLocked2, parentSF)).toBe(true, `${fileLocked2} is not displayed`);
+      expect(await documentListPage.hasLockedIcon(fileLocked2, parentSF)).toBe(true, `${fileLocked2} does not have a lock icon`);
       expect(await dataTable.getLockOwner(fileLocked2, parentSF)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
     });
 
     it('[C306952] Cancel Editing unlocks the file', async () => {
-      await dataTable.selectItem(fileLocked);
+      await documentListPage.selectRow(fileLocked);
       await toolbar.clickMoreActionsCancelEditing();
       await dataTable.unselectItem(fileLocked);
 
       expect(await apis.user.nodes.isFileLockedWrite(fileLockedId)).toBe(false, `${fileLocked} is still locked`);
-      expect(await dataTable.hasLockIcon(fileLocked, parentSF)).toBe(false, `${fileLocked} has a lock icon`);
+      expect(await documentListPage.hasLockedIcon(fileLocked, parentSF)).toBe(false, `${fileLocked} has a lock icon`);
     });
   });
 
@@ -202,7 +204,7 @@ describe('Edit offline', () => {
     });
 
     it('[C297541] File is locked and downloaded when clicking Edit Offline', async () => {
-      await dataTable.selectItem(file1, parentRF);
+      await documentListPage.selectRow(file1, parentRF);
       await toolbar.clickMoreActionsEditOffline();
 
       expect(await Utils.fileExistsOnOS(file1)).toBe(true, 'File not found in download location');
@@ -210,18 +212,18 @@ describe('Edit offline', () => {
     });
 
     it('[C297542] Lock information is displayed', async () => {
-      expect(await dataTable.isItemPresent(fileLocked2, parentRF)).toBe(true, `${fileLocked2} is not displayed`);
-      expect(await dataTable.hasLockIcon(fileLocked2, parentRF)).toBe(true, `${fileLocked2} does not have a lock icon`);
+      expect(await documentListPage.isItemPresent(fileLocked2, parentRF)).toBe(true, `${fileLocked2} is not displayed`);
+      expect(await documentListPage.hasLockedIcon(fileLocked2, parentRF)).toBe(true, `${fileLocked2} does not have a lock icon`);
       expect(await dataTable.getLockOwner(fileLocked2, parentRF)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
     });
 
     it('[C297543] Cancel Editing unlocks the file', async () => {
-      await dataTable.selectItem(fileLocked, parentRF);
+      await documentListPage.selectRow(fileLocked, parentRF);
       await toolbar.clickMoreActionsCancelEditing();
       await dataTable.unselectItem(fileLocked, parentRF);
 
       expect(await apis.user.nodes.isFileLockedWrite(fileLockedId)).toBe(false, `${fileLocked} is still locked`);
-      expect(await dataTable.hasLockIcon(fileLocked, parentRF)).toBe(false, `${fileLocked} has a lock icon`);
+      expect(await documentListPage.hasLockedIcon(fileLocked, parentRF)).toBe(false, `${fileLocked} has a lock icon`);
     });
   });
 
@@ -256,7 +258,7 @@ describe('Edit offline', () => {
 
     // TODO: raise REPO issue: permissions not returned in /people/${personId}/favorites api
     xit('[C306956] File is locked and downloaded when clicking Edit Offline', async () => {
-      await dataTable.selectItem(file1);
+      await documentListPage.selectRow(file1);
       await toolbar.clickMoreActionsEditOffline();
 
       expect(await Utils.fileExistsOnOS(file1)).toBe(true, 'File not found in download location');
@@ -264,18 +266,18 @@ describe('Edit offline', () => {
     });
 
     it('[C306957] Lock information is displayed', async () => {
-      expect(await dataTable.isItemPresent(fileLocked2)).toBe(true, `${fileLocked2} is not displayed`);
-      expect(await dataTable.hasLockIcon(fileLocked2)).toBe(true, `${fileLocked2} does not have a lock icon`);
+      expect(await documentListPage.isItemPresent(fileLocked2)).toBe(true, `${fileLocked2} is not displayed`);
+      expect(await documentListPage.hasLockedIcon(fileLocked2)).toBe(true, `${fileLocked2} does not have a lock icon`);
       expect(await dataTable.getLockOwner(fileLocked2)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
     });
 
     it('[C306958] Cancel Editing unlocks the file', async () => {
-      await dataTable.selectItem(fileLocked);
+      await documentListPage.selectRow(fileLocked);
       await toolbar.clickMoreActionsCancelEditing();
       await dataTable.unselectItem(fileLocked);
 
       expect(await apis.user.nodes.isFileLockedWrite(fileLockedId)).toBe(false, `${fileLocked} is still locked`);
-      expect(await dataTable.hasLockIcon(fileLocked)).toBe(false, `${fileLocked} has a lock icon`);
+      expect(await documentListPage.hasLockedIcon(fileLocked)).toBe(false, `${fileLocked} has a lock icon`);
     });
   });
 
@@ -303,7 +305,7 @@ describe('Edit offline', () => {
       await page.clickPersonalFilesAndWait();
       await searchInput.clickSearchButton();
       await searchInput.searchFor('file-search');
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
     });
 
     afterEach(async () => {
@@ -311,7 +313,7 @@ describe('Edit offline', () => {
     });
 
     it('[C306953] File is locked and downloaded when clicking Edit Offline', async () => {
-      await dataTable.selectItem(fileSearch1);
+      await documentListPage.selectRow(fileSearch1);
       await toolbar.clickMoreActionsEditOffline();
 
       expect(await Utils.fileExistsOnOS(fileSearch1)).toBe(true, 'File not found in download location');
@@ -319,19 +321,19 @@ describe('Edit offline', () => {
     });
 
     it('[C306954] Lock information is displayed', async () => {
-      expect(await dataTable.isItemPresent(fileSearchLocked2, parentSearch)).toBe(true, `${fileSearchLocked2} is not displayed`);
-      expect(await dataTable.hasLockIcon(fileSearchLocked2, parentSearch)).toBe(true, `${fileSearchLocked2} does not have a lock icon`);
+      expect(await documentListPage.isItemPresent(fileSearchLocked2, parentSearch)).toBe(true, `${fileSearchLocked2} is not displayed`);
+      expect(await documentListPage.hasLockedIcon(fileSearchLocked2, parentSearch)).toBe(true, `${fileSearchLocked2} does not have a lock icon`);
       // TODO: enable when ACA-2314 is fixed
       // expect(await dataTable.getLockOwner(fileSearchLocked2, parentSearch)).toContain(username, `${fileSearchLocked2} does not have correct lock owner info`);
     });
 
     it('[C306955] Cancel Editing unlocks the file', async () => {
-      await dataTable.selectItem(fileSearchLocked);
+      await documentListPage.selectRow(fileSearchLocked);
       await toolbar.clickMoreActionsCancelEditing();
       await dataTable.unselectItem(fileSearchLocked);
 
       expect(await apis.user.nodes.isFileLockedWrite(fileSearchLockedId)).toBe(false, `${fileSearchLocked} is still locked`);
-      expect(await dataTable.hasLockIcon(fileSearchLocked, parentSearch)).toBe(false, `${fileSearchLocked} has a lock icon`);
+      expect(await documentListPage.hasLockedIcon(fileSearchLocked, parentSearch)).toBe(false, `${fileSearchLocked} has a lock icon`);
     });
   });
 });

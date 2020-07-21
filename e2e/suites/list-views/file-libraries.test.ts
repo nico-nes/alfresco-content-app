@@ -54,7 +54,7 @@ describe('File Libraries', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -101,16 +101,16 @@ describe('File Libraries', () => {
 
     it('[C217095] has the correct columns', async () => {
       const expectedColumns = ['Name', 'Description', 'My Role', 'Visibility'];
-      const actualColumns = await dataTable.getColumnHeadersText();
+      const actualColumns = await documentListPage.dataTable.getColumnHeadersText();
 
       expect(actualColumns).toEqual(expectedColumns);
     });
 
     it('[C280501] User can see only the sites he is a member of', async () => {
-      const sitesCount = await dataTable.getRowsCount();
+      const sitesCount = await documentListPage.dataTable.numberOfRows();
 
       expect(sitesCount).toEqual(10, 'Incorrect number of sites displayed');
-      expect(await dataTable.isItemPresent(adminSite5)).toBe(false, `${adminSite5} should not appear in the list`);
+      expect(await documentListPage.isItemPresent(adminSite5)).toBe(false, `${adminSite5} should not appear in the list`);
     });
 
     it('[C289905] Library visibility is correctly displayed', async () => {
@@ -149,12 +149,12 @@ describe('File Libraries', () => {
     });
 
     it('[C217096] Tooltip for sites without description', async () => {
-      const tooltip = await dataTable.getItemNameTooltip(userSitePrivate);
+      const tooltip = await documentListPage.dataTable.getTooltip('Name', userSitePrivate);
       expect(tooltip).toBe(`${userSitePrivate}`);
     });
 
     it('[C217097] Tooltip for sites with description', async () => {
-      const tooltip = await dataTable.getItemNameTooltip(userSiteModerated);
+      const tooltip = await documentListPage.dataTable.getTooltip('Name', userSiteModerated);
       expect(tooltip).toBe(`${siteDescription}`);
     });
   });
@@ -167,16 +167,16 @@ describe('File Libraries', () => {
 
     it('[C289893] has the correct columns', async () => {
       const expectedColumns = ['Name', 'Description', 'My Role', 'Visibility'];
-      const actualColumns = await dataTable.getColumnHeadersText();
+      const actualColumns = await documentListPage.dataTable.getColumnHeadersText();
 
       expect(actualColumns).toEqual(expectedColumns);
     });
 
     it('[C289897] User can see only his favorite sites', async () => {
-      const sitesCount = await dataTable.getRowsCount();
+      const sitesCount = await documentListPage.dataTable.numberOfRows();
 
       expect(sitesCount).toEqual(9, 'Incorrect number of sites displayed');
-      expect(await dataTable.isItemPresent(adminSite6)).toBe(false, `${adminSite6} should not appear`);
+      expect(await documentListPage.isItemPresent(adminSite6)).toBe(false, `${adminSite6} should not appear`);
     });
 
     it('[C289906] Library visibility is correctly displayed', async () => {
@@ -215,12 +215,12 @@ describe('File Libraries', () => {
     });
 
     it('[C289894] Tooltip for sites without description', async () => {
-      const tooltip = await dataTable.getItemNameTooltip(userSitePrivate);
+      const tooltip = await documentListPage.dataTable.getTooltip('Name', userSitePrivate);
       expect(tooltip).toBe(`${userSitePrivate}`);
     });
 
     it('[C289895] Tooltip for sites with description', async () => {
-      const tooltip = await dataTable.getItemNameTooltip(userSiteModerated);
+      const tooltip = await documentListPage.dataTable.getTooltip('Name', userSiteModerated);
       expect(tooltip).toBe(`${siteDescription}`);
     });
   });

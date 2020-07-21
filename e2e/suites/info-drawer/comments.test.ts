@@ -24,6 +24,7 @@
  */
 
 import { LoginPage, BrowsingPage, RepoClient, InfoDrawer, Utils } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 const moment = require('moment');
 
 describe('Comments', () => {
@@ -63,7 +64,7 @@ describe('Comments', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -106,12 +107,12 @@ describe('Comments', () => {
   describe('from Personal Files', () => {
     beforeEach(async (done) => {
       await page.clickPersonalFilesAndWait();
-      await dataTable.doubleClickOnRowByName(parent);
+      await documentListPage.doubleClickRow(parent);
       done();
     });
 
     it('[C299173] Comments tab default fields', async () => {
-      await dataTable.selectItem(file1);
+      await documentListPage.selectRow(file1);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -123,7 +124,7 @@ describe('Comments', () => {
     });
 
     it('[C280583] Comments are displayed ordered by created date in descending order', async () => {
-      await dataTable.selectItem(fileWith2Comments);
+      await documentListPage.selectRow(fileWith2Comments);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -133,7 +134,7 @@ describe('Comments', () => {
     });
 
     it('[C280585] Total number of comments is displayed', async () => {
-      await dataTable.selectItem(fileWith2Comments);
+      await documentListPage.selectRow(fileWith2Comments);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -142,7 +143,7 @@ describe('Comments', () => {
     });
 
     it('[C280589] Add button is enabled when typing in the comment field', async () => {
-      await dataTable.selectItem(file1);
+      await documentListPage.selectRow(file1);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -156,7 +157,7 @@ describe('Comments', () => {
     it('[C280590] Add a comment on a file', async () => {
       const myComment = 'my comment';
 
-      await dataTable.selectItem(file2Personal);
+      await documentListPage.selectRow(file2Personal);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -171,7 +172,7 @@ describe('Comments', () => {
     it('[C299208] Add a comment on a folder', async () => {
       const myComment = 'my comment';
 
-      await dataTable.selectItem(folder1);
+      await documentListPage.selectRow(folder1);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -184,7 +185,7 @@ describe('Comments', () => {
     });
 
     it('[C280591] Escape key clears the text when focus is on the textarea', async () => {
-      await dataTable.selectItem(file2Personal);
+      await documentListPage.selectRow(file2Personal);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -210,7 +211,7 @@ describe('Comments', () => {
     });
 
     it('[C299197] Comments are displayed ordered by created date in descending order', async () => {
-      await dataTable.selectItem(fileWith2Comments);
+      await documentListPage.selectRow(fileWith2Comments);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -220,7 +221,7 @@ describe('Comments', () => {
     });
 
     it('[C299198] Total number of comments is displayed', async () => {
-      await dataTable.selectItem(fileWith2Comments);
+      await documentListPage.selectRow(fileWith2Comments);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -231,7 +232,7 @@ describe('Comments', () => {
     it('[C299199] Add a comment on a file', async () => {
       const myComment = 'my comment';
 
-      await dataTable.selectItem(file2Favorites);
+      await documentListPage.selectRow(file2Favorites);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -246,7 +247,7 @@ describe('Comments', () => {
     it('[C299209] Add a comment on a folder', async () => {
       const myComment = 'my comment';
 
-      await dataTable.selectItem(folder2);
+      await documentListPage.selectRow(folder2);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -271,7 +272,7 @@ describe('Comments', () => {
     });
 
     it('[C299189] Comments are displayed ordered by created date in descending order', async () => {
-      await dataTable.selectItem(fileWith2Comments);
+      await documentListPage.selectRow(fileWith2Comments);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -281,7 +282,7 @@ describe('Comments', () => {
     });
 
     it('[C299190] Total number of comments is displayed', async () => {
-      await dataTable.selectItem(fileWith2Comments);
+      await documentListPage.selectRow(fileWith2Comments);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -292,7 +293,7 @@ describe('Comments', () => {
     it('[C299191] Add a comment on a file', async () => {
       const myComment = 'my comment';
 
-      await dataTable.selectItem(file2Shared);
+      await documentListPage.selectRow(file2Shared);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -317,7 +318,7 @@ describe('Comments', () => {
     });
 
     it('[C299193] Comments are displayed ordered by created date in descending order', async () => {
-      await dataTable.selectItem(fileWith2Comments);
+      await documentListPage.selectRow(fileWith2Comments);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -327,7 +328,7 @@ describe('Comments', () => {
     });
 
     it('[C299194] Total number of comments is displayed', async () => {
-      await dataTable.selectItem(fileWith2Comments);
+      await documentListPage.selectRow(fileWith2Comments);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -338,7 +339,7 @@ describe('Comments', () => {
     it('[C299195] Add a comment on a file', async () => {
       const myComment = 'my comment';
 
-      await dataTable.selectItem(file2Recent);
+      await documentListPage.selectRow(file2Recent);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -364,9 +365,9 @@ describe('Comments', () => {
 
     it('[C280582] File from Personal files', async () => {
       await page.clickPersonalFilesAndWait();
-      await dataTable.doubleClickOnRowByName(parent);
+      await documentListPage.doubleClickRow(parent);
 
-      await dataTable.selectItem(fileWith1Comment);
+      await documentListPage.selectRow(fileWith1Comment);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -388,7 +389,7 @@ describe('Comments', () => {
     it('[C299196] File from Favorites', async () => {
       await page.clickFavoritesAndWait();
 
-      await dataTable.selectItem(fileWith1Comment);
+      await documentListPage.selectRow(fileWith1Comment);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -410,7 +411,7 @@ describe('Comments', () => {
     it('[C299188] File from Shared Files', async () => {
       await page.clickSharedFilesAndWait();
 
-      await dataTable.selectItem(fileWith1Comment);
+      await documentListPage.selectRow(fileWith1Comment);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();
@@ -432,7 +433,7 @@ describe('Comments', () => {
     it('[C299192] File from Recent Files', async () => {
       await page.clickRecentFilesAndWait();
 
-      await dataTable.selectItem(fileWith1Comment);
+      await documentListPage.selectRow(fileWith1Comment);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await infoDrawer.clickCommentsTab();

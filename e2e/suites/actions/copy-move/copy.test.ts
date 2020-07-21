@@ -24,6 +24,7 @@
  */
 
 import { LoginPage, BrowsingPage, ContentNodeSelectorDialog, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Copy content', () => {
   const username = `user-${Utils.random()}`;
@@ -106,9 +107,10 @@ describe('Copy content', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, toolbar } = page;
+  const { toolbar } = page;
   const copyDialog = new ContentNodeSelectorDialog();
   const { searchInput } = page.header;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -249,7 +251,7 @@ describe('Copy content', () => {
     beforeEach(async (done) => {
       await Utils.pressEscape();
       await page.clickPersonalFilesAndWait();
-      await dataTable.doubleClickOnRowByName(source);
+      await documentListPage.doubleClickRow(source);
       done();
     });
 
@@ -290,8 +292,8 @@ describe('Copy content', () => {
 
     it('[C217173] Undo copy of a file when a file with same name already exists on the destination', async () =>
       undoCopyFileWithExistingName(fileInFolder, '', folder2, async () => {
-        await dataTable.doubleClickOnRowByName(folder1);
-        await dataTable.waitForHeader();
+        await documentListPage.doubleClickRow(folder1);
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C217174] Undo copy of a folder when a folder with same name already exists on the destination', async () =>
@@ -393,37 +395,37 @@ describe('Copy content', () => {
     it('[C306932] Copy a file', async () =>
       copyFile(file1, source, destinationSearch, async () => {
         await searchInput.searchFor(file1);
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C306943] Copy a folder with content', async () =>
       copyFolderWithContent(folder1, source, destinationSearch, async () => {
         await searchInput.searchFor(folder1);
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C306944] Copy multiple items', async () =>
       copyMultipleItems([file2, file3], source, destinationSearch, async () => {
         await searchInput.searchFor('file');
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C306933] Copy a file with a name that already exists on the destination', async () =>
       copyFileWithNameThatAlreadyExists(existingFile, source, destinationSearch, async () => {
         await searchInput.searchFor(existingFile);
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C306934] Copy a folder with a name that already exists on the destination', async () =>
       copyFolderWithNameThatAlreadyExists(existingFolder, source, destinationSearch, async () => {
         await searchInput.searchFor(existingFolder);
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C306942] Copy items into a library', async () =>
       copyItemsIntoLibrary([file1, file2], source, folderSiteSearch, async () => {
         await searchInput.searchFor('file');
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C306935] Copy locked file', async () =>
@@ -431,7 +433,7 @@ describe('Copy content', () => {
         locationId = sourceId;
         destinationId = destinationIdSearch;
         await searchInput.searchFor(fileLocked1);
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C306936] Copy folder that contains locked file', async () =>
@@ -439,31 +441,31 @@ describe('Copy content', () => {
         locationId = folderWithLockedFilesId;
         destinationId = destinationIdSearch;
         await searchInput.searchFor(folderWithLockedFiles);
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C306938] Undo copy of files', async () =>
       undoCopyFile(file4, source, destinationSearch, async () => {
         await searchInput.searchFor(file4);
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C306939] Undo copy of folders', async () =>
       undoCopyFolder(folder2, source, destinationSearch, async () => {
         await searchInput.searchFor(folder2);
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C306940] Undo copy of a file when a file with same name already exists on the destination', async () =>
       undoCopyFileWithExistingName(fileInFolder, folder1, folder2, async () => {
         await searchInput.searchFor(fileInFolder);
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
 
     it('[C306941] Undo copy of a folder when a folder with same name already exists on the destination', async () =>
       undoCopyFolderWithExistingName(folderExisting, source, destinationSearch, async () => {
         await searchInput.searchFor(folderExisting);
-        await dataTable.waitForBody();
+        await documentListPage.dataTable.waitForTableBody();
       }));
   });
 
@@ -471,7 +473,7 @@ describe('Copy content', () => {
     if (doBefore) {
       await doBefore();
     }
-    await dataTable.selectItem(fileName, location);
+    await documentListPage.selectRow(fileName, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
     await copyDialog.selectDestination(destination);
@@ -481,17 +483,17 @@ describe('Copy content', () => {
     expect(msg).toContain('Undo');
 
     await copyDialog.waitForDialogToClose();
-    expect(await dataTable.isItemPresent(fileName)).toBe(true, `${fileName} not present in source folder`);
+    expect(await documentListPage.isItemPresent(fileName)).toBe(true, `${fileName} not present in source folder`);
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(destination);
-    expect(await dataTable.isItemPresent(fileName)).toBe(true, `${fileName} not present in ${destination} folder`);
+    await documentListPage.doubleClickRow(destination);
+    expect(await documentListPage.isItemPresent(fileName)).toBe(true, `${fileName} not present in ${destination} folder`);
   }
 
   async function copyFolderWithContent(folderName: string, location: string = '', destination: string, doBefore?: Function) {
     if (doBefore) {
       await doBefore();
     }
-    await dataTable.selectItem(folderName, location);
+    await documentListPage.selectRow(folderName, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
     await copyDialog.selectDestination(destination);
@@ -501,21 +503,21 @@ describe('Copy content', () => {
     expect(msg).toContain('Undo');
 
     await copyDialog.waitForDialogToClose();
-    expect(await dataTable.isItemPresent(folderName)).toBe(true, `${folderName} not present in source folder`);
+    expect(await documentListPage.isItemPresent(folderName)).toBe(true, `${folderName} not present in source folder`);
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(destination);
-    expect(await dataTable.isItemPresent(folderName)).toBe(true, `${folderName} not present in ${destination} folder`);
-    expect(await dataTable.isItemPresent(fileInFolder)).toBe(false, `${fileInFolder} is present in ${destination}`);
+    await documentListPage.doubleClickRow(destination);
+    expect(await documentListPage.isItemPresent(folderName)).toBe(true, `${folderName} not present in ${destination} folder`);
+    expect(await documentListPage.isItemPresent(fileInFolder)).toBe(false, `${fileInFolder} is present in ${destination}`);
 
-    await dataTable.doubleClickOnRowByName(folderName);
-    expect(await dataTable.isItemPresent(fileInFolder)).toBe(true, `${fileInFolder} is not present in ${folderName} folder in ${destination}`);
+    await documentListPage.doubleClickRow(folderName);
+    expect(await documentListPage.isItemPresent(fileInFolder)).toBe(true, `${fileInFolder} is not present in ${folderName} folder in ${destination}`);
   }
 
   async function copyMultipleItems(items: string[], location: string = '', destination: string, doBefore?: Function) {
     if (doBefore) {
       await doBefore();
     }
-    await dataTable.selectMultipleItems(items, location);
+    await documentListPage.selectMultipleItems(items, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
     await copyDialog.selectDestination(destination);
@@ -525,19 +527,19 @@ describe('Copy content', () => {
     expect(msg).toContain('Undo');
 
     await copyDialog.waitForDialogToClose();
-    expect(await dataTable.isItemPresent(items[0])).toBe(true, `${items[0]} not present in source folder`);
-    expect(await dataTable.isItemPresent(items[1])).toBe(true, `${items[1]} not present in source folder`);
+    expect(await documentListPage.isItemPresent(items[0])).toBe(true, `${items[0]} not present in source folder`);
+    expect(await documentListPage.isItemPresent(items[1])).toBe(true, `${items[1]} not present in source folder`);
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(destination);
-    expect(await dataTable.isItemPresent(items[0])).toBe(true, `${items[0]} not present in ${destination} folder`);
-    expect(await dataTable.isItemPresent(items[1])).toBe(true, `${items[1]} not present in ${destination} folder`);
+    await documentListPage.doubleClickRow(destination);
+    expect(await documentListPage.isItemPresent(items[0])).toBe(true, `${items[0]} not present in ${destination} folder`);
+    expect(await documentListPage.isItemPresent(items[1])).toBe(true, `${items[1]} not present in ${destination} folder`);
   }
 
   async function copyFileWithNameThatAlreadyExists(fileName: string, location: string = '', destination: string, doBefore?: Function) {
     if (doBefore) {
       await doBefore();
     }
-    await dataTable.selectItem(fileName, location);
+    await documentListPage.selectRow(fileName, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
     await copyDialog.selectDestination(destination);
@@ -547,17 +549,17 @@ describe('Copy content', () => {
     expect(msg).toContain('Undo');
 
     await copyDialog.waitForDialogToClose();
-    expect(await dataTable.isItemPresent(fileName)).toBe(true, `${fileName}.txt not present in source folder`);
+    expect(await documentListPage.isItemPresent(fileName)).toBe(true, `${fileName}.txt not present in source folder`);
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(destination);
-    expect(await dataTable.isItemPresent(fileName)).toBe(true, `${fileName}.txt not present in ${destination} folder`);
+    await documentListPage.doubleClickRow(destination);
+    expect(await documentListPage.isItemPresent(fileName)).toBe(true, `${fileName}.txt not present in ${destination} folder`);
   }
 
   async function copyFolderWithNameThatAlreadyExists(folderName: string, location: string = '', destination: string, doBefore?: Function) {
     if (doBefore) {
       await doBefore();
     }
-    await dataTable.selectItem(folderName, location);
+    await documentListPage.selectRow(folderName, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
     await copyDialog.selectDestination(destination);
@@ -567,13 +569,13 @@ describe('Copy content', () => {
     expect(msg).toContain('Undo');
 
     await copyDialog.waitForDialogToClose();
-    expect(await dataTable.isItemPresent(folderName)).toBe(true, `${folderName} not present in source folder`);
+    expect(await documentListPage.isItemPresent(folderName)).toBe(true, `${folderName} not present in source folder`);
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(destination);
-    expect(await dataTable.isItemPresent(folderName)).toBe(true, `${folderName} not present in ${destination} folder`);
-    await dataTable.doubleClickOnRowByName(folderName);
-    expect(await dataTable.isItemPresent(file2InFolder)).toBe(true, `${file2InFolder} not present in ${destination} folder in ${folderName}`);
-    expect(await dataTable.isItemPresent(file3InFolder)).toBe(true, `${file3InFolder} not present in ${destination} folder in ${folderName}`);
+    await documentListPage.doubleClickRow(destination);
+    expect(await documentListPage.isItemPresent(folderName)).toBe(true, `${folderName} not present in ${destination} folder`);
+    await documentListPage.doubleClickRow(folderName);
+    expect(await documentListPage.isItemPresent(file2InFolder)).toBe(true, `${file2InFolder} not present in ${destination} folder in ${folderName}`);
+    expect(await documentListPage.isItemPresent(file3InFolder)).toBe(true, `${file3InFolder} not present in ${destination} folder in ${folderName}`);
   }
 
   async function copyItemsIntoLibrary(items: string[], location: string = '', destination: string, doBefore?: Function) {
@@ -581,11 +583,11 @@ describe('Copy content', () => {
       await doBefore();
     }
     const noOfItems = items.length;
-    await dataTable.selectMultipleItems(items, location);
+    await documentListPage.selectMultipleItems(items);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('My Libraries');
-    await copyDialog.dataTable.doubleClickOnRowByName(siteName);
-    await copyDialog.dataTable.doubleClickOnRowByName('documentLibrary');
+    await copyDialog.documentListPage.doubleClickRow(siteName);
+    await copyDialog.documentListPage.doubleClickRow('documentLibrary');
     await copyDialog.selectDestination(destination);
     await copyDialog.copyButton.click();
     const msg = await page.getSnackBarMessage();
@@ -594,15 +596,15 @@ describe('Copy content', () => {
 
     await copyDialog.waitForDialogToClose();
     for (const item of items) {
-      expect(await dataTable.isItemPresent(item)).toBe(true, `${item} not present in source folder`);
+      expect(await documentListPage.isItemPresent(item)).toBe(true, `${item} not present in source folder`);
     }
 
     await page.goToMyLibraries();
-    await dataTable.doubleClickOnRowByName(siteName);
-    await dataTable.doubleClickOnRowByName(destination);
+    await documentListPage.doubleClickRow(siteName);
+    await documentListPage.doubleClickRow(destination);
 
     for (const item of items) {
-      expect(await dataTable.isItemPresent(item)).toBe(true, `${item} not present in ${destination} folder`);
+      expect(await documentListPage.isItemPresent(item)).toBe(true, `${item} not present in ${destination} folder`);
     }
   }
 
@@ -611,7 +613,7 @@ describe('Copy content', () => {
       await doBefore();
     }
 
-    await dataTable.selectItem(fileName, location);
+    await documentListPage.selectRow(fileName, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
     await copyDialog.selectDestination(destination);
@@ -621,11 +623,11 @@ describe('Copy content', () => {
     expect(msg).toContain('Undo');
 
     await copyDialog.waitForDialogToClose();
-    expect(await dataTable.isItemPresent(fileName)).toBe(true, `${fileName} not present in source folder`);
+    expect(await documentListPage.isItemPresent(fileName)).toBe(true, `${fileName} not present in source folder`);
     expect(await apis.user.nodes.isFileLockedByName(fileName, locationId)).toBe(true, `${fileName} not locked in ${location}`);
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(destination);
-    expect(await dataTable.isItemPresent(fileName)).toBe(true, `${fileName} not present in ${destination} folder`);
+    await documentListPage.doubleClickRow(destination);
+    expect(await documentListPage.isItemPresent(fileName)).toBe(true, `${fileName} not present in ${destination} folder`);
     expect(await apis.user.nodes.isFileLockedByName(fileName, destinationId)).toBe(false, `${fileName} is locked in ${destination}`);
   }
 
@@ -634,7 +636,7 @@ describe('Copy content', () => {
       await doBefore();
     }
 
-    await dataTable.selectItem(folderName, location);
+    await documentListPage.selectRow(folderName, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
     await copyDialog.selectDestination(destination);
@@ -644,15 +646,15 @@ describe('Copy content', () => {
     expect(msg).toContain('Undo');
 
     await copyDialog.waitForDialogToClose();
-    expect(await dataTable.isItemPresent(folderName)).toBe(true, `${folderName} not present in source folder`);
+    expect(await documentListPage.isItemPresent(folderName)).toBe(true, `${folderName} not present in source folder`);
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(destination);
-    expect(await dataTable.isItemPresent(folderName)).toBe(true, `${folderName} not present in ${destination} folder`);
-    expect(await dataTable.isItemPresent(fileLockedInFolder)).toBe(false, `${fileLockedInFolder} is present in ${destination}`);
+    await documentListPage.doubleClickRow(destination);
+    expect(await documentListPage.isItemPresent(folderName)).toBe(true, `${folderName} not present in ${destination} folder`);
+    expect(await documentListPage.isItemPresent(fileLockedInFolder)).toBe(false, `${fileLockedInFolder} is present in ${destination}`);
     expect(await apis.user.nodes.isFileLockedByName(fileLockedInFolder, locationId)).toBe(true, `${fileLockedInFolder} not locked in ${location}`);
 
-    await dataTable.doubleClickOnRowByName(folderName);
-    expect(await dataTable.isItemPresent(fileLockedInFolder)).toBe(
+    await documentListPage.doubleClickRow(folderName);
+    expect(await documentListPage.isItemPresent(fileLockedInFolder)).toBe(
       true,
       `${fileLockedInFolder} is not present in ${folderName} folder from ${destination}`
     );
@@ -665,7 +667,7 @@ describe('Copy content', () => {
     if (doBefore) {
       await doBefore();
     }
-    await dataTable.selectItem(fileName, location);
+    await documentListPage.selectRow(fileName, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
     await copyDialog.selectDestination(destination);
@@ -677,18 +679,18 @@ describe('Copy content', () => {
     await page.clickSnackBarAction();
 
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(destination);
-    expect(await dataTable.isItemPresent(fileName)).toBe(false, `${fileName} present in ${destination} folder`);
+    await documentListPage.doubleClickRow(destination);
+    expect(await documentListPage.isItemPresent(fileName)).toBe(false, `${fileName} present in ${destination} folder`);
 
     await page.clickTrash();
-    expect(await dataTable.isEmpty()).toBe(true, 'Trash is not empty');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'Trash is not empty');
   }
 
   async function undoCopyFolder(folderName: string, location: string = '', destination: string, doBefore?: Function) {
     if (doBefore) {
       await doBefore();
     }
-    await dataTable.selectItem(folderName, location);
+    await documentListPage.selectRow(folderName, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
     await copyDialog.selectDestination(destination);
@@ -700,11 +702,11 @@ describe('Copy content', () => {
     await page.clickSnackBarAction();
 
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(destination);
-    expect(await dataTable.isItemPresent(folderName)).toBe(false, `${folderName} present in ${destination} folder`);
+    await documentListPage.doubleClickRow(destination);
+    expect(await documentListPage.isItemPresent(folderName)).toBe(false, `${folderName} present in ${destination} folder`);
 
     await page.clickTrash();
-    expect(await dataTable.isEmpty()).toBe(true, 'Trash is not empty');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'Trash is not empty');
   }
 
   async function undoCopyFileWithExistingName(fileName: string, location: string = '', destination: string, doBefore?: Function) {
@@ -712,10 +714,10 @@ describe('Copy content', () => {
       await doBefore();
     }
 
-    await dataTable.selectItem(fileName, location);
+    await documentListPage.selectRow(fileName, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
-    await copyDialog.dataTable.doubleClickOnRowByName(source);
+    await copyDialog.documentListPage.doubleClickRow(source);
     await copyDialog.selectDestination(destination);
     await copyDialog.copyButton.click();
     const msg = await page.getSnackBarMessage();
@@ -725,13 +727,13 @@ describe('Copy content', () => {
     await page.clickSnackBarAction();
 
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(source);
-    await dataTable.doubleClickOnRowByName(folder2);
-    expect(await dataTable.isItemPresent(fileInFolder2)).toBe(true, `${fileInFolder2} not present in ${destination} folder`);
-    expect(await dataTable.isItemPresent(`${fileInFolder2}-1`)).toBe(false, `${fileInFolder2}-1 is present in ${destination} folder`);
+    await documentListPage.doubleClickRow(source);
+    await documentListPage.doubleClickRow(folder2);
+    expect(await documentListPage.isItemPresent(fileInFolder2)).toBe(true, `${fileInFolder2} not present in ${destination} folder`);
+    expect(await documentListPage.isItemPresent(`${fileInFolder2}-1`)).toBe(false, `${fileInFolder2}-1 is present in ${destination} folder`);
 
     await page.clickTrash();
-    expect(await dataTable.isEmpty()).toBe(true, 'Trash is not empty');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'Trash is not empty');
   }
 
   async function undoCopyFolderWithExistingName(folderName: string, location: string = '', destination: string, doBefore?: Function) {
@@ -739,10 +741,10 @@ describe('Copy content', () => {
       await doBefore();
     }
 
-    await dataTable.selectItem(folderName, location);
+    await documentListPage.selectRow(folderName, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
-    await copyDialog.dataTable.doubleClickOnRowByName(destination);
+    await copyDialog.documentListPage.doubleClickRow(destination);
     await copyDialog.copyButton.click();
     const msg = await page.getSnackBarMessage();
     expect(msg).toContain('Copied 1 item');
@@ -751,19 +753,19 @@ describe('Copy content', () => {
     await page.clickSnackBarAction();
 
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(destination);
-    expect(await dataTable.isItemPresent(folderName)).toBe(true, `${folderName} not present in ${destination} folder`);
-    await dataTable.doubleClickOnRowByName(folderName);
-    expect(await dataTable.isItemPresent(file2InFolderExisting)).toBe(
+    await documentListPage.doubleClickRow(destination);
+    expect(await documentListPage.isItemPresent(folderName)).toBe(true, `${folderName} not present in ${destination} folder`);
+    await documentListPage.doubleClickRow(folderName);
+    expect(await documentListPage.isItemPresent(file2InFolderExisting)).toBe(
       true,
       `${file2InFolderExisting} not present in ${folderName} in ${destination} folder`
     );
-    expect(await dataTable.isItemPresent(file1InFolderExisting)).toBe(
+    expect(await documentListPage.isItemPresent(file1InFolderExisting)).toBe(
       false,
       `${file1InFolderExisting} present in ${folderName} in ${destination} folder`
     );
 
     await page.clickTrash();
-    expect(await dataTable.isEmpty()).toBe(true, 'Trash is not empty');
+    expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'Trash is not empty');
   }
 });

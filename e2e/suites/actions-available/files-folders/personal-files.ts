@@ -29,13 +29,13 @@ import * as testUtil from '../test-util';
 
 export function personalFilesTests(parentName?: string) {
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   describe('available actions : ', () => {
     beforeAll(async () => {
       await page.clickPersonalFilesAndWait();
-      await dataTable.doubleClickOnRowByName(parentName);
-      await dataTable.waitForHeader();
+      await documentListPage.doubleClickRow(parentName);
+      await documentListPage.dataTable.waitForTableBody();
     });
 
     beforeEach(async () => {

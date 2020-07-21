@@ -147,33 +147,33 @@ describe('Create folder from template', () => {
 
     it('[C325147] Select template - dialog UI - with existing templates', async () => {
       expect(await selectTemplateDialog.getTitle()).toEqual('Select a folder template');
-      expect(await selectTemplateDialog.dataTable.isEmpty()).toBe(false, 'Datatable is empty');
-      expect(await selectTemplateDialog.dataTable.isItemPresent(templateFolder1)).toBe(true, 'template folder not displayed');
-      expect(await selectTemplateDialog.dataTable.isItemPresent(templateFolder2)).toBe(true, 'template folder not displayed');
-      expect(await selectTemplateDialog.dataTable.isItemPresent(fileInRootFolder)).toBe(true, 'file not displayed');
+      expect(await selectTemplateDialog.documentListPage.isEmpty()).toBe(false, 'Datatable is empty');
+      expect(await selectTemplateDialog.documentListPage.isItemPresent(templateFolder1)).toBe(true, 'template folder not displayed');
+      expect(await selectTemplateDialog.documentListPage.isItemPresent(templateFolder2)).toBe(true, 'template folder not displayed');
+      expect(await selectTemplateDialog.documentListPage.isItemPresent(fileInRootFolder)).toBe(true, 'file not displayed');
       expect(await selectTemplateDialog.breadcrumb.currentFolder.getText()).toEqual('Space Templates');
       expect(await selectTemplateDialog.isNextButtonEnabled()).toBe(false, 'Next button is not disabled');
       expect(await selectTemplateDialog.isCancelButtonEnabled()).toBe(true, 'Cancel button is not enabled');
     });
 
     it(`[C325148] Templates don't appear if user doesn't have permissions to see them`, async () => {
-      expect(await selectTemplateDialog.dataTable.isItemPresent(restrictedTemplateFolder)).toBe(false, 'restricted template folder is displayed');
+      expect(await selectTemplateDialog.documentListPage.isItemPresent(restrictedTemplateFolder)).toBe(false, 'restricted template folder is displayed');
     });
 
     it('[C325149] Navigate through the templates list with folder hierarchy', async () => {
-      expect(await selectTemplateDialog.dataTable.isItemPresent(templateFolder2)).toBe(true, 'template folder not displayed');
+      expect(await selectTemplateDialog.documentListPage.isItemPresent(templateFolder2)).toBe(true, 'template folder not displayed');
 
-      await selectTemplateDialog.dataTable.doubleClickOnRowByName(templateFolder2);
+      await selectTemplateDialog.documentListPage.doubleClickRow(templateFolder2);
 
-      expect(await selectTemplateDialog.dataTable.isItemPresent(templateSubFolder)).toBe(true, 'template sub-folder not displayed');
-      expect(await selectTemplateDialog.dataTable.isItemPresent(fileInFolder2)).toBe(true, 'template not displayed');
-      expect(await selectTemplateDialog.dataTable.isItemPresent(templateFolder1)).toBe(false, 'template folder is displayed');
+      expect(await selectTemplateDialog.documentListPage.isItemPresent(templateSubFolder)).toBe(true, 'template sub-folder not displayed');
+      expect(await selectTemplateDialog.documentListPage.isItemPresent(fileInFolder2)).toBe(true, 'template not displayed');
+      expect(await selectTemplateDialog.documentListPage.isItemPresent(templateFolder1)).toBe(false, 'template folder is displayed');
       expect(await selectTemplateDialog.breadcrumb.currentFolder.getText()).toEqual(templateFolder2);
 
-      await selectTemplateDialog.dataTable.doubleClickOnRowByName(templateSubFolder);
+      await selectTemplateDialog.documentListPage.doubleClickRow(templateSubFolder);
 
       expect(await selectTemplateDialog.breadcrumb.currentFolder.getText()).toEqual(templateSubFolder);
-      expect(await selectTemplateDialog.dataTable.isEmpty()).toBe(true, 'datatable is not empty');
+      expect(await selectTemplateDialog.documentListPage.isEmpty()).toBe(true, 'datatable is not empty');
 
       await selectTemplateDialog.breadcrumb.openPath();
 
@@ -183,12 +183,12 @@ describe('Create folder from template', () => {
     it(`[C325150] Templates list doesn't allow multiple selection`, async () => {
       expect(await selectTemplateDialog.dataTable.getSelectedRowsCount()).toEqual(0, 'Incorrect number of selected rows');
 
-      await selectTemplateDialog.dataTable.selectItem(templateFolder1);
+      await selectTemplateDialog.documentListPage.selectRow(templateFolder1);
       expect(await selectTemplateDialog.dataTable.getSelectedRowsCount()).toEqual(1, 'Incorrect number of selected rows');
       expect(await selectTemplateDialog.dataTable.getSelectedRowsNames()).toEqual([templateFolder1], 'Incorrect selected item');
 
       await Utils.pressCmd();
-      await selectTemplateDialog.dataTable.selectItem(templateFolder2);
+      await selectTemplateDialog.documentListPage.selectRow(templateFolder2);
       await Utils.releaseKeyPressed();
 
       expect(await selectTemplateDialog.dataTable.getSelectedRowsCount()).toEqual(1, 'Incorrect number of selected rows');
@@ -196,7 +196,7 @@ describe('Create folder from template', () => {
     });
 
     it('[C325153] Links to folders are not displayed', async () => {
-      expect(await selectTemplateDialog.dataTable.isItemPresent(folderLink)).toBe(false, 'Link to folder is displayed');
+      expect(await selectTemplateDialog.documentListPage.isItemPresent(folderLink)).toBe(false, 'Link to folder is displayed');
     });
 
     it('[C325151] Cancel the Select template dialog', async () => {
@@ -210,7 +210,7 @@ describe('Create folder from template', () => {
     it('[C325139] Next button is disabled when selecting a file', async () => {
       expect(await selectTemplateDialog.isNextButtonEnabled()).toBe(false, 'Next button is enabled');
 
-      await selectTemplateDialog.dataTable.selectItem(fileInRootFolder);
+      await selectTemplateDialog.documentListPage.selectRow(fileInRootFolder);
 
       expect(await selectTemplateDialog.isNextButtonEnabled()).toBe(false, 'Next button is enabled');
     });
@@ -220,7 +220,7 @@ describe('Create folder from template', () => {
     beforeEach(async () => {
       await sidenav.openCreateFolderFromTemplateDialog();
       await selectTemplateDialog.waitForDialogToOpen();
-      await selectTemplateDialog.dataTable.selectItem(templateFolder1);
+      await selectTemplateDialog.documentListPage.selectRow(templateFolder1);
       await selectTemplateDialog.clickNext();
       await createFromTemplateDialog.waitForDialogToOpen();
     });
@@ -286,10 +286,10 @@ describe('Create folder from template', () => {
   describe('On Personal Files', () => {
     beforeEach(async () => {
       await page.clickPersonalFilesAndWait();
-      await page.dataTable.doubleClickOnRowByName(parent);
+      await documentListPage.doubleClickRow(parent);
       await sidenav.openCreateFolderFromTemplateDialog();
       await selectTemplateDialog.waitForDialogToOpen();
-      await selectTemplateDialog.dataTable.selectItem(templateFolder1);
+      await selectTemplateDialog.documentListPage.selectRow(templateFolder1);
       await selectTemplateDialog.clickNext();
       await createFromTemplateDialog.waitForDialogToOpen();
     });
@@ -298,9 +298,9 @@ describe('Create folder from template', () => {
       await createFromTemplateDialog.enterName(folder1.name);
       await createFromTemplateDialog.createButton.click();
       await createFromTemplateDialog.waitForDialogToClose();
-      await page.dataTable.waitForHeader();
+      await documentListPage.dataTable.waitForTableBody();
 
-      expect(await page.dataTable.isItemPresent(folder1.name)).toBe(true, 'Folder not displayed in list view');
+      expect(await documentListPage.isItemPresent(folder1.name)).toBe(true, 'Folder not displayed in list view');
     });
 
     it('[C325154] Create a folder from a template - with a Name, Title and Description', async () => {
@@ -309,9 +309,9 @@ describe('Create folder from template', () => {
       await createFromTemplateDialog.enterDescription(folder2.description);
       await createFromTemplateDialog.createButton.click();
       await createFromTemplateDialog.waitForDialogToClose();
-      await page.dataTable.waitForHeader();
+      await documentListPage.dataTable.waitForTableBody();
 
-      expect(await page.dataTable.isItemPresent(folder2.name)).toBe(true, 'Folder not displayed in list view');
+      expect(await documentListPage.isItemPresent(folder2.name)).toBe(true, 'Folder not displayed in list view');
       const desc = await userApi.nodes.getNodeDescription(folder2.name, parentId);
       expect(desc).toEqual(folder2.description);
       const title = await userApi.nodes.getNodeTitle(folder2.name, parentId);
@@ -331,16 +331,16 @@ describe('Create folder from template', () => {
       await createFromTemplateDialog.clickCancel();
 
       expect(await createFromTemplateDialog.isDialogOpen()).not.toBe(true, 'dialog is not closed');
-      expect(await page.dataTable.isItemPresent('test')).toBe(false, 'Folder should not appear in the list');
+      expect(await documentListPage.isItemPresent('test')).toBe(false, 'Folder should not appear in the list');
     });
 
     it('[C325158] Trim spaces from folder Name', async () => {
       await createFromTemplateDialog.enterName(nameWithSpaces);
       await createFromTemplateDialog.createButton.click();
       await createFromTemplateDialog.waitForDialogToClose();
-      await page.dataTable.waitForHeader();
+      await documentListPage.dataTable.waitForTableBody();
 
-      expect(await page.dataTable.isItemPresent(nameWithSpaces.trim())).toBe(true, 'Folder not displayed in list view');
+      expect(await documentListPage.isItemPresent(nameWithSpaces.trim())).toBe(true, 'Folder not displayed in list view');
     });
   });
 
@@ -349,10 +349,10 @@ describe('Create folder from template', () => {
 
     beforeEach(async () => {
       await fileLibrariesPage.goToMyLibrariesAndWait();
-      await page.dataTable.doubleClickOnRowByName(siteName);
+      await documentListPage.doubleClickRow(siteName);
       await sidenav.openCreateFolderFromTemplateDialog();
       await selectTemplateDialog.waitForDialogToOpen();
-      await selectTemplateDialog.dataTable.selectItem(templateFolder1);
+      await selectTemplateDialog.documentListPage.selectRow(templateFolder1);
       await selectTemplateDialog.clickNext();
       await createFromTemplateDialog.waitForDialogToOpen();
     });
@@ -363,9 +363,9 @@ describe('Create folder from template', () => {
       await createFromTemplateDialog.enterDescription(folderSite.description);
       await createFromTemplateDialog.createButton.click();
       await createFromTemplateDialog.waitForDialogToClose();
-      await page.dataTable.waitForHeader();
+      await documentListPage.dataTable.waitForTableBody();
 
-      expect(await page.dataTable.isItemPresent(folderSite.name)).toBe(true, 'Folder not displayed in list view');
+      expect(await documentListPage.isItemPresent(folderSite.name)).toBe(true, 'Folder not displayed in list view');
       const desc = await userApi.nodes.getNodeDescription(folderSite.name, docLibUserSite);
       expect(desc).toEqual(folderSite.description);
       const title = await userApi.nodes.getNodeTitle(folderSite.name, docLibUserSite);
@@ -377,7 +377,7 @@ describe('Create folder from template', () => {
       await createFromTemplateDialog.clickCancel();
 
       expect(await createFromTemplateDialog.isDialogOpen()).not.toBe(true, 'dialog is not closed');
-      expect(await page.dataTable.isItemPresent('test')).toBe(false, 'Folder should not appear in the list');
+      expect(await documentListPage.isItemPresent('test')).toBe(false, 'Folder should not appear in the list');
     });
 
     it('[C325163] Create a folder with a duplicate name', async () => {

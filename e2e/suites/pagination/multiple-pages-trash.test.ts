@@ -24,6 +24,7 @@
  */
 
 import { LoginPage, BrowsingPage, Utils, AdminActions, RepoClient } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Pagination on multiple pages on Trash', () => {
   const random = Utils.random();
@@ -39,7 +40,8 @@ describe('Pagination on multiple pages on Trash', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, pagination } = page;
+  const { pagination } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async () => {
     await adminApiActions.createUser({ username });
@@ -108,30 +110,30 @@ describe('Pagination on multiple pages on Trash', () => {
   it('[C280125] change the current page from menu', async () => {
     await pagination.openCurrentPageMenu();
     await pagination.menu.clickNthItem(3);
-    await dataTable.waitForHeader();
+    await documentListPage.dataTable.waitForTableBody();
     expect(await pagination.getRange()).toContain('51-75 of 101');
     expect(await pagination.getCurrentPage()).toContain('Page 3');
     expect(await pagination.isPreviousEnabled()).toBe(true, 'Previous button is not enabled');
     expect(await pagination.isNextEnabled()).toBe(true, 'Next button is not enabled');
-    expect(await dataTable.isItemPresent('file-40')).toBe(true, 'File not found on page');
+    expect(await documentListPage.isItemPresent('file-40')).toBe(true, 'File not found on page');
 
     await pagination.resetToDefaultPageNumber();
   });
 
   it('[C280128] navigate to next and previous pages', async () => {
     await pagination.clickNext();
-    await dataTable.waitForHeader();
+    await documentListPage.dataTable.waitForTableBody();
     expect(await pagination.getRange()).toContain('26-50 of 101');
-    expect(await dataTable.isItemPresent('file-70')).toBe(true, 'File not found on page');
+    expect(await documentListPage.isItemPresent('file-70')).toBe(true, 'File not found on page');
     await pagination.resetToDefaultPageNumber();
 
     await pagination.openCurrentPageMenu();
     await pagination.menu.clickNthItem(2);
-    await dataTable.waitForHeader();
+    await documentListPage.dataTable.waitForTableBody();
     await pagination.clickPrevious();
-    await dataTable.waitForHeader();
+    await documentListPage.dataTable.waitForTableBody();
     expect(await pagination.getRange()).toContain('1-25 of 101');
-    expect(await dataTable.isItemPresent('file-88')).toBe(true, 'File not found on page');
+    expect(await documentListPage.isItemPresent('file-88')).toBe(true, 'File not found on page');
 
     await pagination.resetToDefaultPageNumber();
   });
@@ -144,7 +146,7 @@ describe('Pagination on multiple pages on Trash', () => {
   it('[C280127] Next button is disabled on last page', async () => {
     await pagination.openCurrentPageMenu();
     await pagination.menu.clickNthItem(5);
-    expect(await dataTable.getRowsCount()).toBe(1, 'Incorrect number of items on the last page');
+    expect(await documentListPage.dataTable.numberOfRows()).toBe(1, 'Incorrect number of items on the last page');
     expect(await pagination.getCurrentPage()).toContain('Page 5');
     expect(await pagination.isNextEnabled()).toBe(false, 'Next button is enabled on last page');
   });

@@ -77,7 +77,7 @@ describe('Extensions - Metadata presets', () => {
   beforeEach(async (done) => {
     await page.refresh();
 
-    await page.dataTable.selectItem(file);
+    await documentListPage.selectRow(file);
     await page.toolbar.viewDetailsButton.click();
     await infoDrawer.waitForInfoDrawerToOpen();
 

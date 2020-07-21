@@ -44,7 +44,7 @@ describe('Generic errors', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -65,8 +65,8 @@ describe('Generic errors', () => {
 
   it('[C217313] File / folder not found', async () => {
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(parent);
-    await dataTable.doubleClickOnRowByName(file1);
+    await documentListPage.doubleClickRow(parent);
+    await documentListPage.doubleClickRow(file1);
     const URL = await browser.getCurrentUrl();
     await apis.user.nodes.deleteNodeById(file1Id, false);
     await browser.get(URL);
@@ -84,8 +84,8 @@ describe('Generic errors', () => {
 
   it('[C217314] Permission denied', async () => {
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(parent);
-    await dataTable.doubleClickOnRowByName(file2);
+    await documentListPage.doubleClickRow(parent);
+    await documentListPage.doubleClickRow(file2);
     const URL = await browser.getCurrentUrl();
     await loginPage.loginWith(username2);
     await browser.get(URL);

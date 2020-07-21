@@ -50,7 +50,7 @@ describe('File / folder tooltips', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -81,40 +81,40 @@ describe('File / folder tooltips', () => {
   describe('on Personal Files', () => {
     beforeAll(async (done) => {
       await page.clickPersonalFilesAndWait();
-      await dataTable.doubleClickOnRowByName(parent);
+      await documentListPage.doubleClickRow(parent);
       done();
     });
 
     it('[C255871] File with name, no title, no description', async () => {
-      expect(await dataTable.getItemNameTooltip(file)).toEqual(`${file}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', file)).toEqual(`${file}`);
     });
 
     it('[C255872] File with name and description, no title', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithDesc)).toEqual(`${fileWithDesc}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithDesc)).toEqual(`${fileWithDesc}\n${fileDescription}`);
     });
 
     it('[C255873] File with name and title, no description', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithTitle)).toEqual(`${fileWithTitle}\n${fileTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithTitle)).toEqual(`${fileWithTitle}\n${fileTitle}`);
     });
 
     it('[C255874] File with name and title and description, all different', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithTitleAndDesc)).toEqual(`${fileTitle}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithTitleAndDesc)).toEqual(`${fileTitle}\n${fileDescription}`);
     });
 
     it('[C255875] File with name and title and description, all equal', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqTitleEqDesc)).toEqual(`${fileNameEqTitleEqDesc}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqTitleEqDesc)).toEqual(`${fileNameEqTitleEqDesc}`);
     });
 
     it('[C255876] File with name = title, different description', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqTitleDiffDesc)).toEqual(`${fileNameEqTitleDiffDesc}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqTitleDiffDesc)).toEqual(`${fileNameEqTitleDiffDesc}\n${fileDescription}`);
     });
 
     it('[C255877] File with name = description, different title', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqDescDiffTitle)).toEqual(`${fileTitle}\n${fileNameEqDescDiffTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqDescDiffTitle)).toEqual(`${fileTitle}\n${fileNameEqDescDiffTitle}`);
     });
 
     it('[C255878] File with title = description, different name', async () => {
-      expect(await dataTable.getItemNameTooltip(fileTitleEqDesc)).toEqual(`${fileTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileTitleEqDesc)).toEqual(`${fileTitle}`);
     });
   });
 
@@ -126,35 +126,35 @@ describe('File / folder tooltips', () => {
     });
 
     it('[C280135] File with name, no title, no description', async () => {
-      expect(await dataTable.getItemNameTooltip(file)).toEqual(`${file}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', file)).toEqual(`${file}`);
     });
 
     it('[C280136] File with name and description, no title', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithDesc)).toEqual(`${fileWithDesc}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithDesc)).toEqual(`${fileWithDesc}\n${fileDescription}`);
     });
 
     it('[C280137] File with name and title, no description', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithTitle)).toEqual(`${fileWithTitle}\n${fileTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithTitle)).toEqual(`${fileWithTitle}\n${fileTitle}`);
     });
 
     it('[C280138] File with name and title and description, all different', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithTitleAndDesc)).toEqual(`${fileTitle}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithTitleAndDesc)).toEqual(`${fileTitle}\n${fileDescription}`);
     });
 
     it('[C280139] File with name and title and description, all equal', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqTitleEqDesc)).toEqual(`${fileNameEqTitleEqDesc}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqTitleEqDesc)).toEqual(`${fileNameEqTitleEqDesc}`);
     });
 
     it('[C280140] File with name = title, different description', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqTitleDiffDesc)).toEqual(`${fileNameEqTitleDiffDesc}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqTitleDiffDesc)).toEqual(`${fileNameEqTitleDiffDesc}\n${fileDescription}`);
     });
 
     it('[C280141] File with name = description, different title', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqDescDiffTitle)).toEqual(`${fileTitle}\n${fileNameEqDescDiffTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqDescDiffTitle)).toEqual(`${fileTitle}\n${fileNameEqDescDiffTitle}`);
     });
 
     it('[C280142] File with title = description, different name', async () => {
-      expect(await dataTable.getItemNameTooltip(fileTitleEqDesc)).toEqual(`${fileTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileTitleEqDesc)).toEqual(`${fileTitle}`);
     });
   });
 
@@ -167,35 +167,35 @@ describe('File / folder tooltips', () => {
     });
 
     xit('[C280143] File with name, no title, no description', async () => {
-      expect(await dataTable.getItemNameTooltip(file)).toEqual(`${file}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', file)).toEqual(`${file}`);
     });
 
     xit('[C280144] File with name and description, no title', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithDesc)).toEqual(`${fileWithDesc}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithDesc)).toEqual(`${fileWithDesc}\n${fileDescription}`);
     });
 
     xit('[C280145] File with name and title, no description', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithTitle)).toEqual(`${fileWithTitle}\n${fileTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithTitle)).toEqual(`${fileWithTitle}\n${fileTitle}`);
     });
 
     xit('[C280146] File with name and title and description, all different', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithTitleAndDesc)).toEqual(`${fileTitle}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithTitleAndDesc)).toEqual(`${fileTitle}\n${fileDescription}`);
     });
 
     xit('[C280147] File with name and title and description, all equal', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqTitleEqDesc)).toEqual(`${fileNameEqTitleEqDesc}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqTitleEqDesc)).toEqual(`${fileNameEqTitleEqDesc}`);
     });
 
     xit('[C280148] File with name = title, different description', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqTitleDiffDesc)).toEqual(`${fileNameEqTitleDiffDesc}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqTitleDiffDesc)).toEqual(`${fileNameEqTitleDiffDesc}\n${fileDescription}`);
     });
 
     xit('[C280149] File with name = description, different title', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqDescDiffTitle)).toEqual(`${fileTitle}\n${fileNameEqDescDiffTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqDescDiffTitle)).toEqual(`${fileTitle}\n${fileNameEqDescDiffTitle}`);
     });
 
     xit('[C280150] File with title = description, different name', async () => {
-      expect(await dataTable.getItemNameTooltip(fileTitleEqDesc)).toEqual(`${fileTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileTitleEqDesc)).toEqual(`${fileTitle}`);
     });
   });
 
@@ -206,35 +206,35 @@ describe('File / folder tooltips', () => {
     });
 
     it('[C280151] File with name, no title, no description', async () => {
-      expect(await dataTable.getItemNameTooltip(file)).toEqual(`${file}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', file)).toEqual(`${file}`);
     });
 
     it('[C280152] File with name and description, no title', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithDesc)).toEqual(`${fileWithDesc}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithDesc)).toEqual(`${fileWithDesc}\n${fileDescription}`);
     });
 
     it('[C280153] File with name and title, no description', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithTitle)).toEqual(`${fileWithTitle}\n${fileTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithTitle)).toEqual(`${fileWithTitle}\n${fileTitle}`);
     });
 
     it('[C280154] File with name and title and description, all different', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithTitleAndDesc)).toEqual(`${fileTitle}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithTitleAndDesc)).toEqual(`${fileTitle}\n${fileDescription}`);
     });
 
     it('[C280155] File with name and title and description, all equal', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqTitleEqDesc)).toEqual(`${fileNameEqTitleEqDesc}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqTitleEqDesc)).toEqual(`${fileNameEqTitleEqDesc}`);
     });
 
     it('[C280156] File with name = title, different description', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqTitleDiffDesc)).toEqual(`${fileNameEqTitleDiffDesc}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqTitleDiffDesc)).toEqual(`${fileNameEqTitleDiffDesc}\n${fileDescription}`);
     });
 
     it('[C280157] File with name = description, different title', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqDescDiffTitle)).toEqual(`${fileTitle}\n${fileNameEqDescDiffTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqDescDiffTitle)).toEqual(`${fileTitle}\n${fileNameEqDescDiffTitle}`);
     });
 
     it('[C280158] File with title = description, different name', async () => {
-      expect(await dataTable.getItemNameTooltip(fileTitleEqDesc)).toEqual(`${fileTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileTitleEqDesc)).toEqual(`${fileTitle}`);
     });
   });
 
@@ -271,35 +271,35 @@ describe('File / folder tooltips', () => {
     });
 
     it('[C280159] File with name, no title, no description', async () => {
-      expect(await dataTable.getItemNameTooltip(file)).toEqual(`${file}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', file)).toEqual(`${file}`);
     });
 
     it('[C280160] File with name and description, no title', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithDesc)).toEqual(`${fileWithDesc}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithDesc)).toEqual(`${fileWithDesc}\n${fileDescription}`);
     });
 
     it('[C280161] File with name and title, no description', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithTitle)).toEqual(`${fileWithTitle}\n${fileTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithTitle)).toEqual(`${fileWithTitle}\n${fileTitle}`);
     });
 
     it('[C280162] File with name and title and description, all different', async () => {
-      expect(await dataTable.getItemNameTooltip(fileWithTitleAndDesc)).toEqual(`${fileTitle}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileWithTitleAndDesc)).toEqual(`${fileTitle}\n${fileDescription}`);
     });
 
     it('[C280163] File with name and title and description, all equal', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqTitleEqDesc)).toEqual(`${fileNameEqTitleEqDesc}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqTitleEqDesc)).toEqual(`${fileNameEqTitleEqDesc}`);
     });
 
     it('[C280164] File with name = title, different description', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqTitleDiffDesc)).toEqual(`${fileNameEqTitleDiffDesc}\n${fileDescription}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqTitleDiffDesc)).toEqual(`${fileNameEqTitleDiffDesc}\n${fileDescription}`);
     });
 
     it('[C280165] File with name = description, different title', async () => {
-      expect(await dataTable.getItemNameTooltip(fileNameEqDescDiffTitle)).toEqual(`${fileTitle}\n${fileNameEqDescDiffTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileNameEqDescDiffTitle)).toEqual(`${fileTitle}\n${fileNameEqDescDiffTitle}`);
     });
 
     it('[C280166] File with title = description, different name', async () => {
-      expect(await dataTable.getItemNameTooltip(fileTitleEqDesc)).toEqual(`${fileTitle}`);
+      expect(await documentListPage.dataTable.getTooltip('Name', fileTitleEqDesc)).toEqual(`${fileTitle}`);
     });
   });
 });

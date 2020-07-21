@@ -28,7 +28,7 @@ import * as testData from './test-data-permissions';
 import * as testUtil from '../test-util';
 
 const page = new BrowsingPage();
-const { dataTable } = page;
+const documentListPage = new DocumentListPage();
 const searchResultsPage = new SearchResultsPage();
 const { searchInput } = searchResultsPage.header;
 
@@ -44,8 +44,8 @@ export function collaboratorTests(siteName?: string) {
 
     it('on File Libraries - [C297647]', async () => {
       await page.clickFileLibrariesAndWait();
-      await dataTable.doubleClickOnRowByName(siteName);
-      await dataTable.waitForHeader();
+      await documentListPage.doubleClickRow(siteName);
+      await documentListPage.dataTable.waitForTableBody();
 
       const expectedToolbarPrimary = ['Shared Link Settings', 'Download', 'View', 'View Details', 'More Actions'];
       const expectedToolbarMore = ['Edit Offline', 'Upload New Version', 'Remove Favorite', 'Copy', 'Manage Versions', 'Permissions'];
@@ -86,8 +86,8 @@ export function collaboratorTests(siteName?: string) {
     describe('available actions in the viewer : ', () => {
       it('file opened from File Libraries - [C297654]', async () => {
         await page.clickFileLibrariesAndWait();
-        await dataTable.doubleClickOnRowByName(siteName);
-        await dataTable.waitForHeader();
+        await documentListPage.doubleClickRow(siteName);
+        await documentListPage.dataTable.waitForTableBody();
 
         const expectedToolbarPrimary = ['Activate full-screen mode', 'Shared Link Settings', 'Download', 'Print', 'View Details', 'More Actions'];
         const expectedToolbarMore = [
@@ -171,8 +171,8 @@ export function filesLockedByCurrentUser(siteName?: string) {
 
     it('on File Libraries - [C297657]', async () => {
       await page.clickFileLibrariesAndWait();
-      await dataTable.doubleClickOnRowByName(siteName);
-      await dataTable.waitForHeader();
+      await documentListPage.doubleClickRow(siteName);
+      await documentListPage.dataTable.waitForTableBody();
 
       const expectedToolbarPrimary = ['Shared Link Settings', 'Download', 'View', 'View Details', 'More Actions'];
       const expectedToolbarMore = ['Cancel Editing', 'Upload New Version', 'Remove Favorite', 'Copy', 'Manage Versions'];
@@ -213,8 +213,8 @@ export function filesLockedByCurrentUser(siteName?: string) {
     describe('available actions in the viewer : ', () => {
       it('file opened from File Libraries - [C297661]', async () => {
         await page.clickFileLibrariesAndWait();
-        await dataTable.doubleClickOnRowByName(siteName);
-        await dataTable.waitForHeader();
+        await documentListPage.doubleClickRow(siteName);
+        await documentListPage.dataTable.waitForTableBody();
 
         const expectedToolbarPrimary = ['Activate full-screen mode', 'Shared Link Settings', 'Download', 'Print', 'View Details', 'More Actions'];
         const expectedToolbarMore = ['Cancel Editing', 'Upload New Version', 'Remove Favorite', 'Copy', 'Manage Versions'];
@@ -266,8 +266,8 @@ export function filesLockedByOtherUser(siteName?: string) {
 
     it('on File Libraries - [C297664]', async () => {
       await page.clickFileLibrariesAndWait();
-      await dataTable.doubleClickOnRowByName(siteName);
-      await dataTable.waitForHeader();
+      await documentListPage.doubleClickRow(siteName);
+      await documentListPage.dataTable.waitForTableBody();
 
       const expectedToolbarPrimary = ['Shared Link Settings', 'Download', 'View', 'View Details', 'More Actions'];
       const expectedToolbarMore = ['Cancel Editing', 'Remove Favorite', 'Move', 'Copy', 'Delete', 'Manage Versions', 'Permissions'];
@@ -319,8 +319,8 @@ export function filesLockedByOtherUser(siteName?: string) {
     describe('available actions in the viewer : ', () => {
       it('file opened from File Libraries - [C297671]', async () => {
         await page.clickFileLibrariesAndWait();
-        await dataTable.doubleClickOnRowByName(siteName);
-        await dataTable.waitForHeader();
+        await documentListPage.doubleClickRow(siteName);
+        await documentListPage.dataTable.waitForTableBody();
 
         const expectedToolbarPrimary = ['Activate full-screen mode', 'Shared Link Settings', 'Download', 'Print', 'View Details', 'More Actions'];
         const expectedToolbarMore = ['Cancel Editing', 'Remove Favorite', 'Move', 'Copy', 'Delete', 'Manage Versions', 'Permissions'];

@@ -62,7 +62,7 @@ describe('Library properties', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -99,7 +99,7 @@ describe('Library properties', () => {
   });
 
   it('[C289336] Info drawer opens for a library', async () => {
-    await dataTable.selectItem(site.name);
+    await documentListPage.selectRow(site.name);
     await page.toolbar.viewDetailsButton.click();
     await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -119,7 +119,7 @@ describe('Library properties', () => {
   });
 
   it('[C289338] Editable properties', async () => {
-    await dataTable.selectItem(site.name);
+    await documentListPage.selectRow(site.name);
     await page.toolbar.viewDetailsButton.click();
     await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -138,7 +138,7 @@ describe('Library properties', () => {
   });
 
   it('[C289339] Edit site details', async () => {
-    await dataTable.selectItem(siteForUpdate.name);
+    await documentListPage.selectRow(siteForUpdate.name);
     await page.toolbar.viewDetailsButton.click();
     await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -153,7 +153,7 @@ describe('Library properties', () => {
     await aboutTab.clickUpdate();
 
     expect(await page.getSnackBarMessage()).toEqual('Library properties updated');
-    expect(await dataTable.isItemPresent(siteUpdated.name)).toBe(true, 'New site name not displayed in the list');
+    expect(await documentListPage.isItemPresent(siteUpdated.name)).toBe(true, 'New site name not displayed in the list');
     expect(await infoDrawer.isOpen()).toBe(false, 'Info drawer still open');
 
     expect((await apis.user.sites.getSite(siteForUpdate.id)).entry.title).toEqual(siteUpdated.name);
@@ -165,7 +165,7 @@ describe('Library properties', () => {
     const newName = `new-name-${Utils.random}`;
     const newDesc = `new desc ${Utils.random}`;
 
-    await dataTable.selectItem(site.name);
+    await documentListPage.selectRow(site.name);
     await page.toolbar.viewDetailsButton.click();
     await infoDrawer.waitForInfoDrawerToOpen();
 
@@ -178,15 +178,15 @@ describe('Library properties', () => {
 
     await aboutTab.clickCancel();
 
-    expect(await dataTable.isItemPresent(newName)).toBe(false, 'New site name is displayed in the list');
-    expect(await dataTable.isItemPresent(site.name)).toBe(true, 'Original site name not displayed in the list');
+    expect(await documentListPage.isItemPresent(newName)).toBe(false, 'New site name is displayed in the list');
+    expect(await documentListPage.isItemPresent(site.name)).toBe(true, 'Original site name not displayed in the list');
     expect(await infoDrawer.isOpen()).toBe(true, 'Info drawer not open');
   });
 
   it('[C289341] Warning appears when editing the name of the library by entering an existing name', async () => {
     await apis.user.queries.waitForSites(site.name, { expect: 1 });
 
-    await dataTable.selectItem(siteDup);
+    await documentListPage.selectRow(siteDup);
     await page.toolbar.viewDetailsButton.click();
     await infoDrawer.waitForInfoDrawerToOpen();
     await aboutTab.clickEditLibraryProperties();
@@ -197,7 +197,7 @@ describe('Library properties', () => {
   });
 
   it('[C289342] Site name too long', async () => {
-    await dataTable.selectItem(site.name);
+    await documentListPage.selectRow(site.name);
     await page.toolbar.viewDetailsButton.click();
     await infoDrawer.waitForInfoDrawerToOpen();
     await aboutTab.clickEditLibraryProperties();
@@ -210,7 +210,7 @@ describe('Library properties', () => {
   });
 
   it('[C289343] Site description too long', async () => {
-    await dataTable.selectItem(site.name);
+    await documentListPage.selectRow(site.name);
     await page.toolbar.viewDetailsButton.click();
     await infoDrawer.waitForInfoDrawerToOpen();
     await aboutTab.clickEditLibraryProperties();
@@ -231,7 +231,7 @@ describe('Library properties', () => {
     it('[C289337] Info drawer button is not displayed when user is not the library manager', async () => {
       await loginPage.loginWith(user2);
       await page.clickFileLibrariesAndWait();
-      await dataTable.selectItem(site.name);
+      await documentListPage.selectRow(site.name);
       expect(await page.toolbar.isButtonPresent('View Details')).toBe(false, 'View Details is present');
     });
 
@@ -239,7 +239,7 @@ describe('Library properties', () => {
       await loginPage.loginWith(user3);
 
       await page.clickFileLibrariesAndWait();
-      await dataTable.selectItem(site.name);
+      await documentListPage.selectRow(site.name);
       await page.toolbar.viewDetailsButton.click();
       await infoDrawer.waitForInfoDrawerToOpen();
       await aboutTab.clickEditLibraryProperties();

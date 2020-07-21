@@ -43,7 +43,7 @@ describe('General', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -63,7 +63,7 @@ describe('General', () => {
 
   beforeEach(async (done) => {
     await page.clickPersonalFilesAndWait();
-    await dataTable.doubleClickOnRowByName(parent);
+    await documentListPage.doubleClickRow(parent);
     done();
   });
 
@@ -75,12 +75,12 @@ describe('General', () => {
   });
 
   it('[C268999] Info drawer closes on page refresh', async () => {
-    await dataTable.selectItem(file1);
+    await documentListPage.selectRow(file1);
     await page.toolbar.viewDetailsButton.click();
     expect(await infoDrawer.isOpen()).toBe(true, 'Info drawer not open');
 
     await page.refresh();
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
     expect(await infoDrawer.isOpen()).toBe(false, 'Info drawer open');
   });

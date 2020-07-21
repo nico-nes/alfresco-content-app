@@ -30,7 +30,7 @@ import * as testUtil from '../test-util';
 export function viewerTests(parentName?: string) {
   const page = new BrowsingPage();
   const searchResultsPage = new SearchResultsPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
   const { searchInput } = page.header;
 
   describe('available actions : ', () => {
@@ -41,8 +41,7 @@ export function viewerTests(parentName?: string) {
     describe('file opened from Personal Files', () => {
       beforeAll(async () => {
         await page.clickPersonalFilesAndWait();
-        await dataTable.doubleClickOnRowByName(parentName);
-        await dataTable.waitForHeader();
+        await documentListPage.doubleClickRow(parentName);
       });
 
       it('File Office - [C282025]', async () => {

@@ -24,6 +24,7 @@
  */
 
 import { SITE_VISIBILITY, SITE_ROLES, LoginPage, BrowsingPage, Utils, ConfirmDialog, RepoClient } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Library actions', () => {
   const username = `user-${Utils.random()}`;
@@ -60,8 +61,9 @@ describe('Library actions', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, toolbar } = page;
+  const { toolbar } = page;
   const { searchInput } = page.header;
+  const documentListPage = new DocumentListPage();
 
   const confirmDialog = new ConfirmDialog();
 
@@ -126,22 +128,22 @@ describe('Library actions', () => {
 
     it('[C290105] from Favorite Libraries', async () => {
       await page.goToFavoriteLibrariesAndWait();
-      await dataTable.selectItem(sitePublic1Admin);
+      await documentListPage.selectRow(sitePublic1Admin);
       await toolbar.joinButton.click();
 
-      expect(await dataTable.getLibraryRole(sitePublic1Admin)).toEqual(SITE_ROLES.SITE_CONSUMER.LABEL);
+      expect(await documentListPage.getLibraryRole(sitePublic1Admin)).toEqual(SITE_ROLES.SITE_CONSUMER.LABEL);
     });
 
     it('[C306959] from Search Results', async () => {
       await searchInput.clickSearchButton();
       await searchInput.checkLibraries();
       await searchInput.searchFor(siteSearchPublic1Admin);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
 
-      await dataTable.selectItem(siteSearchPublic1Admin);
+      await documentListPage.selectRow(siteSearchPublic1Admin);
       await toolbar.joinButton.click();
 
-      expect(await dataTable.getLibraryRole(siteSearchPublic1Admin)).toEqual(SITE_ROLES.SITE_CONSUMER.LABEL);
+      expect(await documentListPage.getLibraryRole(siteSearchPublic1Admin)).toEqual(SITE_ROLES.SITE_CONSUMER.LABEL);
     });
   });
 
@@ -155,10 +157,10 @@ describe('Library actions', () => {
 
     it('[C290109] from Favorite Libraries', async () => {
       await page.goToFavoriteLibrariesAndWait();
-      await dataTable.selectItem(siteModerated1Admin);
+      await documentListPage.selectRow(siteModerated1Admin);
       await toolbar.joinButton.click();
 
-      expect(await dataTable.getLibraryRole(siteModerated1Admin)).toEqual(SITE_ROLES.NONE.LABEL);
+      expect(await documentListPage.getLibraryRole(siteModerated1Admin)).toEqual(SITE_ROLES.NONE.LABEL);
       const hasJoinRequest = await apis.user.sites.hasMembershipRequest(siteModerated1Admin);
       expect(hasJoinRequest).toBe(true, `Join request does not exist on ${siteModerated1Admin}`);
     });
@@ -167,12 +169,12 @@ describe('Library actions', () => {
       await searchInput.clickSearchButton();
       await searchInput.checkLibraries();
       await searchInput.searchFor(siteSearchModerated1Admin);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
 
-      await dataTable.selectItem(siteSearchModerated1Admin);
+      await documentListPage.selectRow(siteSearchModerated1Admin);
       await toolbar.joinButton.click();
 
-      expect(await dataTable.getLibraryRole(siteSearchModerated1Admin)).toEqual(SITE_ROLES.NONE.LABEL);
+      expect(await documentListPage.getLibraryRole(siteSearchModerated1Admin)).toEqual(SITE_ROLES.NONE.LABEL);
       const hasJoinRequest = await apis.user.sites.hasMembershipRequest(siteSearchModerated1Admin);
       expect(hasJoinRequest).toBe(true, `Join request does not exist on ${siteSearchModerated1Admin}`);
     });
@@ -197,44 +199,44 @@ describe('Library actions', () => {
 
     it('[C290106] from My Libraries', async () => {
       await page.goToMyLibrariesAndWait();
-      await dataTable.selectItem(sitePublic2Admin);
+      await documentListPage.selectRow(sitePublic2Admin);
       await toolbar.leaveButton.click();
       await page.waitForDialog();
       await confirmDialog.okButton.click();
 
       expect(await page.getSnackBarMessage()).toEqual(`You have left the library`);
-      expect(await dataTable.isItemPresent(sitePublic2Admin)).toBe(false, `${sitePublic2Admin} is displayed`);
+      expect(await documentListPage.isItemPresent(sitePublic2Admin)).toBe(false, `${sitePublic2Admin} is displayed`);
     });
 
     it('[C290110] from Favorite Libraries', async () => {
       await page.goToFavoriteLibrariesAndWait();
-      await dataTable.selectItem(sitePublic3Admin);
+      await documentListPage.selectRow(sitePublic3Admin);
       await toolbar.leaveButton.click();
       await page.waitForDialog();
       await confirmDialog.okButton.click();
 
       expect(await page.getSnackBarMessage()).toEqual(`You have left the library`);
-      expect(await dataTable.isItemPresent(sitePublic3Admin)).toBe(true, `${sitePublic3Admin} is not displayed`);
+      expect(await documentListPage.isItemPresent(sitePublic3Admin)).toBe(true, `${sitePublic3Admin} is not displayed`);
     });
 
     it('[C306961] from Search Results', async () => {
       await searchInput.clickSearchButton();
       await searchInput.checkLibraries();
       await searchInput.searchFor(siteSearchPublic2Admin);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
 
-      await dataTable.selectItem(siteSearchPublic2Admin);
+      await documentListPage.selectRow(siteSearchPublic2Admin);
       await toolbar.leaveButton.click();
       await page.waitForDialog();
       await confirmDialog.okButton.click();
 
       expect(await page.getSnackBarMessage()).toEqual(`You have left the library`);
-      expect(await dataTable.isItemPresent(siteSearchPublic2Admin)).toBe(true, `${siteSearchPublic2Admin} is not displayed`);
+      expect(await documentListPage.isItemPresent(siteSearchPublic2Admin)).toBe(true, `${siteSearchPublic2Admin} is not displayed`);
     });
 
     it('[C290136] Confirmation dialog UI', async () => {
       await page.goToMyLibrariesAndWait();
-      await dataTable.selectItem(sitePublic4Admin);
+      await documentListPage.selectRow(sitePublic4Admin);
       await toolbar.leaveButton.click();
       await page.waitForDialog();
 
@@ -247,18 +249,18 @@ describe('Library actions', () => {
 
     it('[C290111] Cancel Leave Library', async () => {
       await page.goToMyLibrariesAndWait();
-      await dataTable.selectItem(sitePublic5Admin);
+      await documentListPage.selectRow(sitePublic5Admin);
       await toolbar.leaveButton.click();
       await page.waitForDialog();
 
       expect(await confirmDialog.isCancelEnabled()).toBe(true, 'Cancel button is not enabled');
       await confirmDialog.cancelButton.click();
-      expect(await dataTable.isItemPresent(sitePublic5Admin)).toBe(true, `${sitePublic5Admin} was deleted`);
+      expect(await documentListPage.isItemPresent(sitePublic5Admin)).toBe(true, `${sitePublic5Admin} was deleted`);
     });
 
     it('[C290107] Leave a library - failure notification', async () => {
       await page.goToMyLibrariesAndWait();
-      await dataTable.selectItem(sitePublicUser);
+      await documentListPage.selectRow(sitePublicUser);
       await toolbar.leaveButton.click();
       await page.waitForDialog();
       await confirmDialog.okButton.click();
@@ -279,7 +281,7 @@ describe('Library actions', () => {
 
     it('[C290108] from Favorite Libraries', async () => {
       await page.goToFavoriteLibrariesAndWait();
-      await dataTable.selectItem(siteModerated2Admin);
+      await documentListPage.selectRow(siteModerated2Admin);
       await toolbar.clickButton('Cancel Join Request');
 
       expect(await page.getSnackBarMessage()).toEqual(`Canceled the request to join the library`);
@@ -292,9 +294,9 @@ describe('Library actions', () => {
       await searchInput.clickSearchButton();
       await searchInput.checkLibraries();
       await searchInput.searchFor(siteSearchModerated2Admin);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
 
-      await dataTable.selectItem(siteSearchModerated2Admin);
+      await documentListPage.selectRow(siteSearchModerated2Admin);
       await toolbar.clickButton('Cancel Join Request');
 
       expect(await page.getSnackBarMessage()).toEqual(`Canceled the request to join the library`);
@@ -314,7 +316,7 @@ describe('Library actions', () => {
 
     it('[C289974] from My Libraries', async () => {
       await page.goToMyLibrariesAndWait();
-      await dataTable.selectItem(sitePublic6Admin);
+      await documentListPage.selectRow(sitePublic6Admin);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(sitePublic6Admin, { expect: true })).toBe(true, `${sitePublic6Admin} not favorite`);
@@ -324,9 +326,9 @@ describe('Library actions', () => {
       await searchInput.clickSearchButton();
       await searchInput.checkLibraries();
       await searchInput.searchFor(siteSearchPublic3Admin);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
 
-      await dataTable.selectItem(siteSearchPublic3Admin);
+      await documentListPage.selectRow(siteSearchPublic3Admin);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(siteSearchPublic3Admin, { expect: true })).toBe(
@@ -352,7 +354,7 @@ describe('Library actions', () => {
 
     it('[C289975] from My Libraries', async () => {
       await page.goToMyLibrariesAndWait();
-      await dataTable.selectItem(sitePublic7Admin);
+      await documentListPage.selectRow(sitePublic7Admin);
       await toolbar.clickMoreActionsRemoveFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(sitePublic7Admin, { expect: false })).toBe(false, `${sitePublic7Admin} still favorite`);
@@ -360,10 +362,10 @@ describe('Library actions', () => {
 
     it('[C289976] from Favorite Libraries', async () => {
       await page.goToFavoriteLibrariesAndWait();
-      await dataTable.selectItem(sitePublic8Admin);
+      await documentListPage.selectRow(sitePublic8Admin);
       await toolbar.clickMoreActionsRemoveFavorite();
 
-      expect(await dataTable.isItemPresent(sitePublic8Admin)).toBe(false, `${sitePublic8Admin} is displayed`);
+      expect(await documentListPage.isItemPresent(sitePublic8Admin)).toBe(false, `${sitePublic8Admin} is displayed`);
       expect(await apis.user.favorites.isFavoriteWithRetry(sitePublic8Admin, { expect: false })).toBe(false, `${sitePublic8Admin} still favorite`);
     });
 
@@ -371,9 +373,9 @@ describe('Library actions', () => {
       await searchInput.clickSearchButton();
       await searchInput.checkLibraries();
       await searchInput.searchFor(siteSearchPublic4Admin);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
 
-      await dataTable.selectItem(siteSearchPublic4Admin);
+      await documentListPage.selectRow(siteSearchPublic4Admin);
       await toolbar.clickMoreActionsRemoveFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(siteSearchPublic4Admin, { expect: false })).toBe(
@@ -393,33 +395,33 @@ describe('Library actions', () => {
 
     it('[C289988] from My Libraries', async () => {
       await page.goToMyLibrariesAndWait();
-      await dataTable.selectItem(siteForDelete1);
+      await documentListPage.selectRow(siteForDelete1);
       await toolbar.clickMoreActionsDelete();
 
       expect(await page.getSnackBarMessage()).toEqual(`Library deleted`);
-      expect(await dataTable.isItemPresent(siteForDelete1)).toBe(false, `${siteForDelete1} still displayed`);
+      expect(await documentListPage.isItemPresent(siteForDelete1)).toBe(false, `${siteForDelete1} still displayed`);
     });
 
     it('[C289991] from Favorite Libraries', async () => {
       await page.goToFavoriteLibrariesAndWait();
-      await dataTable.selectItem(siteForDelete2);
+      await documentListPage.selectRow(siteForDelete2);
       await toolbar.clickMoreActionsDelete();
 
       expect(await page.getSnackBarMessage()).toEqual(`Library deleted`);
-      expect(await dataTable.isItemPresent(siteForDelete2)).toBe(false, `${siteForDelete2} still displayed`);
+      expect(await documentListPage.isItemPresent(siteForDelete2)).toBe(false, `${siteForDelete2} still displayed`);
     });
 
     it('[C306965] from Search Results', async () => {
       await searchInput.clickSearchButton();
       await searchInput.checkLibraries();
       await searchInput.searchFor(siteSearchForDelete);
-      await dataTable.waitForBody();
+      await documentListPage.dataTable.waitForTableBody();
 
-      await dataTable.selectItem(siteSearchForDelete);
+      await documentListPage.selectRow(siteSearchForDelete);
       await toolbar.clickMoreActionsDelete();
 
       expect(await page.getSnackBarMessage()).toEqual(`Library deleted`);
-      expect(await dataTable.isItemPresent(siteSearchForDelete)).toBe(false, `${siteSearchForDelete} still displayed`);
+      expect(await documentListPage.isItemPresent(siteSearchForDelete)).toBe(false, `${siteSearchForDelete} still displayed`);
     });
   });
 });

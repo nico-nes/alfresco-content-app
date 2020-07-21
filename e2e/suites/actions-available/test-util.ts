@@ -23,17 +23,18 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BrowsingPage, Viewer, Utils } from '@alfresco/aca-testing-shared';
-import { BrowserActions } from '@alfresco/adf-testing';
+import { BrowsingPage, Viewer, Utils, Menu } from '@alfresco/aca-testing-shared';
+import { BrowserActions, DocumentListPage } from '@alfresco/adf-testing';
 
 const page = new BrowsingPage();
-const { dataTable, toolbar } = page;
-const contextMenu = dataTable.menu;
+const { toolbar } = page;
+const contextMenu = new Menu();
 const viewer = new Viewer();
 const viewerToolbar = viewer.toolbar;
+const documentListPage = new DocumentListPage();
 
 export async function checkContextMenu(item: string, expectedContextMenu: string[]): Promise<void> {
-  await dataTable.rightClickOnItem(item);
+  await documentListPage.rightClickOnRow(item);
 
   const actualActions = await contextMenu.getMenuItems();
   expect(actualActions).toEqual(expectedContextMenu);
@@ -42,14 +43,14 @@ export async function checkContextMenu(item: string, expectedContextMenu: string
 }
 
 export async function checkToolbarPrimary(item: string, expectedToolbarPrimary: string[]): Promise<void> {
-  await dataTable.selectItem(item);
+  await documentListPage.selectRow(item);
 
   const actualPrimaryActions = await toolbar.getButtons();
   expect(actualPrimaryActions).toEqual(expectedToolbarPrimary);
 }
 
 export async function checkToolbarMoreActions(item: string, expectedToolbarMore: string[]): Promise<void> {
-  await dataTable.selectItem(item);
+  await documentListPage.selectRow(item);
   await toolbar.openMoreMenu();
 
   const actualMoreActions = await toolbar.menu.getMenuItems();
@@ -59,7 +60,7 @@ export async function checkToolbarMoreActions(item: string, expectedToolbarMore:
 }
 
 export async function checkToolbarActions(item: string, expectedToolbarPrimary: string[], expectedToolbarMore: string[]): Promise<void> {
-  await dataTable.selectItem(item);
+  await documentListPage.selectRow(item);
 
   const actualPrimaryActions = await toolbar.getButtons();
   expect(actualPrimaryActions).toEqual(expectedToolbarPrimary);
@@ -73,7 +74,7 @@ export async function checkToolbarActions(item: string, expectedToolbarPrimary: 
 }
 
 export async function checkMultipleSelContextMenu(items: string[], expectedContextMenu: string[]): Promise<void> {
-  await dataTable.selectMultipleItems(items);
+  await documentListPage.selectMultipleItems(items);
   await dataTable.rightClickOnMultipleSelection();
 
   const actualActions = await contextMenu.getMenuItems();
@@ -83,7 +84,7 @@ export async function checkMultipleSelContextMenu(items: string[], expectedConte
 }
 
 export async function checkMultipleSelToolbarPrimary(items: string[], expectedToolbarPrimary: string[]): Promise<void> {
-  await dataTable.selectMultipleItems(items);
+  await documentListPage.selectMultipleItems(items);
 
   const actualPrimaryActions = await toolbar.getButtons();
   expect(actualPrimaryActions).toEqual(expectedToolbarPrimary);
@@ -94,7 +95,7 @@ export async function checkMultipleSelToolbarActions(
   expectedToolbarPrimary: string[],
   expectedToolbarMore: string[]
 ): Promise<void> {
-  await dataTable.selectMultipleItems(items);
+  await documentListPage.selectMultipleItems(items);
 
   const actualPrimaryActions = await toolbar.getButtons();
   expect(actualPrimaryActions).toEqual(expectedToolbarPrimary);
@@ -108,7 +109,7 @@ export async function checkMultipleSelToolbarActions(
 }
 
 export async function checkViewerActions(item: string, expectedToolbarPrimary: string[], expectedToolbarMore: string[]): Promise<void> {
-  await dataTable.selectItem(item);
+  await documentListPage.selectRow(item);
   await BrowserActions.click(toolbar.viewButton);
   await viewer.waitForViewerToOpen();
 

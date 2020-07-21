@@ -104,7 +104,7 @@ describe('Page titles', () => {
 
     it('[C280415] File Preview page', async () => {
       await page.clickPersonalFilesAndWait();
-      await page.dataTable.doubleClickOnRowByName(file);
+      await documentListPage.doubleClickRow(file);
       expect(await browser.getTitle()).toContain(PAGE_TITLES.VIEWER);
       await Utils.pressEscape();
     });

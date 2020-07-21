@@ -24,6 +24,7 @@
  */
 
 import { LoginPage, BrowsingPage, SITE_ROLES, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('New menu', () => {
   const username = `user-${Utils.random()}`;
@@ -38,8 +39,9 @@ describe('New menu', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, sidenav } = page;
+  const { sidenav } = page;
   const { menu } = sidenav;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -79,7 +81,7 @@ describe('New menu', () => {
 
   it('[C280393] Actions in File Libraries - user with enough permissions', async () => {
     await page.goToMyLibrariesAndWait();
-    await dataTable.doubleClickOnRowByName(siteUser);
+    await documentListPage.doubleClickRow(siteUser);
     await sidenav.openNewMenu();
 
     expect(await menu.isUploadFileEnabled()).toBe(true, 'Upload file is not enabled in File Libraries');
@@ -94,7 +96,7 @@ describe('New menu', () => {
 
   it('[C280397] Actions in File Libraries - user without enough permissions', async () => {
     await page.goToMyLibrariesAndWait();
-    await dataTable.doubleClickOnRowByName(siteAdmin);
+    await documentListPage.doubleClickRow(siteAdmin);
     await sidenav.openNewMenu();
 
     expect(await menu.isUploadFileEnabled()).toBe(false, 'Upload file is not disabled');
@@ -131,7 +133,7 @@ describe('New menu', () => {
 
   it('[C280398] Disabled actions tooltips', async () => {
     await page.goToMyLibrariesAndWait();
-    await dataTable.doubleClickOnRowByName(siteAdmin);
+    await documentListPage.doubleClickRow(siteAdmin);
     await sidenav.openNewMenu();
 
     let tooltip: string;

@@ -26,6 +26,7 @@
 import { browser } from 'protractor';
 
 import { SITE_VISIBILITY, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Breadcrumb', () => {
   const username = `user-${Utils.random()}`;
@@ -48,6 +49,7 @@ describe('Breadcrumb', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
+  const documentListPage = new DocumentListPage();
   const { breadcrumb } = page;
 
   const apis = {
@@ -125,28 +127,28 @@ describe('Breadcrumb', () => {
 
   it('[C260965] Personal Files breadcrumb for a folder hierarchy', async () => {
     await page.clickPersonalFilesAndWait();
-    await page.dataTable.doubleClickOnRowByName(parent);
-    await page.dataTable.doubleClickOnRowByName(subFolder1);
-    await page.dataTable.doubleClickOnRowByName(subFolder2);
+    await documentListPage.doubleClickRow(parent);
+    await documentListPage.doubleClickRow(subFolder1);
+    await documentListPage.doubleClickRow(subFolder2);
     const expectedBreadcrumb = ['Personal Files', parent, subFolder1, subFolder2];
     expect(await breadcrumb.getAllItems()).toEqual(expectedBreadcrumb);
   });
 
   it('[C260967] File Libraries breadcrumb for a folder hierarchy', async () => {
     await page.clickFileLibrariesAndWait();
-    await page.dataTable.doubleClickOnRowByName(siteName);
-    await page.dataTable.doubleClickOnRowByName(parent);
-    await page.dataTable.doubleClickOnRowByName(subFolder1);
-    await page.dataTable.doubleClickOnRowByName(subFolder2);
+    await documentListPage.doubleClickRow(siteName);
+    await documentListPage.doubleClickRow(parent);
+    await documentListPage.doubleClickRow(subFolder1);
+    await documentListPage.doubleClickRow(subFolder2);
     const expectedItems = ['My Libraries', siteName, parent, subFolder1, subFolder2];
     expect(await breadcrumb.getAllItems()).toEqual(expectedItems);
   });
 
   it('[C213235] User can navigate to any location by clicking on a step from the breadcrumb', async () => {
     await page.clickPersonalFilesAndWait();
-    await page.dataTable.doubleClickOnRowByName(parent);
-    await page.dataTable.doubleClickOnRowByName(subFolder1);
-    await page.dataTable.doubleClickOnRowByName(subFolder2);
+    await documentListPage.doubleClickRow(parent);
+    await documentListPage.doubleClickRow(subFolder1);
+    await documentListPage.doubleClickRow(subFolder2);
     await breadcrumb.clickItem(subFolder1);
     const expectedBreadcrumb = ['Personal Files', parent, subFolder1];
     expect(await breadcrumb.getAllItems()).toEqual(expectedBreadcrumb);
@@ -154,9 +156,9 @@ describe('Breadcrumb', () => {
 
   it('[C213237] Tooltip appears on hover on a step in breadcrumb', async () => {
     await page.clickPersonalFilesAndWait();
-    await page.dataTable.doubleClickOnRowByName(parent);
-    await page.dataTable.doubleClickOnRowByName(subFolder1);
-    await page.dataTable.doubleClickOnRowByName(subFolder2);
+    await documentListPage.doubleClickRow(parent);
+    await documentListPage.doubleClickRow(subFolder1);
+    await documentListPage.doubleClickRow(subFolder2);
 
     const item = breadcrumb.items.get(2);
     const title = await item.getAttribute('title');
@@ -166,22 +168,21 @@ describe('Breadcrumb', () => {
 
   it('[C213238] Breadcrumb updates correctly when folder is renamed', async () => {
     await page.clickPersonalFilesAndWait();
-    await page.dataTable.doubleClickOnRowByName(parent2);
-    await page.dataTable.doubleClickOnRowByName(folder1);
-    await page.dataTable.wait();
+    await documentListPage.doubleClickRow(parent2);
+    await documentListPage.doubleClickRow(folder1);
     await apis.user.nodes.renameNode(folder1Id, folder1Renamed);
     await page.refresh();
-    await page.dataTable.wait();
+    await documentListPage.waitForTableBody();
     expect(await breadcrumb.currentItem.getText()).toEqual(folder1Renamed);
   });
 
   it('[C213240] Browser back navigates to previous location regardless of breadcrumb steps', async () => {
     await page.clickPersonalFilesAndWait();
-    await page.dataTable.doubleClickOnRowByName(parent);
-    await page.dataTable.doubleClickOnRowByName(subFolder1);
-    await page.dataTable.doubleClickOnRowByName(subFolder2);
+    await documentListPage.doubleClickRow(parent);
+    await documentListPage.doubleClickRow(subFolder1);
+    await documentListPage.doubleClickRow(subFolder2);
     await page.clickTrash();
-    await page.dataTable.waitForEmptyState();
+    await documentListPage.waitForEmptyState();
     await browser.navigate().back();
     const expectedBreadcrumb = ['Personal Files', parent, subFolder1, subFolder2];
     expect(await breadcrumb.getAllItems()).toEqual(expectedBreadcrumb);
@@ -206,10 +207,10 @@ describe('Breadcrumb', () => {
     });
 
     it(`[C260970] Breadcrumb on navigation to a user's home`, async () => {
-      await page.dataTable.doubleClickOnRowByName('User Homes');
-      await page.dataTable.doubleClickOnRowByName(user2);
+      await documentListPage.doubleClickRow('User Homes');
+      await documentListPage.doubleClickRow(user2);
       expect(await breadcrumb.getAllItems()).toEqual(['Personal Files', 'User Homes', user2]);
-      await page.dataTable.doubleClickOnRowByName(userFolder);
+      await documentListPage.doubleClickRow(userFolder);
       expect(await breadcrumb.getAllItems()).toEqual(['Personal Files', 'User Homes', user2, userFolder]);
     });
   });

@@ -70,7 +70,7 @@ describe('Search results - libraries', () => {
   const loginPage = new LoginPage();
   const page = new SearchResultsPage();
   const { searchInput } = page.header;
-  const dataTable = page.dataTable;
+ const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -122,43 +122,43 @@ describe('Search results - libraries', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkLibraries();
     await searchInput.searchFor(site1.name);
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    expect(await dataTable.isItemPresent(site1.name)).toBe(true, `${site1.name} not displayed`);
-    expect(await dataTable.isItemPresent(site2.name)).toBe(false, `${site2.name} displayed`);
-    expect(await dataTable.isItemPresent(site3.name)).toBe(false, `${site3.name} displayed`);
-    expect(await dataTable.isItemPresent(site4.name)).toBe(false, `${site4.name} displayed`);
+    expect(await documentListPage.isItemPresent(site1.name)).toBe(true, `${site1.name} not displayed`);
+    expect(await documentListPage.isItemPresent(site2.name)).toBe(false, `${site2.name} displayed`);
+    expect(await documentListPage.isItemPresent(site3.name)).toBe(false, `${site3.name} displayed`);
+    expect(await documentListPage.isItemPresent(site4.name)).toBe(false, `${site4.name} displayed`);
   });
 
   it('[C290013] Search library - partial name match', async () => {
     await searchInput.clickSearchButton();
     await searchInput.checkLibraries();
     await searchInput.searchFor('lib');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    expect(await dataTable.isItemPresent(site1.name)).toBe(true, `${site1.name} not displayed`);
-    expect(await dataTable.isItemPresent(site2.name)).toBe(false, `${site2.name} displayed`);
-    expect(await dataTable.isItemPresent(site3.name)).toBe(true, `${site3.name} not displayed`);
-    expect(await dataTable.isItemPresent(site4.name)).toBe(false, `${site4.name} displayed`);
+    expect(await documentListPage.isItemPresent(site1.name)).toBe(true, `${site1.name} not displayed`);
+    expect(await documentListPage.isItemPresent(site2.name)).toBe(false, `${site2.name} displayed`);
+    expect(await documentListPage.isItemPresent(site3.name)).toBe(true, `${site3.name} not displayed`);
+    expect(await documentListPage.isItemPresent(site4.name)).toBe(false, `${site4.name} displayed`);
   });
 
   it('[C290014] Search library - description match', async () => {
     await searchInput.clickSearchButton();
     await searchInput.checkLibraries();
     await searchInput.searchFor(site4.description);
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    expect(await dataTable.isItemPresent(site1.name)).toBe(false, `${site1.name} displayed`);
-    expect(await dataTable.isItemPresent(site2.name)).toBe(false, `${site2.name} displayed`);
-    expect(await dataTable.isItemPresent(site3.name)).toBe(false, `${site3.name} displayed`);
-    expect(await dataTable.isItemPresent(site4.name)).toBe(true, `${site4.name} not displayed`);
+    expect(await documentListPage.isItemPresent(site1.name)).toBe(false, `${site1.name} displayed`);
+    expect(await documentListPage.isItemPresent(site2.name)).toBe(false, `${site2.name} displayed`);
+    expect(await documentListPage.isItemPresent(site3.name)).toBe(false, `${site3.name} displayed`);
+    expect(await documentListPage.isItemPresent(site4.name)).toBe(true, `${site4.name} not displayed`);
   });
 
   it('[C290015] Results page title', async () => {
     await searchInput.clickSearchButton();
     await searchInput.checkLibraries();
     await searchInput.searchFor('lib');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
     expect(await page.breadcrumb.currentItem.getText()).toEqual('Libraries found...');
   });
@@ -167,10 +167,10 @@ describe('Search results - libraries', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkLibraries();
     await searchInput.searchFor(site1.name);
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
     const expectedColumns = ['Name', 'Description', 'My Role', 'Visibility'];
-    const actualColumns = await dataTable.getColumnHeadersText();
+    const actualColumns = await documentListPage.dataTable.getColumnHeadersText();
 
     expect(actualColumns).toEqual(expectedColumns);
   });
@@ -179,7 +179,7 @@ describe('Search results - libraries', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkLibraries();
     await searchInput.searchFor('user-site');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
     const expectedSitesVisibility = {
       [userSitePrivate]: SITE_VISIBILITY.PRIVATE,
@@ -198,7 +198,7 @@ describe('Search results - libraries', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkLibraries();
     await searchInput.searchFor('admin-site');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
     const expectedSitesRoles = {
       [adminSite1]: SITE_ROLES.SITE_CONSUMER.LABEL,
@@ -218,17 +218,17 @@ describe('Search results - libraries', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkLibraries();
     await searchInput.searchFor('admin-site');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    expect(await dataTable.isItemPresent(adminPrivate)).toBe(false, `${adminPrivate} is displayed`);
+    expect(await documentListPage.isItemPresent(adminPrivate)).toBe(false, `${adminPrivate} is displayed`);
   });
 
   it('[C290028] Search libraries with special characters', async () => {
     await searchInput.clickSearchButton();
     await searchInput.checkLibraries();
     await searchInput.searchFor(siteRussian.name);
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    expect(await dataTable.isItemPresent(siteRussian.name)).toBe(true, `${siteRussian.name} not displayed`);
+    expect(await documentListPage.isItemPresent(siteRussian.name)).toBe(true, `${siteRussian.name} not displayed`);
   });
 });

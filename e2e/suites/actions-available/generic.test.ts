@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, RepoClient, NodeContentTree, Utils, AdminActions } from '@alfresco/aca-testing-shared';
+import { LoginPage, BrowsingPage, RepoClient, NodeContentTree, Utils, AdminActions, Menu } from '@alfresco/aca-testing-shared';
+import { DocumentListPage } from '@alfresco/adf-testing';
 
 describe('Generic tests : ', () => {
   const random = Utils.random();
@@ -50,9 +51,10 @@ describe('Generic tests : ', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable, toolbar } = page;
+  const { toolbar } = page;
   const { searchInput } = page.header;
-  const contextMenu = dataTable.menu;
+  const contextMenu = new Menu();
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async () => {
     await adminApiActions.createUser({ username });
@@ -73,44 +75,44 @@ describe('Generic tests : ', () => {
   describe('single selection', () => {
     beforeEach(async () => {
       await page.clickPersonalFilesAndWait();
-      await dataTable.doubleClickOnRowByName(parent);
-      await dataTable.waitForHeader();
+      await documentListPage.doubleClickRow(parent);
+      await documentListPage.dataTable.waitForTableBody();
     });
 
     it('[C213134] selected row is marked with a check circle icon', async () => {
-      await dataTable.selectItem(file1);
+      await documentListPage.selectRow(file1);
       expect(await dataTable.hasCheckMarkIcon(file1)).toBe(true, 'check mark missing');
     });
 
     it('[C286252] Row is marked with a check circle icon on direct right click', async () => {
-      await dataTable.rightClickOnItem(file2);
+      await documentListPage.rightClickOnRow(file2);
       expect(await dataTable.hasCheckMarkIcon(file2)).toBe(true, 'check mark missing');
     });
 
     it('[C286253] Context menu appears on direct right click on an item', async () => {
-      await dataTable.rightClickOnItem(file1);
-      expect(await dataTable.hasContextMenu()).toBe(true, 'Context menu is not displayed');
+      await documentListPage.rightClickOnRow(file1);
+      expect(await documentListPage.dataTable.hasContextMenu()).toBe(true, 'Context menu is not displayed');
     });
 
     it('[C286254] Context menu appears when selecting an item and then right clicking on it', async () => {
-      await dataTable.selectItem(file2);
-      await dataTable.rightClickOnItem(file2);
-      expect(await dataTable.hasContextMenu()).toBe(true, 'Context menu is not displayed');
+      await documentListPage.selectRow(file2);
+      await documentListPage.rightClickOnRow(file2);
+      expect(await documentListPage.dataTable.hasContextMenu()).toBe(true, 'Context menu is not displayed');
     });
 
     it('[C284666] Context menu appears correctly when right clicking on another item', async () => {
-      await dataTable.selectItem(file1);
-      await dataTable.rightClickOnItem(file2);
-      expect(await dataTable.hasContextMenu()).toBe(true, `Context menu is not displayed`);
+      await documentListPage.selectRow(file1);
+      await documentListPage.rightClickOnRow(file2);
+      expect(await documentListPage.dataTable.hasContextMenu()).toBe(true, `Context menu is not displayed`);
       expect(await dataTable.hasCheckMarkIcon(file2)).toBe(true, `${file2} is not selected`);
       expect(await dataTable.hasCheckMarkIcon(file1)).toBe(false, `${file1} is not selected`);
     });
 
     it('[C280619] Context menu closes when clicking away from it', async () => {
-      await dataTable.rightClickOnItem(file1);
-      expect(await dataTable.hasContextMenu()).toBe(true, 'Context menu is not displayed');
+      await documentListPage.rightClickOnRow(file1);
+      expect(await documentListPage.dataTable.hasContextMenu()).toBe(true, 'Context menu is not displayed');
       await page.breadcrumb.currentItem.click();
-      expect(await dataTable.hasContextMenu()).toBe(false, 'Context menu is displayed');
+      expect(await documentListPage.dataTable.hasContextMenu()).toBe(false, 'Context menu is displayed');
     });
   });
 
@@ -162,22 +164,22 @@ describe('Generic tests : ', () => {
   describe('multiple selection', () => {
     beforeEach(async () => {
       await page.clickPersonalFilesAndWait();
-      await dataTable.doubleClickOnRowByName(parent);
-      await dataTable.waitForHeader();
+      await documentListPage.doubleClickRow(parent);
+      await documentListPage.dataTable.waitForTableBody();
     });
 
     it('[C286268] Context menu appears on right click on a multiple selection of items', async () => {
-      await dataTable.selectMultipleItems([file1, file2]);
+      await documentListPage.selectMultipleItems([file1, file2]);
       await dataTable.rightClickOnMultipleSelection();
 
-      expect(await dataTable.hasContextMenu()).toBe(true, 'Context menu is not displayed');
+      expect(await documentListPage.dataTable.hasContextMenu()).toBe(true, 'Context menu is not displayed');
     });
 
     it('[C286269] Context menu appears when right clicking on a single item while having multiple items selected', async () => {
-      await dataTable.selectMultipleItems([file2, folder1]);
-      await dataTable.rightClickOnItem(file1);
+      await documentListPage.selectMultipleItems([file2, folder1]);
+      await documentListPage.rightClickOnRow(file1);
 
-      expect(await dataTable.hasContextMenu()).toBe(true, `Context menu is not displayed for ${file1}`);
+      expect(await documentListPage.dataTable.hasContextMenu()).toBe(true, `Context menu is not displayed for ${file1}`);
       expect(await dataTable.getSelectedRowsCount()).toEqual(1, 'incorrect number of selected rows');
       expect(await contextMenu.editFolderAction.isPresent()).toBe(false, `Edit folder is displayed for ${file1}`);
       expect(await dataTable.hasCheckMarkIcon(file1)).toBe(true, `${file1} is not selected`);
@@ -186,25 +188,25 @@ describe('Generic tests : ', () => {
     });
 
     it('[C280458] Unselect items with single click', async () => {
-      await dataTable.selectMultipleItems([file1, file2, folder1, folder2]);
+      await documentListPage.selectMultipleItems([file1, file2, folder1, folder2]);
       expect(await dataTable.getSelectedRowsCount()).toEqual(4, 'incorrect selected rows number');
 
-      await dataTable.clickItem(file1);
+      await documentListPage.selectRow(file1);
       expect(await dataTable.getSelectedRowsCount()).toEqual(1, 'incorrect selected rows number');
     });
 
     it('[C217110] Select / unselect items by CMD+click', async () => {
       await Utils.pressCmd();
-      await dataTable.clickItem(file1);
-      await dataTable.clickItem(file2);
-      await dataTable.clickItem(folder1);
-      await dataTable.clickItem(folder2);
+      await documentListPage.selectRow(file1);
+      await documentListPage.selectRow(file2);
+      await documentListPage.selectRow(folder1);
+      await documentListPage.selectRow(folder2);
       await Utils.releaseKeyPressed();
       expect(await dataTable.getSelectedRowsCount()).toEqual(4, 'incorrect selected rows number');
 
       await Utils.pressCmd();
-      await dataTable.clickItem(file1);
-      await dataTable.clickItem(file2);
+      await documentListPage.selectRow(file1);
+      await documentListPage.selectRow(file2);
       await Utils.releaseKeyPressed();
       expect(await dataTable.getSelectedRowsCount()).toEqual(2, 'incorrect selected rows number');
     });

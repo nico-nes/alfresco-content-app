@@ -55,7 +55,7 @@ describe('Search sorting', () => {
   const loginPage = new LoginPage();
   const page = new SearchResultsPage();
   const { searchInput } = page.header;
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username: user1 });
@@ -79,7 +79,7 @@ describe('Search sorting', () => {
 
     await searchInput.clickSearchButton();
     await searchInput.searchFor('search sort');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
     done();
   });
 

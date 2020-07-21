@@ -43,7 +43,7 @@ describe('Search results general', () => {
   const loginPage = new LoginPage();
   const page = new SearchResultsPage();
   const { searchInput } = page.header;
-  const dataTable = page.dataTable;
+ const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -73,11 +73,11 @@ describe('Search results general', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkOnlyFiles();
     await searchInput.searchFor('test');
-    await dataTable.waitForBody();
+    await documentListPage.dataTable.waitForTableBody();
 
-    expect(await dataTable.isItemPresent(file)).toBe(true, `${file} not displayed`);
-    expect(await dataTable.isItemPresent(folder)).toBe(false, `${folder} is displayed`);
-    expect(await dataTable.isItemPresent(site)).toBe(false, `${site} is displayed`);
+    expect(await documentListPage.isItemPresent(file)).toBe(true, `${file} not displayed`);
+    expect(await documentListPage.isItemPresent(folder)).toBe(false, `${folder} is displayed`);
+    expect(await documentListPage.isItemPresent(site)).toBe(false, `${site} is displayed`);
   });
 
   it('[C290006] Only folders are returned when Folders option is the only one checked', async () => {
@@ -86,9 +86,9 @@ describe('Search results general', () => {
     await searchInput.searchFor('test');
     await page.waitForResults();
 
-    expect(await dataTable.isItemPresent(file)).toBe(false, `${file} is displayed`);
-    expect(await dataTable.isItemPresent(folder)).toBe(true, `${folder} not displayed`);
-    expect(await dataTable.isItemPresent(site)).toBe(false, `${site} is displayed`);
+    expect(await documentListPage.isItemPresent(file)).toBe(false, `${file} is displayed`);
+    expect(await documentListPage.isItemPresent(folder)).toBe(true, `${folder} not displayed`);
+    expect(await documentListPage.isItemPresent(site)).toBe(false, `${site} is displayed`);
   });
 
   it('[C290007] Files and folders are returned when both Files and Folders options are checked', async () => {
@@ -97,9 +97,9 @@ describe('Search results general', () => {
     await searchInput.searchFor('test');
     await page.waitForResults();
 
-    expect(await dataTable.isItemPresent(file)).toBe(true, `${file} not displayed`);
-    expect(await dataTable.isItemPresent(folder)).toBe(true, `${folder} not displayed`);
-    expect(await dataTable.isItemPresent(site)).toBe(false, `${site} is displayed`);
+    expect(await documentListPage.isItemPresent(file)).toBe(true, `${file} not displayed`);
+    expect(await documentListPage.isItemPresent(folder)).toBe(true, `${folder} not displayed`);
+    expect(await documentListPage.isItemPresent(site)).toBe(false, `${site} is displayed`);
   });
 
   it('[C290008] Only libraries are returned when Libraries option is checked', async () => {
@@ -108,9 +108,9 @@ describe('Search results general', () => {
     await searchInput.searchFor('test');
     await page.waitForResults();
 
-    expect(await dataTable.isItemPresent(file)).toBe(false, `${file} is displayed`);
-    expect(await dataTable.isItemPresent(folder)).toBe(false, `${folder} is displayed`);
-    expect(await dataTable.isItemPresent(site)).toBe(true, `${site} not displayed`);
+    expect(await documentListPage.isItemPresent(file)).toBe(false, `${file} is displayed`);
+    expect(await documentListPage.isItemPresent(folder)).toBe(false, `${folder} is displayed`);
+    expect(await documentListPage.isItemPresent(site)).toBe(true, `${site} not displayed`);
   });
 
   it('[C279162] Results are updated automatically when changing the search term', async () => {
@@ -118,14 +118,14 @@ describe('Search results general', () => {
     await searchInput.searchFor(file);
     await page.waitForResults();
 
-    expect(await dataTable.isItemPresent(file)).toBe(true, `${file} is not displayed`);
-    expect(await dataTable.isItemPresent(folder)).toBe(false, `${folder} is displayed`);
+    expect(await documentListPage.isItemPresent(file)).toBe(true, `${file} is not displayed`);
+    expect(await documentListPage.isItemPresent(folder)).toBe(false, `${folder} is displayed`);
 
     await searchInput.clickSearchButton();
     await searchInput.searchFor(folder);
 
-    expect(await dataTable.isItemPresent(file)).toBe(false, `${file} is displayed`);
-    expect(await dataTable.isItemPresent(folder)).toBe(true, `${folder} is not displayed`);
+    expect(await documentListPage.isItemPresent(file)).toBe(false, `${file} is displayed`);
+    expect(await documentListPage.isItemPresent(folder)).toBe(true, `${folder} is not displayed`);
   });
 
   it('[C279178] Results are returned when accessing an URL containing a search query', async () => {
@@ -134,7 +134,7 @@ describe('Search results general', () => {
     await searchInput.searchFor(site);
     await page.waitForResults();
 
-    expect(await dataTable.isItemPresent(site)).toBe(true, `${site} not displayed`);
+    expect(await documentListPage.isItemPresent(site)).toBe(true, `${site} not displayed`);
 
     const url = await browser.getCurrentUrl();
 
@@ -142,6 +142,6 @@ describe('Search results general', () => {
     await browser.get(url);
     await page.waitForResults();
 
-    expect(await dataTable.isItemPresent(site)).toBe(true, `${site} not displayed`);
+    expect(await documentListPage.isItemPresent(site)).toBe(true, `${site} not displayed`);
   });
 });

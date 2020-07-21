@@ -38,7 +38,7 @@ describe('Upload files', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const { dataTable } = page;
+  const documentListPage = new DocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -59,10 +59,10 @@ describe('Upload files', () => {
   });
 
   it('Upload a file', async () => {
-    await dataTable.doubleClickOnRowByName(folder1);
+    await documentListPage.doubleClickRow(folder1);
     await page.sidenav.openNewMenu();
     await page.sidenav.menu.uploadFilesInput.sendKeys(`${__dirname}/create-folder.test.ts`);
 
-    expect(await dataTable.isItemPresent('create-folder.test.ts')).toBe(true, 'file not uploaded');
+    expect(await documentListPage.isItemPresent('create-folder.test.ts')).toBe(true, 'file not uploaded');
   });
 });
