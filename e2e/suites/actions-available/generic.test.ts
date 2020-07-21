@@ -168,19 +168,12 @@ describe('Generic tests : ', () => {
       await documentListPage.dataTable.waitForTableBody();
     });
 
-    it('[C286268] Context menu appears on right click on a multiple selection of items', async () => {
-      await documentListPage.selectMultipleItems([file1, file2]);
-      await dataTable.rightClickOnMultipleSelection();
-
-      expect(await documentListPage.dataTable.hasContextMenu()).toBe(true, 'Context menu is not displayed');
-    });
-
     it('[C286269] Context menu appears when right clicking on a single item while having multiple items selected', async () => {
       await documentListPage.selectMultipleItems([file2, folder1]);
       await documentListPage.rightClickOnRow(file1);
 
       expect(await documentListPage.dataTable.hasContextMenu()).toBe(true, `Context menu is not displayed for ${file1}`);
-      expect(awaitdocumentListPage.dataTable.getNumberOfSelectedRows()).toEqual(1, 'incorrect number of selected rows');
+      expect(await documentListPage.dataTable.getNumberOfSelectedRows()).toEqual(1, 'incorrect number of selected rows');
       expect(await contextMenu.editFolderAction.isPresent()).toBe(false, `Edit folder is displayed for ${file1}`);
       expect(await documentListPage.dataTable.hasCheckMarkIcon(file1)).toBe(true, `${file1} is not selected`);
       expect(await documentListPage.dataTable.hasCheckMarkIcon(file2)).toBe(false, `${file2} is selected`);
@@ -189,10 +182,10 @@ describe('Generic tests : ', () => {
 
     it('[C280458] Unselect items with single click', async () => {
       await documentListPage.selectMultipleItems([file1, file2, folder1, folder2]);
-      expect(awaitdocumentListPage.dataTable.getNumberOfSelectedRows()).toEqual(4, 'incorrect selected rows number');
+      expect(await documentListPage.dataTable.getNumberOfSelectedRows()).toEqual(4, 'incorrect selected rows number');
 
       await documentListPage.selectRow(file1);
-      expect(awaitdocumentListPage.dataTable.getNumberOfSelectedRows()).toEqual(1, 'incorrect selected rows number');
+      expect(await documentListPage.dataTable.getNumberOfSelectedRows()).toEqual(1, 'incorrect selected rows number');
     });
 
     it('[C217110] Select / unselect items by CMD+click', async () => {
@@ -202,13 +195,13 @@ describe('Generic tests : ', () => {
       await documentListPage.selectRow(folder1);
       await documentListPage.selectRow(folder2);
       await Utils.releaseKeyPressed();
-      expect(awaitdocumentListPage.dataTable.getNumberOfSelectedRows()).toEqual(4, 'incorrect selected rows number');
+      expect(await documentListPage.dataTable.getNumberOfSelectedRows()).toEqual(4, 'incorrect selected rows number');
 
       await Utils.pressCmd();
       await documentListPage.selectRow(file1);
       await documentListPage.selectRow(file2);
       await Utils.releaseKeyPressed();
-      expect(awaitdocumentListPage.dataTable.getNumberOfSelectedRows()).toEqual(2, 'incorrect selected rows number');
+      expect(await documentListPage.dataTable.getNumberOfSelectedRows()).toEqual(2, 'incorrect selected rows number');
     });
   });
 });

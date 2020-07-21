@@ -59,12 +59,72 @@ export class ACADocumentListPage extends DocumentListPage {
     return '';
   }
 
+  getNthSearchResultsRow(nth: number): ElementFinder {
+    return this.getSearchResultsRows().get(nth - 1);
+  }
 
+  private getSearchResultsRows(): ElementArrayFinder {
+    return this.dataTable.rootElement.all(by.css(ACADocumentListPage.selectors.searchResultsRow));
+  }
 
+  async getSortedColumnHeaderText(): Promise<string> {
+    return this.getSortedColumnHeader().getText();
+  }
 
+  private getSortedColumnHeader(): ElementFinder {
+    const locator = by.css(ACADocumentListPage.selectors.sortedColumnHeader);
+    return this.head.element(locator);
+  }
 
+  async clickSearchResultNameLink(itemName: string): Promise<void> {
+    await this.getSearchResultNameLink(itemName).click();
+  }
 
+  private getSearchResultNameLink(itemName: string): ElementFinder {
+    return this.dataTable.getRow('Display name', itemName).$('.link');
+  }
 
+  async hasLinkOnSearchResultName(itemName: string): Promise<boolean> {
+    return this.getSearchResultNameLink(itemName).isPresent();
+  }
+
+  getColumnHeaderByLabel(label: string): ElementFinder {
+    const locator = by.cssContainingText(ACADocumentListPage.selectors.columnHeader, label);
+    return this.head.element(locator);
+  }
+
+  async getSitesNameAndVisibility(): Promise<any> {
+    const data: string[] = await this.getEntireDataTableText();
+    return data.reduce((acc: any, cell) => {
+      acc[cell[1]] = cell[4].toUpperCase();
+      return acc;
+    }, {});
+  }
+
+  async getSitesNameAndRole(): Promise<any> {
+    const data: string[] = await this.getEntireDataTableText();
+    return data.reduce((acc: any, cell) => {
+      acc[cell[1]] = cell[3];
+      return acc;
+    }, {});
+  }
+
+  private async getEntireDataTableText(): Promise<string[]> {
+    const text: string[] = await this.getRows().map((row) => {
+      return row.all(by.css(ACADocumentListPage.selectors.cell)).map(async (cell) => {
+        return cell.getText();
+      });
+    });
+    return text;
+  }
+
+  async getCellsContainingName(name: string): Promise<string[]> {
+    const rows = this.getRows().all(by.cssContainingText(ACADocumentListPage.selectors.cell, name));
+    const cellsText: string[] = await rows.map(async (cell) => {
+      return cell.getText();
+    });
+    return cellsText;
+  }
 
 
 
@@ -116,20 +176,6 @@ export class ACADocumentListPage extends DocumentListPage {
 
   async getColumnHeadersText(): Promise<string> {
     return this.getColumnHeaders().getText();
-  }
-
-  getColumnHeaderByLabel(label: string): ElementFinder {
-    const locator = by.cssContainingText(DataTable.selectors.columnHeader, label);
-    return this.head.element(locator);
-  }
-
-  private getSortedColumnHeader(): ElementFinder {
-    const locator = by.css(DataTable.selectors.sortedColumnHeader);
-    return this.head.element(locator);
-  }
-
-  async getSortedColumnHeaderText(): Promise<string> {
-    return this.getSortedColumnHeader().getText();
   }
 
   async getSortingOrder(): Promise<string> {
@@ -336,14 +382,6 @@ export class ACADocumentListPage extends DocumentListPage {
     return '';
   }
 
-  async getCellsContainingName(name: string): Promise<string[]> {
-    const rows = this.getRows().all(by.cssContainingText(DataTable.selectors.cell, name));
-    const cellsText: string[] = await rows.map(async (cell) => {
-      return cell.getText();
-    });
-    return cellsText;
-  }
-
   async hasContextMenu(): Promise<boolean> {
     const count = await this.menu.getItemsCount();
     return count > 0;
@@ -355,39 +393,6 @@ export class ACADocumentListPage extends DocumentListPage {
 
   async isItemPresent(name: string, location?: string): Promise<boolean> {
     return this.getRowByName(name, location).isPresent();
-  }
-
-  private async getEntireDataTableText(): Promise<string[]> {
-    const text: string[] = await this.getRows().map((row) => {
-      return row.all(by.css(DataTable.selectors.cell)).map(async (cell) => {
-        return cell.getText();
-      });
-    });
-    return text;
-  }
-
-  async getSitesNameAndVisibility(): Promise<any> {
-    const data: string[] = await this.getEntireDataTableText();
-    return data.reduce((acc: any, cell) => {
-      acc[cell[1]] = cell[4].toUpperCase();
-      return acc;
-    }, {});
-  }
-
-  async getSitesNameAndRole(): Promise<any> {
-    const data: string[] = await this.getEntireDataTableText();
-    return data.reduce((acc: any, cell) => {
-      acc[cell[1]] = cell[3];
-      return acc;
-    }, {});
-  }
-
-  private getSearchResultsRows(): ElementArrayFinder {
-    return this.body.all(by.css(DataTable.selectors.searchResultsRow));
-  }
-
-  getNthSearchResultsRow(nth: number): ElementFinder {
-    return this.getSearchResultsRows().get(nth - 1);
   }
 
   private getSearchResultsRowByName(name: string, location: string = ''): ElementFinder {
@@ -428,15 +433,7 @@ export class ACADocumentListPage extends DocumentListPage {
     return this.getSearchResultNthLine(name, location, 3).getText();
   }
 
-  private getSearchResultNameLink(itemName: string, location: string = ''): ElementFinder {
-    return this.getSearchResultsRowByName(itemName, location).$('.link');
-  }
 
-  async hasLinkOnSearchResultName(itemName: string, location: string = ''): Promise<boolean> {
-    return this.getSearchResultNameLink(itemName, location).isPresent();
-  }
 
-  async clickSearchResultNameLink(itemName: string, location: string = ''): Promise<void> {
-    await this.getSearchResultNameLink(itemName, location).click();
-  }
+
 }

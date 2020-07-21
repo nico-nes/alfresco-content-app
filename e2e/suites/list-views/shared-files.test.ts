@@ -97,11 +97,6 @@ describe('Shared Files', () => {
     expect(actualColumns).toEqual(expectedColumns);
   });
 
-  it('[C213115] default sorting column', async () => {
-    expect(await dataTable.getSortedColumnHeaderText()).toBe('Modified');
-    expect(await dataTable.getSortingOrder()).toBe('desc');
-  });
-
   it('[C213114] displays the files shared by everyone', async () => {
     expect(await documentListPage.isItemPresent(fileAdmin)).toBe(true, `${fileAdmin} not displayed`);
     expect(await documentListPage.isItemPresent(file1User)).toBe(true, `${file1User} not displayed`);

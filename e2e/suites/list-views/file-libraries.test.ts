@@ -120,7 +120,7 @@ describe('File Libraries', () => {
         [userSitePublic]: SITE_VISIBILITY.PUBLIC
       };
 
-      const sitesList = await dataTable.getSitesNameAndVisibility();
+      const sitesList = await documentListPage.getSitesNameAndVisibility();
 
       for (const site of Object.keys(expectedSitesVisibility)) {
         expect(sitesList[site]).toEqual(expectedSitesVisibility[site]);
@@ -135,7 +135,7 @@ describe('File Libraries', () => {
         [adminSite4]: SITE_ROLES.SITE_MANAGER.LABEL
       };
 
-      const sitesList = await dataTable.getSitesNameAndRole();
+      const sitesList = await documentListPage.getSitesNameAndRole();
 
       for (const site of Object.keys(expectedSitesRoles)) {
         expect(sitesList[site]).toEqual(expectedSitesRoles[site]);
@@ -144,7 +144,7 @@ describe('File Libraries', () => {
 
     it('[C217098] Site ID is displayed when two sites have the same name', async () => {
       const expectedSites = [`${siteName} (${siteId1})`, `${siteName} (${siteId2})`];
-      const actualSites = await dataTable.getCellsContainingName(siteName);
+      const actualSites = await documentListPage.getCellsContainingName(siteName);
       expect(actualSites.sort()).toEqual(expectedSites.sort());
     });
 
@@ -186,7 +186,7 @@ describe('File Libraries', () => {
         [userSitePublic]: SITE_VISIBILITY.PUBLIC
       };
 
-      const sitesList = await dataTable.getSitesNameAndVisibility();
+      const sitesList = await documentListPage.getSitesNameAndVisibility();
 
       for (const site of Object.keys(expectedSitesVisibility)) {
         expect(sitesList[site]).toEqual(expectedSitesVisibility[site]);
@@ -201,7 +201,7 @@ describe('File Libraries', () => {
         [adminSite4]: SITE_ROLES.SITE_MANAGER.LABEL
       };
 
-      const sitesList = await dataTable.getSitesNameAndRole();
+      const sitesList = await documentListPage.getSitesNameAndRole();
 
       for (const site of Object.keys(expectedSitesRoles)) {
         expect(sitesList[site]).toEqual(expectedSitesRoles[site]);
@@ -210,7 +210,7 @@ describe('File Libraries', () => {
 
     it('[C289896] Site ID is displayed when two sites have the same name', async () => {
       const expectedSites = [`${siteName} (${siteId1})`, `${siteName} (${siteId2})`];
-      const actualSites = await dataTable.getCellsContainingName(siteName);
+      const actualSites = await documentListPage.getCellsContainingName(siteName);
       expect(actualSites.sort()).toEqual(expectedSites.sort());
     });
 

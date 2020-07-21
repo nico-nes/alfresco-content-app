@@ -103,97 +103,97 @@ describe('Search sorting', () => {
     await page.sortingPicker.sortBy('Filename');
     await page.sortingPicker.setSortOrderASC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
 
     await page.sortingPicker.sortBy('Filename');
     await page.sortingPicker.setSortOrderDESC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
   });
 
   it('[C277740] Sort by Type', async () => {
     await page.sortingPicker.sortBy('Type');
     await page.sortingPicker.setSortOrderASC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
 
     await page.sortingPicker.sortBy('Type');
     await page.sortingPicker.setSortOrderDESC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
   });
 
   it('[C277738] Sort by Size', async () => {
     await page.sortingPicker.sortBy('Size');
     await page.sortingPicker.setSortOrderASC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
 
     await page.sortingPicker.sortBy('Size');
     await page.sortingPicker.setSortOrderDESC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
   });
 
   it('[C277734] Sort by Created date', async () => {
     await page.sortingPicker.sortBy('Created date');
     await page.sortingPicker.setSortOrderASC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
 
     await page.sortingPicker.sortBy('Created date');
     await page.sortingPicker.setSortOrderDESC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
   });
 
   it('[C277736] Sort by Modified date', async () => {
     await page.sortingPicker.sortBy('Modified date');
     await page.sortingPicker.setSortOrderASC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
 
     await page.sortingPicker.sortBy('Modified date');
     await page.sortingPicker.setSortOrderDESC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
   });
 
   it('[C277727] Sort by Relevance', async () => {
     await page.sortingPicker.sortBy('Relevance');
     await page.sortingPicker.setSortOrderASC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
 
     await page.sortingPicker.sortBy('Relevance');
     await page.sortingPicker.setSortOrderDESC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
   });
 
   it('[C277732] Sort by Modifier', async () => {
     await page.sortingPicker.sortBy('Modifier');
     await page.sortingPicker.setSortOrderASC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(filePdf.name);
 
     await page.sortingPicker.sortBy('Modifier');
     await page.sortingPicker.setSortOrderDESC();
 
-    expect(await dataTable.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
-    expect(await dataTable.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
+    expect(await documentListPage.getNthSearchResultsRow(1).getText()).toContain(filePdf.name);
+    expect(await documentListPage.getNthSearchResultsRow(2).getText()).toContain(fileJpg.name);
   });
 });

@@ -89,11 +89,6 @@ describe('Recent Files', () => {
     expect(actualColumns).toEqual(expectedColumns);
   });
 
-  it('[C213171] default sorting column', async () => {
-    expect(await dataTable.getSortedColumnHeaderText()).toBe('Modified');
-    expect(await dataTable.getSortingOrder()).toBe('desc');
-  });
-
   it('[C213170] displays the files added by the current user in the last 30 days', async () => {
     expect(await documentListPage.dataTable.numberOfRows()).toEqual(3, 'Incorrect number of files displayed');
     expect(await documentListPage.isItemPresent(fileName1)).toBe(true, `${fileName1} not displayed`);

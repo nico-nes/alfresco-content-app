@@ -89,7 +89,7 @@ describe('Extensions - DocumentList presets', () => {
 
   it('[C286699] Disabled items are not shown', async () => {
     const noColumnLabel = testData.find((item) => item.disabled).label;
-    const element = dataTable.getColumnHeaderByLabel(noColumnLabel);
+    const element =documentListPage.getColumnHeaderByLabel(noColumnLabel);
 
     expect(await element.isPresent()).toBe(false, `"${noColumnLabel}" is displayed`);
   });

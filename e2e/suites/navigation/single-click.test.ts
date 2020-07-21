@@ -217,13 +217,13 @@ describe('Single click on item name', () => {
       await searchInput.searchFor(file1);
       await documentListPage.dataTable.waitForTableBody();
 
-      expect(await dataTable.hasLinkOnSearchResultName(file1)).toBe(true, 'Link on name is missing');
+      expect(await documentListPage.hasLinkOnSearchResultName(file1)).toBe(true, 'Link on name is missing');
     });
 
     it('[C306989] File preview opens when clicking the hyperlink', async () => {
       await searchInput.searchFor(file1);
       await documentListPage.dataTable.waitForTableBody();
-      await dataTable.clickSearchResultNameLink(file1);
+      await documentListPage.clickSearchResultNameLink(file1);
 
       expect(await viewer.isViewerOpened()).toBe(true, 'Viewer is not opened');
 
@@ -233,7 +233,7 @@ describe('Single click on item name', () => {
     it('[C306990] Navigate inside the folder when clicking the hyperlink', async () => {
       await searchInput.searchFor(folder1);
       await documentListPage.dataTable.waitForTableBody();
-      await dataTable.clickSearchResultNameLink(folder1);
+      await documentListPage.clickSearchResultNameLink(folder1);
 
       expect(await breadcrumb.currentItem.getText()).toBe(folder1);
     });

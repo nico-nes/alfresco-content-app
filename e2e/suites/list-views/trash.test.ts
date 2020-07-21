@@ -147,11 +147,6 @@ describe('Trash', () => {
       expect(await documentListPage.isItemPresent(fileAdmin)).toBe(false, `${fileAdmin} is displayed`);
     });
 
-    it('[C213219] default sorting column', async () => {
-      expect(await dataTable.getSortedColumnHeaderText()).toBe('Deleted');
-      expect(await dataTable.getSortingOrder()).toBe('desc');
-    });
-
     it('[C280498] Location column displays the parent folder of the file', async () => {
       expect(await documentListPage.getItemLocation(fileInFolder)).toEqual(folderNotDeleted);
       expect(await documentListPage.getItemLocation(fileUser)).toEqual('Personal Files');

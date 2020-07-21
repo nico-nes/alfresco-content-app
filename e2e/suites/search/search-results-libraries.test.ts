@@ -187,7 +187,7 @@ describe('Search results - libraries', () => {
       [userSitePublic]: SITE_VISIBILITY.PUBLIC
     };
 
-    const sitesList = await dataTable.getSitesNameAndVisibility();
+    const sitesList = await documentListPage.getSitesNameAndVisibility();
 
     for (const site of Object.keys(expectedSitesVisibility)) {
       expect(sitesList[site]).toEqual(expectedSitesVisibility[site]);
@@ -207,7 +207,7 @@ describe('Search results - libraries', () => {
       [adminSite4]: SITE_ROLES.SITE_MANAGER.LABEL
     };
 
-    const sitesList: any = await dataTable.getSitesNameAndRole();
+    const sitesList: any = await documentListPage.getSitesNameAndRole();
 
     for (const site of Object.keys(expectedSitesRoles)) {
       expect(sitesList[site]).toEqual(expectedSitesRoles[site]);

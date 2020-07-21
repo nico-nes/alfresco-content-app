@@ -24,7 +24,7 @@
  */
 
 import { BrowsingPage, Viewer, Utils, Menu } from '@alfresco/aca-testing-shared';
-import { BrowserActions, DocumentListPage } from '@alfresco/adf-testing';
+import { BrowserActions, ACADocumentListPage } from '@alfresco/adf-testing';
 
 const page = new BrowsingPage();
 const { toolbar } = page;
@@ -49,16 +49,6 @@ export async function checkToolbarPrimary(item: string, expectedToolbarPrimary: 
   expect(actualPrimaryActions).toEqual(expectedToolbarPrimary);
 }
 
-export async function checkToolbarMoreActions(item: string, expectedToolbarMore: string[]): Promise<void> {
-  await documentListPage.selectRow(item);
-  await toolbar.openMoreMenu();
-
-  const actualMoreActions = await toolbar.menu.getMenuItems();
-  expect(actualMoreActions).toEqual(expectedToolbarMore);
-
-  await toolbar.closeMoreMenu();
-}
-
 export async function checkToolbarActions(item: string, expectedToolbarPrimary: string[], expectedToolbarMore: string[]): Promise<void> {
   await documentListPage.selectRow(item);
 
@@ -71,16 +61,6 @@ export async function checkToolbarActions(item: string, expectedToolbarPrimary: 
   expect(actualMoreActions).toEqual(expectedToolbarMore);
 
   await toolbar.closeMoreMenu();
-}
-
-export async function checkMultipleSelContextMenu(items: string[], expectedContextMenu: string[]): Promise<void> {
-  await documentListPage.selectMultipleItems(items);
-  await dataTable.rightClickOnMultipleSelection();
-
-  const actualActions = await contextMenu.getMenuItems();
-  expect(actualActions).toEqual(expectedContextMenu);
-
-  await Utils.pressEscape();
 }
 
 export async function checkMultipleSelToolbarPrimary(items: string[], expectedToolbarPrimary: string[]): Promise<void> {
