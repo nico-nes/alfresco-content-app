@@ -73,7 +73,7 @@ describe('Download', () => {
   const { toolbar } = page;
   const searchResultsPage = new SearchResultsPage();
   const { searchInput } = searchResultsPage.header;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });

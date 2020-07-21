@@ -71,7 +71,7 @@ describe('Destination picker dialog : ', () => {
 
   const dialog = new ContentNodeSelectorDialog();
   const breadcrumb = dialog.breadcrumb;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async () => {
     await adminApiActions.createUser({ username });

@@ -81,7 +81,7 @@ describe('Edit folder', () => {
   const editDialog = new CreateOrEditFolderDialog();
   const { toolbar } = page;
   const { searchInput } = page.header;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });

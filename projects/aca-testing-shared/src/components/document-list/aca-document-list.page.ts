@@ -23,14 +23,13 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ElementFinder, ElementArrayFinder, by, browser, protractor } from 'protractor';
-import { Logger } from '@alfresco/adf-testing';
-import { BROWSER_WAIT_TIMEOUT } from '../../configs';
-import { Component } from '../component';
-import { Menu } from '../menu/menu';
-import { Utils, waitForPresence, waitForClickable } from '../../utilities/utils';
+import { element, ElementFinder, ElementArrayFinder, by, browser, protractor } from 'protractor';
+import { Logger, DocumentListPage } from '@alfresco/adf-testing';
 
-export class DataTable extends Component {
+export class ACADocumentListPage extends DocumentListPage {
+
+  emptySearchText: ElementFinder;
+
   private static selectors = {
     columnHeader: '.adf-datatable-row .adf-datatable-cell-header .adf-datatable-cell-value',
     sortedColumnHeader: `
@@ -44,6 +43,45 @@ export class DataTable extends Component {
     searchResultsRowLine: '.line'
   };
 
+  constructor(rootElement = element.all(by.css('adf-document-list')).first()) {
+    super(rootElement);
+    this.emptySearchText = this.rootElement.element(by.css('.empty-search__text'));
+  }
+
+  private async hasLockOwnerInfo(name: string): Promise<boolean> {
+    return this.dataTable.getRow('Display name', name).element(by.css(ACADocumentListPage.selectors.lockOwner)).isPresent();
+  }
+
+  async getLockOwner(itemName: string): Promise<string> {
+    if (await this.hasLockOwnerInfo(itemName)) {
+      return this.dataTable.getRow('Display name', name).$(ACADocumentListPage.selectors.lockOwner).$('.locked_by--name').getText();
+    }
+    return '';
+  }
+
+
+
+
+
+
+
+
+
+
+  private static selectors = {
+    columnHeader: '.adf-datatable-row .adf-datatable-cell-header .adf-datatable-cell-value',
+    sortedColumnHeader: `
+      .adf-datatable__header--sorted-asc .adf-datatable-cell-value,
+      .adf-datatable__header--sorted-desc .adf-datatable-cell-value
+    `,
+    row: '.adf-datatable-row[role]',
+    cell: '.adf-datatable-cell-container',
+    lockOwner: '.aca-locked-by',
+    searchResultsRow: 'aca-search-results-row',
+    searchResultsRowLine: '.line'
+  };
+
+
   head = this.byCss('.adf-datatable-header');
   body = this.byCss('.adf-datatable-body');
   emptyList = this.byCss('div.adf-no-content-container');
@@ -55,9 +93,9 @@ export class DataTable extends Component {
 
   menu = new Menu();
 
-  constructor(ancestor?: string) {
-    super('adf-datatable', ancestor);
-  }
+  // constructor(ancestor?: string) {
+  //   super('adf-datatable', ancestor);
+  // }
 
   async waitForHeader(): Promise<void> {
     return waitForPresence(this.head, '--- timeout waitForHeader ---');
@@ -174,18 +212,6 @@ export class DataTable extends Component {
     return row.element(by.css('img[src*="lock"]')).isPresent();
   }
 
-  private async hasLockOwnerInfo(itemName: string, location: string = ''): Promise<boolean> {
-    const row = this.getRowByName(itemName, location);
-    return row.element(by.css(DataTable.selectors.lockOwner)).isPresent();
-  }
-
-  async getLockOwner(itemName: string, location: string = ''): Promise<string> {
-    if (await this.hasLockOwnerInfo(itemName, location)) {
-      const row = this.getRowByName(itemName, location);
-      return row.$(DataTable.selectors.lockOwner).$('.locked_by--name').getText();
-    }
-    return '';
-  }
 
   private getNameLink(itemName: string): ElementFinder {
     return this.getRowNameCell(itemName).$('.adf-datatable-link');
@@ -214,18 +240,6 @@ export class DataTable extends Component {
         await item.click();
       } catch (e) {
         Logger.error('--- select item catch : ', e);
-      }
-    }
-  }
-
-  async unselectItem(name: string, location: string = ''): Promise<void> {
-    const isSelected = await this.hasCheckMarkIcon(name, location);
-    if (isSelected) {
-      try {
-        const item = this.getRowFirstCell(name, location);
-        await item.click();
-      } catch (e) {
-        Logger.error('--- unselect item catch : ', e);
       }
     }
   }
@@ -296,14 +310,6 @@ export class DataTable extends Component {
 
   async isEmpty(): Promise<boolean> {
     return this.emptyList.isPresent();
-  }
-
-  async getEmptyDragAndDropText(): Promise<string> {
-    const isEmpty = await this.emptyFolderDragAndDrop.isDisplayed();
-    if (isEmpty) {
-      return this.emptyFolderDragAndDrop.getText();
-    }
-    return '';
   }
 
   async getEmptyStateTitle(): Promise<string> {

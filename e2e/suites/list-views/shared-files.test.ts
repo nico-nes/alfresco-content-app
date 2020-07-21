@@ -52,7 +52,7 @@ describe('Shared Files', () => {
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
   const { breadcrumb } = page;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });

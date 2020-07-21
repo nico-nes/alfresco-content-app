@@ -28,7 +28,7 @@ import * as testData from './test-data-permissions';
 import * as testUtil from '../test-util';
 
 const page = new BrowsingPage();
-const documentListPage = new DocumentListPage();
+const documentListPage = new ACADocumentListPage();
 const searchResultsPage = new SearchResultsPage();
 const { searchInput } = searchResultsPage.header;
 

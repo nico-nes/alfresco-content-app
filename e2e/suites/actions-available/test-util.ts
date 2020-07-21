@@ -31,7 +31,7 @@ const { toolbar } = page;
 const contextMenu = new Menu();
 const viewer = new Viewer();
 const viewerToolbar = viewer.toolbar;
-const documentListPage = new DocumentListPage();
+const documentListPage = new ACADocumentListPage();
 
 export async function checkContextMenu(item: string, expectedContextMenu: string[]): Promise<void> {
   await documentListPage.rightClickOnRow(item);

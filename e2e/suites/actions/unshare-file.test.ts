@@ -55,7 +55,7 @@ describe('Unshare a file', () => {
   const confirmDialog = new ConfirmDialog();
   const contextMenu = new Menu();
   const viewer = new Viewer();
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });

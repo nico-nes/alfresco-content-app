@@ -41,7 +41,7 @@ describe('Pagination on multiple pages on Trash', () => {
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
   const { pagination } = page;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async () => {
     await adminApiActions.createUser({ username });

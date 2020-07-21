@@ -55,7 +55,7 @@ describe('Share a file', () => {
   const page = new BrowsingPage();
   const { toolbar } = page;
   const shareLinkPreUrl = `/#/preview/s/`;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   const apis = {
     admin: new RepoClient(),

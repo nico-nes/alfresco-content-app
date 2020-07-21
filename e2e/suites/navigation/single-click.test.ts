@@ -52,7 +52,7 @@ describe('Single click on item name', () => {
   const { breadcrumb } = page;
   const viewer = new Viewer();
   const { searchInput } = page.header;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });

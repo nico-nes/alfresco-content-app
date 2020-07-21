@@ -67,7 +67,7 @@ describe('Search filters', () => {
   const page = new SearchResultsPage();
   const { searchInput } = page.header;
   const { filters } = page;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   const sizeFilter = filters.size;
   const fileTypeFilter = filters.fileType;

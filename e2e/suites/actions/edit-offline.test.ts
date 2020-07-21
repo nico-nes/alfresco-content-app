@@ -63,7 +63,7 @@ describe('Edit offline', () => {
   const page = new BrowsingPage();
   const { toolbar } = page;
   const { searchInput } = page.header;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async () => {
     await apis.admin.people.createUser({ username });
@@ -107,13 +107,13 @@ describe('Edit offline', () => {
     it('[C297539] Lock information is displayed', async () => {
       expect(await documentListPage.isItemPresent(fileLocked2)).toBe(true, `${fileLocked2} is not displayed`);
       expect(await documentListPage.hasLockedIcon(fileLocked2)).toBe(true, `${fileLocked2} does not have a lock icon`);
-      expect(await dataTable.getLockOwner(fileLocked2)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
+      expect(await documentListPage.getLockOwner(fileLocked2)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
     });
 
     it('[C297540] Cancel Editing unlocks the file', async () => {
       await documentListPage.selectRow(fileLocked);
       await toolbar.clickMoreActionsCancelEditing();
-      await dataTable.unselectItem(fileLocked);
+      await documentListPage.dataTable.unselectItem(fileLocked);
 
       expect(await apis.user.nodes.isFileLockedWrite(fileLockedId)).toBe(false, `${fileLocked} is still locked`);
       expect(await documentListPage.hasLockedIcon(fileLocked)).toBe(false, `${fileLocked} has a lock icon`);
@@ -160,13 +160,13 @@ describe('Edit offline', () => {
     it('[C306951] Lock information is displayed', async () => {
       expect(await documentListPage.isItemPresent(fileLocked2, parentSF)).toBe(true, `${fileLocked2} is not displayed`);
       expect(await documentListPage.hasLockedIcon(fileLocked2, parentSF)).toBe(true, `${fileLocked2} does not have a lock icon`);
-      expect(await dataTable.getLockOwner(fileLocked2, parentSF)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
+      expect(await documentListPage.getLockOwner(fileLocked2, parentSF)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
     });
 
     it('[C306952] Cancel Editing unlocks the file', async () => {
       await documentListPage.selectRow(fileLocked);
       await toolbar.clickMoreActionsCancelEditing();
-      await dataTable.unselectItem(fileLocked);
+      await documentListPage.dataTable.unselectItem(fileLocked);
 
       expect(await apis.user.nodes.isFileLockedWrite(fileLockedId)).toBe(false, `${fileLocked} is still locked`);
       expect(await documentListPage.hasLockedIcon(fileLocked, parentSF)).toBe(false, `${fileLocked} has a lock icon`);
@@ -214,13 +214,13 @@ describe('Edit offline', () => {
     it('[C297542] Lock information is displayed', async () => {
       expect(await documentListPage.isItemPresent(fileLocked2, parentRF)).toBe(true, `${fileLocked2} is not displayed`);
       expect(await documentListPage.hasLockedIcon(fileLocked2, parentRF)).toBe(true, `${fileLocked2} does not have a lock icon`);
-      expect(await dataTable.getLockOwner(fileLocked2, parentRF)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
+      expect(await documentListPage.getLockOwner(fileLocked2, parentRF)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
     });
 
     it('[C297543] Cancel Editing unlocks the file', async () => {
       await documentListPage.selectRow(fileLocked, parentRF);
       await toolbar.clickMoreActionsCancelEditing();
-      await dataTable.unselectItem(fileLocked, parentRF);
+      await documentListPage.dataTable.unselectItem(fileLocked, parentRF);
 
       expect(await apis.user.nodes.isFileLockedWrite(fileLockedId)).toBe(false, `${fileLocked} is still locked`);
       expect(await documentListPage.hasLockedIcon(fileLocked, parentRF)).toBe(false, `${fileLocked} has a lock icon`);
@@ -268,13 +268,13 @@ describe('Edit offline', () => {
     it('[C306957] Lock information is displayed', async () => {
       expect(await documentListPage.isItemPresent(fileLocked2)).toBe(true, `${fileLocked2} is not displayed`);
       expect(await documentListPage.hasLockedIcon(fileLocked2)).toBe(true, `${fileLocked2} does not have a lock icon`);
-      expect(await dataTable.getLockOwner(fileLocked2)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
+      expect(await documentListPage.getLockOwner(fileLocked2)).toContain(username, `${fileLocked2} does not have correct lock owner info`);
     });
 
     it('[C306958] Cancel Editing unlocks the file', async () => {
       await documentListPage.selectRow(fileLocked);
       await toolbar.clickMoreActionsCancelEditing();
-      await dataTable.unselectItem(fileLocked);
+      await documentListPage.dataTable.unselectItem(fileLocked);
 
       expect(await apis.user.nodes.isFileLockedWrite(fileLockedId)).toBe(false, `${fileLocked} is still locked`);
       expect(await documentListPage.hasLockedIcon(fileLocked)).toBe(false, `${fileLocked} has a lock icon`);
@@ -324,13 +324,13 @@ describe('Edit offline', () => {
       expect(await documentListPage.isItemPresent(fileSearchLocked2, parentSearch)).toBe(true, `${fileSearchLocked2} is not displayed`);
       expect(await documentListPage.hasLockedIcon(fileSearchLocked2, parentSearch)).toBe(true, `${fileSearchLocked2} does not have a lock icon`);
       // TODO: enable when ACA-2314 is fixed
-      // expect(await dataTable.getLockOwner(fileSearchLocked2, parentSearch)).toContain(username, `${fileSearchLocked2} does not have correct lock owner info`);
+      // expect(await documentListPage.getLockOwner(fileSearchLocked2, parentSearch)).toContain(username, `${fileSearchLocked2} does not have correct lock owner info`);
     });
 
     it('[C306955] Cancel Editing unlocks the file', async () => {
       await documentListPage.selectRow(fileSearchLocked);
       await toolbar.clickMoreActionsCancelEditing();
-      await dataTable.unselectItem(fileSearchLocked);
+      await documentListPage.dataTable.unselectItem(fileSearchLocked);
 
       expect(await apis.user.nodes.isFileLockedWrite(fileSearchLockedId)).toBe(false, `${fileSearchLocked} is still locked`);
       expect(await documentListPage.hasLockedIcon(fileSearchLocked, parentSearch)).toBe(false, `${fileSearchLocked} has a lock icon`);

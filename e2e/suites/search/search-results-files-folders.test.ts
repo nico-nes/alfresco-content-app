@@ -55,7 +55,7 @@ describe('Search results - files and folders', () => {
   const page = new SearchResultsPage();
   const { searchInput } = page.header;
   const { breadcrumb } = page;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });

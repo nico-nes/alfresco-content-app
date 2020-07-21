@@ -37,7 +37,7 @@ describe('Pagination on multiple pages', () => {
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
   const { pagination } = page;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   const sites = Array(101)
     .fill('site')

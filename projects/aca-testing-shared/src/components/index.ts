@@ -25,7 +25,7 @@
 
 export * from './breadcrumb/breadcrumb';
 export * from './breadcrumb/dropdown-breadcrumb';
-export * from './data-table/data-table';
+export * from './document-list/aca-document-list.page';
 export * from './datetime-picker/datetime-picker';
 export * from './dialog';
 export * from './header/header';

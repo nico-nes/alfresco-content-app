@@ -29,7 +29,7 @@ import * as testUtil from '../test-util';
 
 export function librariesTests(siteName?: string) {
   const page = new BrowsingPage();
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   describe('available actions : ', () => {
     beforeAll(async () => {

@@ -48,7 +48,7 @@ describe('Permanently delete from Trash', () => {
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
   const { toolbar } = page;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   const confirmDialog = new ConfirmDialog();
 

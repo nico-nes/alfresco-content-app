@@ -49,7 +49,7 @@ describe('Breadcrumb', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
   const { breadcrumb } = page;
 
   const apis = {

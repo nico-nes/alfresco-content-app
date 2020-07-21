@@ -43,7 +43,7 @@ describe('General', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });

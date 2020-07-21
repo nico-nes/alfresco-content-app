@@ -51,7 +51,7 @@ describe('Viewer actions', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
- const documentListPage = new DocumentListPage();
+ const documentListPage = new ACADocumentListPage();
   const viewer = new Viewer();
   const { toolbar } = viewer;
   const copyMoveDialog = new ContentNodeSelectorDialog();

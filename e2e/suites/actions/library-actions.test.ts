@@ -63,7 +63,7 @@ describe('Library actions', () => {
   const page = new BrowsingPage();
   const { toolbar } = page;
   const { searchInput } = page.header;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   const confirmDialog = new ConfirmDialog();
 

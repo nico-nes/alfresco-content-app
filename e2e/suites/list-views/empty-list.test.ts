@@ -23,8 +23,7 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, SearchResultsPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, LoginPage, BrowsingPage, SearchResultsPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
 
 describe('Empty list views', () => {
   const username = `user-${Utils.random()}`;
@@ -40,7 +39,7 @@ describe('Empty list views', () => {
   const searchResultsPage = new SearchResultsPage();
   const { pagination } = page;
   const { searchInput } = page.header;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -51,7 +50,7 @@ describe('Empty list views', () => {
   it('[C280131] empty Personal Files', async () => {
     await page.clickPersonalFiles();
     expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
-    expect(await dataTable.getEmptyDragAndDropText()).toContain('Drag and drop');
+    expect(await documentListPage.dataTable.getEmptyDragAndDropText()).toContain('Drag and drop');
   });
 
   it('[C217099] empty My Libraries', async () => {
@@ -198,7 +197,7 @@ describe('Empty list views', () => {
     await documentListPage.dataTable.waitForTableBody();
 
     expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
-    expect(await dataTable.emptySearchText.getText()).toContain('Your search returned 0 results');
+    expect(await documentListPage.emptySearchText.getText()).toContain('Your search returned 0 results');
   });
 
   it('[C290031] Empty Search results - Files / Folders', async () => {
@@ -209,6 +208,6 @@ describe('Empty list views', () => {
     await documentListPage.dataTable.waitForTableBody();
 
     expect(await documentListPage.dataTable.isEmpty()).toBe(true, 'list is not empty');
-    expect(await dataTable.emptySearchText.getText()).toContain('Your search returned 0 results');
+    expect(await documentListPage.emptySearchText.getText()).toContain('Your search returned 0 results');
   });
 });

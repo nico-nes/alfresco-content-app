@@ -30,7 +30,7 @@ import * as testUtil from '../test-util';
 export function viewerTests(parentName?: string) {
   const page = new BrowsingPage();
   const searchResultsPage = new SearchResultsPage();
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
   const { searchInput } = page.header;
 
   describe('available actions : ', () => {

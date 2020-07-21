@@ -41,7 +41,7 @@ describe('New menu', () => {
   const page = new BrowsingPage();
   const { sidenav } = page;
   const { menu } = sidenav;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });

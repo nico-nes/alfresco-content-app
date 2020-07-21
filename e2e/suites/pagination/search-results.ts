@@ -30,7 +30,7 @@ export function searchResultsTests() {
   const page = new BrowsingPage();
   const { pagination } = page;
   const { searchInput } = page.header;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   describe('Pagination controls : ', () => {
     beforeAll(async () => {

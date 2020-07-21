@@ -54,7 +54,7 @@ describe('Generic tests : ', () => {
   const { toolbar } = page;
   const { searchInput } = page.header;
   const contextMenu = new Menu();
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   beforeAll(async () => {
     await adminApiActions.createUser({ username });
@@ -81,12 +81,12 @@ describe('Generic tests : ', () => {
 
     it('[C213134] selected row is marked with a check circle icon', async () => {
       await documentListPage.selectRow(file1);
-      expect(await dataTable.hasCheckMarkIcon(file1)).toBe(true, 'check mark missing');
+      expect(await documentListPage.dataTable.hasCheckMarkIcon(file1)).toBe(true, 'check mark missing');
     });
 
     it('[C286252] Row is marked with a check circle icon on direct right click', async () => {
       await documentListPage.rightClickOnRow(file2);
-      expect(await dataTable.hasCheckMarkIcon(file2)).toBe(true, 'check mark missing');
+      expect(await documentListPage.dataTable.hasCheckMarkIcon(file2)).toBe(true, 'check mark missing');
     });
 
     it('[C286253] Context menu appears on direct right click on an item', async () => {
@@ -104,8 +104,8 @@ describe('Generic tests : ', () => {
       await documentListPage.selectRow(file1);
       await documentListPage.rightClickOnRow(file2);
       expect(await documentListPage.dataTable.hasContextMenu()).toBe(true, `Context menu is not displayed`);
-      expect(await dataTable.hasCheckMarkIcon(file2)).toBe(true, `${file2} is not selected`);
-      expect(await dataTable.hasCheckMarkIcon(file1)).toBe(false, `${file1} is not selected`);
+      expect(await documentListPage.dataTable.hasCheckMarkIcon(file2)).toBe(true, `${file2} is not selected`);
+      expect(await documentListPage.dataTable.hasCheckMarkIcon(file1)).toBe(false, `${file1} is not selected`);
     });
 
     it('[C280619] Context menu closes when clicking away from it', async () => {
@@ -180,19 +180,19 @@ describe('Generic tests : ', () => {
       await documentListPage.rightClickOnRow(file1);
 
       expect(await documentListPage.dataTable.hasContextMenu()).toBe(true, `Context menu is not displayed for ${file1}`);
-      expect(await dataTable.getSelectedRowsCount()).toEqual(1, 'incorrect number of selected rows');
+      expect(awaitdocumentListPage.dataTable.getNumberOfSelectedRows()).toEqual(1, 'incorrect number of selected rows');
       expect(await contextMenu.editFolderAction.isPresent()).toBe(false, `Edit folder is displayed for ${file1}`);
-      expect(await dataTable.hasCheckMarkIcon(file1)).toBe(true, `${file1} is not selected`);
-      expect(await dataTable.hasCheckMarkIcon(file2)).toBe(false, `${file2} is selected`);
-      expect(await dataTable.hasCheckMarkIcon(folder1)).toBe(false, `${folder1} is selected`);
+      expect(await documentListPage.dataTable.hasCheckMarkIcon(file1)).toBe(true, `${file1} is not selected`);
+      expect(await documentListPage.dataTable.hasCheckMarkIcon(file2)).toBe(false, `${file2} is selected`);
+      expect(await documentListPage.dataTable.hasCheckMarkIcon(folder1)).toBe(false, `${folder1} is selected`);
     });
 
     it('[C280458] Unselect items with single click', async () => {
       await documentListPage.selectMultipleItems([file1, file2, folder1, folder2]);
-      expect(await dataTable.getSelectedRowsCount()).toEqual(4, 'incorrect selected rows number');
+      expect(awaitdocumentListPage.dataTable.getNumberOfSelectedRows()).toEqual(4, 'incorrect selected rows number');
 
       await documentListPage.selectRow(file1);
-      expect(await dataTable.getSelectedRowsCount()).toEqual(1, 'incorrect selected rows number');
+      expect(awaitdocumentListPage.dataTable.getNumberOfSelectedRows()).toEqual(1, 'incorrect selected rows number');
     });
 
     it('[C217110] Select / unselect items by CMD+click', async () => {
@@ -202,13 +202,13 @@ describe('Generic tests : ', () => {
       await documentListPage.selectRow(folder1);
       await documentListPage.selectRow(folder2);
       await Utils.releaseKeyPressed();
-      expect(await dataTable.getSelectedRowsCount()).toEqual(4, 'incorrect selected rows number');
+      expect(awaitdocumentListPage.dataTable.getNumberOfSelectedRows()).toEqual(4, 'incorrect selected rows number');
 
       await Utils.pressCmd();
       await documentListPage.selectRow(file1);
       await documentListPage.selectRow(file2);
       await Utils.releaseKeyPressed();
-      expect(await dataTable.getSelectedRowsCount()).toEqual(2, 'incorrect selected rows number');
+      expect(awaitdocumentListPage.dataTable.getNumberOfSelectedRows()).toEqual(2, 'incorrect selected rows number');
     });
   });
 });

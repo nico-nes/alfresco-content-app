@@ -37,7 +37,7 @@ describe('Personal Files', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   const adminFolder = `admin-folder-${Utils.random()}`;
 

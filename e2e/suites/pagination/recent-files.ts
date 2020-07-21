@@ -29,7 +29,7 @@ import { DocumentListPage } from '@alfresco/adf-testing';
 export function recentFilesTests() {
   const page = new BrowsingPage();
   const { pagination } = page;
-  const documentListPage = new DocumentListPage();
+  const documentListPage = new ACADocumentListPage();
 
   describe('Pagination controls : ', () => {
     beforeAll(async () => {
