@@ -24,7 +24,8 @@
  */
 
 import { browser } from 'protractor';
-import { APP_ROUTES, LoginPage, BrowsingPage, Utils, RepoClient, navigate } from '@alfresco/aca-testing-shared';
+import { APP_ROUTES, BrowsingPage, Utils, RepoClient, navigate } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Login', () => {
   const peopleApi = new RepoClient().people;
@@ -73,7 +74,7 @@ describe('Login', () => {
 
   describe('general tests', () => {
     beforeEach(async (done) => {
-      await loginPage.load();
+
       done();
     });
 
@@ -97,7 +98,7 @@ describe('Login', () => {
     it('[C213092] navigate to "Personal Files"', async () => {
       const { username } = johnDoe;
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       expect(await browser.getCurrentUrl()).toContain(APP_ROUTES.PERSONAL_FILES);
     });
 
@@ -105,19 +106,19 @@ describe('Login', () => {
       const { userInfo } = new BrowsingPage(APP_ROUTES.PERSONAL_FILES).header;
       const { username, firstName, lastName } = johnDoe;
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       expect(await userInfo.fullName.getText()).toEqual(`${firstName} ${lastName}`);
     });
 
     it(`[C213096] logs in with user having username containing "@"`, async () => {
-      await loginPage.loginWith(testUser);
+      await loginPage.login(testUser, testUser);
       expect(await browser.getCurrentUrl()).toContain(APP_ROUTES.PERSONAL_FILES);
     });
 
     it('[C213097] logs in with user with non-latin characters', async () => {
       const { username, password } = russianUser;
 
-      await loginPage.loginWith(username, password);
+      await loginPage.login(username, password);
       expect(await browser.getCurrentUrl()).toContain(APP_ROUTES.PERSONAL_FILES);
     });
 
@@ -125,7 +126,7 @@ describe('Login', () => {
     xit('[C213107] redirects to Home Page when navigating to the Login page while already logged in', async () => {
       const { username } = johnDoe;
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
 
       await navigate(APP_ROUTES.LOGIN);
       expect(await browser.getCurrentUrl()).toContain(APP_ROUTES.PERSONAL_FILES);
@@ -134,15 +135,15 @@ describe('Login', () => {
     it('[C213109] redirects to Personal Files when pressing browser Back while already logged in', async () => {
       const { username } = johnDoe;
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       await browser.navigate().back();
       expect(await browser.getCurrentUrl()).toContain(APP_ROUTES.PERSONAL_FILES);
     });
 
     it('[C213104] user is able to login after changing his password', async () => {
-      await loginPage.loginWith(testUser2.username, testUser2.password);
+      await loginPage.login(testUser2.username, testUser2.password);
       await peopleApi.changePassword(testUser2.username, newPassword);
-      await loginPage.loginWith(testUser2.username, newPassword);
+      await loginPage.login(testUser2.username, newPassword);
       expect(await browser.getCurrentUrl()).toContain(APP_ROUTES.PERSONAL_FILES);
     });
   });
@@ -152,7 +153,7 @@ describe('Login', () => {
     const { submitButton, errorMessage } = loginComponent;
 
     beforeEach(async (done) => {
-      await loginPage.load();
+
       done();
     });
 
@@ -167,7 +168,7 @@ describe('Login', () => {
     });
 
     it('[C213093] shows error when entering nonexistent user', async () => {
-      await loginPage.tryLoginWith('nonexistent-user', 'any-password');
+      await loginPage.login('nonexistent-user', 'any-password');
       expect(await browser.getCurrentUrl()).toContain(APP_ROUTES.LOGIN);
       expect(await errorMessage.isDisplayed()).toBe(true, 'error message is not displayed');
       expect(await errorMessage.getText()).toBe(`You've entered an unknown username or password`);
@@ -176,7 +177,7 @@ describe('Login', () => {
     it('[C280071] shows error when entering invalid password', async () => {
       const { username } = johnDoe;
 
-      await loginPage.tryLoginWith(username, 'incorrect-password');
+      await loginPage.login(username, 'incorrect-password');
       expect(await browser.getCurrentUrl()).toContain(APP_ROUTES.LOGIN);
       expect(await errorMessage.isDisplayed()).toBe(true, 'error message is not displayed');
       expect(await errorMessage.getText()).toBe(`You've entered an unknown username or password`);
@@ -188,7 +189,7 @@ describe('Login', () => {
     });
 
     it('[C213100] disabled user is not logged in', async () => {
-      await loginPage.tryLoginWith(disabledUser);
+      await loginPage.login(disabledUser);
       expect(await browser.getCurrentUrl()).toContain(APP_ROUTES.LOGIN);
       expect(await errorMessage.isDisplayed()).toBe(true, 'error message is not displayed');
       expect(await errorMessage.getText()).toBe(`You've entered an unknown username or password`);

@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, SearchResultsPage, RepoClient, Utils, FILES } from '@alfresco/aca-testing-shared';
+import { ACADocumentListPage, SearchResultsPage, RepoClient, Utils, FILES } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Search sorting', () => {
   const random = Utils.random();
@@ -69,7 +70,7 @@ describe('Search sorting', () => {
 
     await apis.user1.search.waitForNodes('search-sort', { expect: 2 });
 
-    await loginPage.loginWith(user1);
+    await loginPage.login(user1, user1);
     done();
   });
 

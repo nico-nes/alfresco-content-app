@@ -23,7 +23,9 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BrowsingPage, LoginPage, Utils } from '@alfresco/aca-testing-shared';
+import { BrowsingPage, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
+import { browser } from 'protractor';
 
 describe('Search input', () => {
   const loginPage = new LoginPage();
@@ -31,7 +33,7 @@ describe('Search input', () => {
   const { searchInput } = page.header;
 
   beforeAll(async (done) => {
-    await loginPage.loginWithAdmin();
+    await loginPage.login(browser.params.ADMIN_USERNAME, browser.params.ADMIN_PASSWORD);
     done();
   });
 

@@ -23,16 +23,17 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Header, DataTable, Pagination, Toolbar, Breadcrumb, Sidenav } from '../components/components';
+import { Header, Pagination, Toolbar, Breadcrumb, Sidenav } from '../components/components';
 import { SIDEBAR_LABELS } from './../configs';
 import { Page } from './page';
+import { ACADocumentListPage } from '../components/document-list/aca-document-list.page';
 
 export class BrowsingPage extends Page {
   header = new Header(this.appRoot);
   sidenav = new Sidenav(this.appRoot);
   toolbar = new Toolbar(this.appRoot);
   breadcrumb = new Breadcrumb(this.appRoot);
-  dataTable = new DataTable(this.appRoot);
+  dataTable = new ACADocumentListPage();
   pagination = new Pagination(this.appRoot);
 
   async signOut(): Promise<void> {
@@ -45,7 +46,7 @@ export class BrowsingPage extends Page {
 
   async clickPersonalFilesAndWait(): Promise<void> {
     await this.clickPersonalFiles();
-    await this.dataTable.waitForHeader();
+    await this.dataTable.waitForTableBody();
   }
 
   async clickFileLibraries(): Promise<void> {
@@ -54,7 +55,7 @@ export class BrowsingPage extends Page {
 
   async clickFileLibrariesAndWait(): Promise<void> {
     await this.clickFileLibraries();
-    await this.dataTable.waitForHeader();
+    await this.dataTable.waitForTableBody();
   }
 
   async goToFavoriteLibraries(): Promise<void> {
@@ -66,7 +67,7 @@ export class BrowsingPage extends Page {
 
   async goToFavoriteLibrariesAndWait(): Promise<void> {
     await this.goToFavoriteLibraries();
-    await this.dataTable.waitForHeader();
+    await this.dataTable.waitForTableBody();
   }
 
   async goToMyLibraries(): Promise<void> {
@@ -78,7 +79,7 @@ export class BrowsingPage extends Page {
 
   async goToMyLibrariesAndWait(): Promise<void> {
     await this.goToMyLibraries();
-    await this.dataTable.waitForHeader();
+    await this.dataTable.waitForTableBody();
   }
 
   async clickRecentFiles(): Promise<void> {
@@ -87,7 +88,7 @@ export class BrowsingPage extends Page {
 
   async clickRecentFilesAndWait(): Promise<void> {
     await this.clickRecentFiles();
-    await this.dataTable.waitForHeader();
+    await this.dataTable.waitForTableBody();
   }
 
   async clickSharedFiles(): Promise<void> {
@@ -96,7 +97,7 @@ export class BrowsingPage extends Page {
 
   async clickSharedFilesAndWait(): Promise<void> {
     await this.clickSharedFiles();
-    await this.dataTable.waitForHeader();
+    await this.dataTable.waitForTableBody();
   }
 
   async clickFavorites(): Promise<void> {
@@ -105,7 +106,7 @@ export class BrowsingPage extends Page {
 
   async clickFavoritesAndWait(): Promise<void> {
     await this.clickFavorites();
-    await this.dataTable.waitForHeader();
+    await this.dataTable.waitForTableBody();
   }
 
   async clickTrash(): Promise<void> {
@@ -114,6 +115,6 @@ export class BrowsingPage extends Page {
 
   async clickTrashAndWait(): Promise<void> {
     await this.clickTrash();
-    await this.dataTable.waitForHeader();
+    await this.dataTable.waitForTableBody();
   }
 }

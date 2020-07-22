@@ -23,18 +23,18 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { by } from 'protractor';
+import { by, element } from 'protractor';
 import { GenericDialog } from '../dialog/generic-dialog';
 import { DropDownBreadcrumb } from '../breadcrumb/dropdown-breadcrumb';
-import { DataTable } from '../data-table/data-table';
 import { isPresentAndEnabled } from '../../utilities/utils';
+import { ACADocumentListPage } from '../document-list/aca-document-list.page';
 
 export class SelectTemplateDialog extends GenericDialog {
   nextButton = this.childElement(by.css('[data-automation-id="content-node-selector-actions-choose"]'));
   cancelButton = this.childElement(by.css('[data-automation-id="content-node-selector-actions-cancel"]'));
 
   breadcrumb = new DropDownBreadcrumb();
-  dataTable = new DataTable('.aca-template-node-selector-dialog');
+  documentListPage = new ACADocumentListPage(element(by.css('.aca-template-node-selector-dialog')));
 
   constructor() {
     super('.aca-template-node-selector-dialog');

@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, RepoClient, InfoDrawer, Utils, FILES, DATE_TIME_FORMAT, DATE_FORMAT } from '@alfresco/aca-testing-shared';
+import { BrowsingPage, RepoClient, InfoDrawer, Utils, FILES, DATE_TIME_FORMAT, DATE_FORMAT } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 const moment = require('moment');
 
@@ -76,7 +77,7 @@ describe('File / Folder properties', () => {
     folder1Id = (await apis.user.nodes.createFolder(folder1.name, parentId, folder1.title, folder1.description, folder1.author)).entry.id;
     image1Id = (await apis.user.upload.uploadFile(image1.name, parentId)).entry.id;
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

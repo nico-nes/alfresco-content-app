@@ -30,3 +30,4 @@ export * from './filters/size-filter';
 export * from './search-filters';
 export * from './search-input';
 export * from './search-sorting-picker';
+export * from './search-document-list.page';

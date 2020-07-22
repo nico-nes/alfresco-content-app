@@ -25,7 +25,7 @@
 
 import { browser } from 'protractor';
 import {
-  LoginPage,
+  ACADocumentListPage,
   BrowsingPage,
   SITE_VISIBILITY,
   SITE_ROLES,
@@ -35,7 +35,7 @@ import {
   Viewer,
   Utils
 } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Unshare a file', () => {
   const username = `user-${Utils.random()}`;
@@ -60,7 +60,7 @@ describe('Unshare a file', () => {
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
     parentId = (await apis.user.nodes.createFolder(parent)).entry.id;
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

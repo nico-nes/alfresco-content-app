@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, ContentNodeSelectorDialog, RepoClient, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, ContentNodeSelectorDialog, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Copy content', () => {
   const username = `user-${Utils.random()}`;
@@ -207,7 +207,7 @@ describe('Copy content', () => {
     await apis.user.shared.waitForApi({ expect: 7 });
     await apis.user.favorites.waitForApi({ expect: 13 });
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 
@@ -517,7 +517,7 @@ describe('Copy content', () => {
     if (doBefore) {
       await doBefore();
     }
-    await documentListPage.selectMultipleItems(items, location);
+    await documentListPage.dataTable.selectMultipleItems(items, location);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('Personal Files');
     await copyDialog.selectDestination(destination);
@@ -583,7 +583,7 @@ describe('Copy content', () => {
       await doBefore();
     }
     const noOfItems = items.length;
-    await documentListPage.selectMultipleItems(items);
+    await documentListPage.dataTable.selectMultipleItems(items);
     await toolbar.clickMoreActionsCopy();
     await copyDialog.selectLocation('My Libraries');
     await copyDialog.documentListPage.doubleClickRow(siteName);

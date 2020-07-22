@@ -23,9 +23,10 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, SearchResultsPage, RepoClient, Utils, AdminActions } from '@alfresco/aca-testing-shared';
+import { BrowsingPage, SearchResultsPage, RepoClient, Utils, AdminActions } from '@alfresco/aca-testing-shared';
 import * as testData from './test-data-libraries';
 import * as testUtil from '../test-util';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Library actions : ', () => {
   const username = `user-${Utils.random()}`;
@@ -82,7 +83,7 @@ describe('Library actions : ', () => {
 
     await userApi.trashcan.waitForApi({ expect: 2 });
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
   });
 
   afterAll(async () => {

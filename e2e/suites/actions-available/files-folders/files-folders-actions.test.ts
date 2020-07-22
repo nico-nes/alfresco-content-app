@@ -23,7 +23,7 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RepoClient, Utils, AdminActions, LoginPage, FILES } from '@alfresco/aca-testing-shared';
+import { RepoClient, Utils, AdminActions, FILES } from '@alfresco/aca-testing-shared';
 import * as testData from './test-data';
 import { personalFilesTests } from './personal-files';
 import { recentFilesTests } from './recent-files';
@@ -32,6 +32,7 @@ import { searchResultsTests } from './search-results';
 import { sharedFilesTests } from './shared-files';
 import { viewerTests } from './viewer';
 import { trashTests } from './trash';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Files / folders actions : ', () => {
   const random = Utils.random();
@@ -127,7 +128,7 @@ describe('Files / folders actions : ', () => {
       userApi.trashcan.waitForApi({ expect: 4 })
     ]);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
   });
 
   afterAll(async () => {

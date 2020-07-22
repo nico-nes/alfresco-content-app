@@ -1,7 +1,6 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
-const AlfrescoApi = require('@alfresco/js-api').AlfrescoApiCompatibility;
 const path = require('path');
 const { SpecReporter } = require('jasmine-spec-reporter');
 const afterLaunch = require('./e2e/e2e-config/hooks/after-launch');

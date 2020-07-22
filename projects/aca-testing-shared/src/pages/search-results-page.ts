@@ -37,7 +37,7 @@ export class SearchResultsPage extends BrowsingPage {
   filters = new SearchFilters('aca-search-results');
 
   async waitForResults(): Promise<void> {
-    await this.dataTable.waitForBody();
+    await this.dataTable.waitForTableBody();
   }
 
   async getResultsFoundText(): Promise<string> {

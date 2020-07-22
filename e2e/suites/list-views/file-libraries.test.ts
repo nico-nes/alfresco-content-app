@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SITE_VISIBILITY, SITE_ROLES, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { SITE_VISIBILITY, SITE_ROLES, ACADocumentListPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('File Libraries', () => {
   const username = `user-${Utils.random()}`;
@@ -83,7 +84,7 @@ describe('File Libraries', () => {
     await apis.user.sites.createSite(siteName, SITE_VISIBILITY.PUBLIC, null, siteId1);
     await apis.user.sites.createSite(siteName, SITE_VISIBILITY.PUBLIC, null, siteId2);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

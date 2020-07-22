@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, SITE_VISIBILITY, RepoClient, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, SITE_VISIBILITY, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Mark items as favorites', () => {
   const username = `user-${Utils.random()}`;
@@ -122,7 +122,7 @@ describe('Mark items as favorites', () => {
     await apis.user.shared.shareFilesByIds([fileNotFav1Id, fileNotFav2Id, fileNotFav3Id, fileNotFav4Id]);
     await apis.user.shared.waitForApi({ expect: currentSharedFiles + 8 });
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 
@@ -162,7 +162,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C217187] Favorite action has empty star icon for multiple selection of items when some are not favorite', async () => {
-      await documentListPage.selectMultipleItems([fileNotFavUI, fileFavUI]);
+      await documentListPage.dataTable.selectMultipleItems([fileNotFavUI, fileFavUI]);
       await toolbar.openMoreMenu();
 
       expect(await toolbar.menu.getItemIconText('Favorite')).toEqual('star_border');
@@ -199,7 +199,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C217192] favorite multiple items - all unfavorite', async () => {
-      await documentListPage.selectMultipleItems([fileNotFav2, fileNotFav3]);
+      await documentListPage.dataTable.selectMultipleItems([fileNotFav2, fileNotFav3]);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileNotFav2Id, { expect: true })).toBe(true, `${fileNotFav2} not marked as favorite`);
@@ -207,7 +207,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C217194] favorite multiple items - some favorite and some unfavorite', async () => {
-      await documentListPage.selectMultipleItems([fileNotFav4, fileFav2]);
+      await documentListPage.dataTable.selectMultipleItems([fileNotFav4, fileFav2]);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileNotFav4Id, { expect: true })).toBe(true, `${fileNotFav4} not marked as favorite`);
@@ -215,7 +215,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C217193] unfavorite multiple items', async () => {
-      await documentListPage.selectMultipleItems([fileFav3, fileFav4]);
+      await documentListPage.dataTable.selectMultipleItems([fileFav3, fileFav4]);
       await toolbar.clickMoreActionsRemoveFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileFav3Id, { expect: false })).toBe(false, `${fileFav3} marked as favorite`);
@@ -255,7 +255,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C280355] favorite multiple items - all unfavorite', async () => {
-      await documentListPage.selectMultipleItems([fileNotFav2, fileNotFav3]);
+      await documentListPage.dataTable.selectMultipleItems([fileNotFav2, fileNotFav3]);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileNotFav2Id, { expect: true })).toBe(true, `${fileNotFav2} not marked as favorite`);
@@ -263,7 +263,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C280357] favorite multiple items - some favorite and some unfavorite', async () => {
-      await documentListPage.selectMultipleItems([fileNotFav4, fileFav2]);
+      await documentListPage.dataTable.selectMultipleItems([fileNotFav4, fileFav2]);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileNotFav4Id, { expect: true })).toBe(true, `${fileNotFav4} not marked as favorite`);
@@ -271,7 +271,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C280356] unfavorite multiple items', async () => {
-      await documentListPage.selectMultipleItems([fileFav3, fileFav4]);
+      await documentListPage.dataTable.selectMultipleItems([fileFav3, fileFav4]);
       await toolbar.clickMoreActionsRemoveFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileFav3Id, { expect: false })).toBe(false, `${fileFav3} marked as favorite`);
@@ -310,7 +310,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C280365] favorite multiple items - all unfavorite', async () => {
-      await documentListPage.selectMultipleItems([fileNotFav2, fileNotFav3]);
+      await documentListPage.dataTable.selectMultipleItems([fileNotFav2, fileNotFav3]);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileNotFav2Id, { expect: true })).toBe(true, `${fileNotFav2} not marked as favorite`);
@@ -318,7 +318,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C280367] favorite multiple items - some favorite and some unfavorite', async () => {
-      await documentListPage.selectMultipleItems([fileNotFav4, fileFav2]);
+      await documentListPage.dataTable.selectMultipleItems([fileNotFav4, fileFav2]);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileNotFav4Id, { expect: true })).toBe(true, `${fileNotFav4} not marked as favorite`);
@@ -326,7 +326,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C280366] unfavorite multiple items', async () => {
-      await documentListPage.selectMultipleItems([fileFav3, fileFav4]);
+      await documentListPage.dataTable.selectMultipleItems([fileFav3, fileFav4]);
       await toolbar.clickMoreActionsRemoveFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileFav3Id, { expect: false })).toBe(false, `${fileFav3} marked as favorite`);
@@ -359,7 +359,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C280374] unfavorite multiple items', async () => {
-      await documentListPage.selectMultipleItems([fileFav3, fileFav4]);
+      await documentListPage.dataTable.selectMultipleItems([fileFav3, fileFav4]);
       await toolbar.clickMoreActionsRemoveFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileFav3Id, { expect: false })).toBe(false, `${fileFav3} marked as favorite`);
@@ -421,7 +421,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C306968] favorite multiple items - all unfavorite', async () => {
-      await documentListPage.selectMultipleItems([fileSearchNotFav2, fileSearchNotFav3]);
+      await documentListPage.dataTable.selectMultipleItems([fileSearchNotFav2, fileSearchNotFav3]);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileSearchNotFav2Id, { expect: true })).toBe(
@@ -435,7 +435,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C306970] favorite multiple items - some favorite and some unfavorite', async () => {
-      await documentListPage.selectMultipleItems([fileSearchNotFav4, fileSearchFav2]);
+      await documentListPage.dataTable.selectMultipleItems([fileSearchNotFav4, fileSearchFav2]);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileSearchNotFav4Id, { expect: true })).toBe(
@@ -449,7 +449,7 @@ describe('Mark items as favorites', () => {
     });
 
     it('[C306969] unfavorite multiple items', async () => {
-      await documentListPage.selectMultipleItems([fileSearchFav3, fileSearchFav4]);
+      await documentListPage.dataTable.selectMultipleItems([fileSearchFav3, fileSearchFav4]);
       await toolbar.clickMoreActionsRemoveFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileSearchFav3Id, { expect: false })).toBe(false, `${fileSearchFav3} marked as favorite`);
@@ -546,7 +546,7 @@ describe('Mark items as favorites', () => {
 
     it('[C280345] Favorite multiple items - all unfavorite', async () => {
       await documentListPage.doubleClickRow(folderSite);
-      await documentListPage.selectMultipleItems([fileSiteNotFav2, fileSiteNotFav3]);
+      await documentListPage.dataTable.selectMultipleItems([fileSiteNotFav2, fileSiteNotFav3]);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileSiteNotFav2Id, { expect: true })).toBe(true, 'item not marked as favorite');
@@ -555,7 +555,7 @@ describe('Mark items as favorites', () => {
 
     it('[C280346] Unfavorite multiple items', async () => {
       await documentListPage.doubleClickRow(folderSite);
-      await documentListPage.selectMultipleItems([fileSiteFav2, fileSiteFav3]);
+      await documentListPage.dataTable.selectMultipleItems([fileSiteFav2, fileSiteFav3]);
       await toolbar.clickMoreActionsRemoveFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileSiteFav2Id, { expect: false })).toBe(false, 'item marked as favorite');
@@ -564,7 +564,7 @@ describe('Mark items as favorites', () => {
 
     it('[C280347] Favorite multiple items - some favorite and some unfavorite', async () => {
       await documentListPage.doubleClickRow(folderSite);
-      await documentListPage.selectMultipleItems([fileSiteNotFav4, fileSiteFav4]);
+      await documentListPage.dataTable.selectMultipleItems([fileSiteNotFav4, fileSiteFav4]);
       await toolbar.clickMoreActionsFavorite();
 
       expect(await apis.user.favorites.isFavoriteWithRetry(fileSiteNotFav4Id, { expect: true })).toBe(true, 'item not marked as favorite');

@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { ACADocumentListPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('File / folder tooltips', () => {
   const username = `user-${Utils.random()}`;
@@ -69,7 +70,7 @@ describe('File / folder tooltips', () => {
 
     await apis.user.favorites.addFavoritesByIds('file', [file1Id, file2Id, file3Id, file4Id, file5Id, file6Id, file7Id, file8Id]);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

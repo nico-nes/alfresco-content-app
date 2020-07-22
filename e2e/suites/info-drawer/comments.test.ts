@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, RepoClient, InfoDrawer, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, RepoClient, InfoDrawer, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 const moment = require('moment');
 
 describe('Comments', () => {
@@ -90,7 +90,7 @@ describe('Comments', () => {
     folder2Id = (await apis.user.nodes.createFolder(folder2, parentId)).entry.id;
     await apis.user.favorites.addFavoriteById('folder', folder2Id);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SITE_VISIBILITY, SITE_ROLES, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { SITE_VISIBILITY, SITE_ROLES, ACADocumentListPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Shared Files', () => {
   const username = `user-${Utils.random()}`;
@@ -74,7 +74,7 @@ describe('Shared Files', () => {
     await apis.user.shared.unshareFile(file3User);
     await apis.admin.shared.waitForApi({ expect: 3 });
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

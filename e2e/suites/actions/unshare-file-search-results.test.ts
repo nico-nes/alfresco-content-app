@@ -25,7 +25,7 @@
 
 import { browser } from 'protractor';
 import {
-  LoginPage,
+  ACADocumentListPage,
   BrowsingPage,
   SITE_VISIBILITY,
   SITE_ROLES,
@@ -35,7 +35,7 @@ import {
   Viewer,
   Utils
 } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Unshare a file from Search Results', () => {
   const username = `user-${Utils.random()}`;
@@ -102,7 +102,7 @@ describe('Unshare a file from Search Results', () => {
     await apis.user.shared.waitForApi({ expect: 6 });
     await apis.user.search.waitForNodes('search-file', { expect: 6 });
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, SearchResultsPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, SearchResultsPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Download', () => {
   const username = `user-${Utils.random()}`;
@@ -102,7 +102,7 @@ describe('Download', () => {
     await apis.user.favorites.addFavoriteById('file', fileFavoritesId);
     await apis.user.favorites.addFavoriteById('folder', folderFavoritesId);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 
@@ -145,7 +145,7 @@ describe('Download', () => {
     });
 
     it('[C216353] Download multiple items', async () => {
-      await documentListPage.selectMultipleItems([filePersonal, folderPersonal]);
+      await documentListPage.dataTable.selectMultipleItems([filePersonal, folderPersonal]);
       await toolbar.downloadButton.click();
 
       expect(await Utils.fileExistsOnOS(archiveZip)).toBe(true, 'File not found in download location');
@@ -193,7 +193,7 @@ describe('Download', () => {
     });
 
     it('[C280189] Download multiple items', async () => {
-      await documentListPage.selectMultipleItems([fileFavorites, folderFavorites]);
+      await documentListPage.dataTable.selectMultipleItems([fileFavorites, folderFavorites]);
       await toolbar.downloadButton.click();
 
       expect(await Utils.fileExistsOnOS(archiveZip)).toBe(true, 'File not found in download location');
@@ -228,7 +228,7 @@ describe('Download', () => {
     });
 
     it('[C280183] Download multiple items', async () => {
-      await documentListPage.selectMultipleItems([fileShared1, fileShared2]);
+      await documentListPage.dataTable.selectMultipleItems([fileShared1, fileShared2]);
       await toolbar.downloadButton.click();
 
       expect(await Utils.fileExistsOnOS(archiveZip)).toBe(true, 'File not found in download location');
@@ -259,7 +259,7 @@ describe('Download', () => {
     });
 
     it('[C280177] Download multiple items', async () => {
-      await documentListPage.selectMultipleItems([fileRecent1, fileRecent2]);
+      await documentListPage.dataTable.selectMultipleItems([fileRecent1, fileRecent2]);
       await toolbar.downloadButton.click();
 
       expect(await Utils.fileExistsOnOS(archiveZip)).toBe(true, 'File not found in download location');
@@ -281,14 +281,14 @@ describe('Download', () => {
     });
 
     it('[C279164] Download a file', async () => {
-      await documentListPage.selectRow(fileSearch, parent);
+      await documentListPage.selectRow(fileSearch);
       await toolbar.downloadButton.click();
 
       expect(await Utils.fileExistsOnOS(fileSearch)).toBe(true, 'File not found in download location');
     });
 
     it('[C297694] Download a folder', async () => {
-      await documentListPage.selectRow(folderSearch, parent);
+      await documentListPage.selectRow(folderSearch);
       await toolbar.downloadButton.click();
 
       const folderZip = `${folderSearch}.zip`;
@@ -301,7 +301,7 @@ describe('Download', () => {
     });
 
     it('[C297695] Download multiple items', async () => {
-      await documentListPage.selectMultipleItems([fileSearch, folderSearch]);
+      await documentListPage.dataTable.selectMultipleItems([fileSearch, folderSearch]);
       await toolbar.downloadButton.click();
 
       expect(await Utils.fileExistsOnOS(archiveZip)).toBe(true, 'File not found in download location');

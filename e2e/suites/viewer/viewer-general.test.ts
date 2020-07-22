@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, FILES, SITE_VISIBILITY, RepoClient, Utils, Viewer } from '@alfresco/aca-testing-shared';
+import { ACADocumentListPage, BrowsingPage, FILES, SITE_VISIBILITY, RepoClient, Utils, Viewer } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Viewer general', () => {
   const username = `user-${Utils.random()}`;
@@ -72,7 +73,7 @@ describe('Viewer general', () => {
     await apis.user.favorites.addFavoriteById('file', xlsxFileId);
     await apis.user.favorites.waitForApi({ expect: 2 });
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

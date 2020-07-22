@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Delete and undo delete', () => {
   const username = `user-${Utils.random()}`;
@@ -115,7 +115,7 @@ describe('Delete and undo delete', () => {
       await apis.user.nodes.lockFile(fileLocked3Id, 'FULL');
       await apis.user.nodes.lockFile(fileLocked4Id, 'FULL');
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
 
       done();
     });
@@ -152,7 +152,7 @@ describe('Delete and undo delete', () => {
 
     it('[C280502] delete multiple files and check notification', async () => {
       let items = await documentListPage.dataTable.numberOfRows();
-      await documentListPage.selectMultipleItems([file2, file3]);
+      await documentListPage.dataTable.selectMultipleItems([file2, file3]);
       await toolbar.clickMoreActionsDelete();
       const message = await page.getSnackBarMessage();
       expect(message).toContain(`Deleted 2 items`);
@@ -190,7 +190,7 @@ describe('Delete and undo delete', () => {
     });
 
     it('[C217129] notification on multiple items deletion - some items fail to delete', async () => {
-      await documentListPage.selectMultipleItems([file4, folder3]);
+      await documentListPage.dataTable.selectMultipleItems([file4, folder3]);
       await toolbar.clickMoreActionsDelete();
       const message = await page.getSnackBarMessage();
       expect(message).toContain(`Deleted 1 item, 1 couldn't be deleted`);
@@ -198,7 +198,7 @@ describe('Delete and undo delete', () => {
     });
 
     it('[C217130] notification on multiple items deletion - all items fail to delete', async () => {
-      await documentListPage.selectMultipleItems([folder4, folder5]);
+      await documentListPage.dataTable.selectMultipleItems([folder4, folder5]);
       await toolbar.clickMoreActionsDelete();
       const message = await page.getSnackBarMessage();
       expect(message).toEqual(`2 items couldn't be deleted`);
@@ -231,7 +231,7 @@ describe('Delete and undo delete', () => {
     it('[C280504] undo delete of multiple files', async () => {
       const items = await documentListPage.dataTable.numberOfRows();
 
-      await documentListPage.selectMultipleItems([file6, file7]);
+      await documentListPage.dataTable.selectMultipleItems([file6, file7]);
       await toolbar.clickMoreActionsDelete();
       await page.clickSnackBarAction();
       expect(await documentListPage.isItemPresent(file6)).toBe(true, `${file6} was not removed from list`);
@@ -269,7 +269,7 @@ describe('Delete and undo delete', () => {
       await apis.user.shared.shareFilesByIds([sharedFile1Id, sharedFile2Id, sharedFile3Id, sharedFile4Id, sharedFile5Id, sharedFile6Id]);
       await apis.user.shared.waitForApi({ expect: 6 });
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 
@@ -296,7 +296,7 @@ describe('Delete and undo delete', () => {
     });
 
     it('[C280513] delete multiple files and check notification', async () => {
-      await documentListPage.selectMultipleItems([sharedFile2, sharedFile3]);
+      await documentListPage.dataTable.selectMultipleItems([sharedFile2, sharedFile3]);
       await toolbar.clickMoreActionsDelete();
       const message = await page.getSnackBarMessage();
       expect(message).toContain(`Deleted 2 items`);
@@ -317,7 +317,7 @@ describe('Delete and undo delete', () => {
     });
 
     it('[C280514] undo delete of multiple files', async () => {
-      await documentListPage.selectMultipleItems([sharedFile5, sharedFile6]);
+      await documentListPage.dataTable.selectMultipleItems([sharedFile5, sharedFile6]);
       await toolbar.clickMoreActionsDelete();
       await page.clickSnackBarAction();
       await page.clickTrash();
@@ -403,7 +403,7 @@ describe('Delete and undo delete', () => {
       await apis.user.favorites.addFavoritesByIds('folder', [favFolder1Id, favFolder2Id, favFolder3Id, favFolder4Id, favFolder5Id, favFolder6Id]);
       await apis.user.favorites.waitForApi({ expect: 13 });
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 
@@ -440,7 +440,7 @@ describe('Delete and undo delete', () => {
     it('[C280517] delete multiple files and check notification', async () => {
       let items = await documentListPage.dataTable.numberOfRows();
 
-      await documentListPage.selectMultipleItems([favFile2, favFile3]);
+      await documentListPage.dataTable.selectMultipleItems([favFile2, favFile3]);
       await toolbar.clickMoreActionsDelete();
       const message = await page.getSnackBarMessage();
       expect(message).toContain(`Deleted 2 items`);
@@ -478,7 +478,7 @@ describe('Delete and undo delete', () => {
     });
 
     it('[C280520] notification on multiple items deletion - some items fail to delete', async () => {
-      await documentListPage.selectMultipleItems([favFile4, favFolder3]);
+      await documentListPage.dataTable.selectMultipleItems([favFile4, favFolder3]);
       await toolbar.clickMoreActionsDelete();
       const message = await page.getSnackBarMessage();
       expect(message).toContain(`Deleted 1 item, 1 couldn't be deleted`);
@@ -486,7 +486,7 @@ describe('Delete and undo delete', () => {
     });
 
     it('[C280521] notification on multiple items deletion - all items fail to delete', async () => {
-      await documentListPage.selectMultipleItems([favFolder4, favFolder5]);
+      await documentListPage.dataTable.selectMultipleItems([favFolder4, favFolder5]);
       await toolbar.clickMoreActionsDelete();
       const message = await page.getSnackBarMessage();
       expect(message).toEqual(`2 items couldn't be deleted`);
@@ -518,7 +518,7 @@ describe('Delete and undo delete', () => {
     it('[C280525] undo delete of multiple files', async () => {
       const items = await documentListPage.dataTable.numberOfRows();
 
-      await documentListPage.selectMultipleItems([favFile6, favFile7]);
+      await documentListPage.dataTable.selectMultipleItems([favFile6, favFile7]);
       await toolbar.clickMoreActionsDelete();
       await page.clickSnackBarAction();
       expect(await documentListPage.isItemPresent(favFile6)).toBe(true, `${favFile6} was not removed from list`);
@@ -549,7 +549,7 @@ describe('Delete and undo delete', () => {
       await apis.user.nodes.createFile(recentFile6, parentId);
       await apis.user.search.waitForApi(username, { expect: 6 });
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
 
       await page.clickRecentFiles();
       done();
@@ -578,7 +578,7 @@ describe('Delete and undo delete', () => {
     });
 
     it('[C280529] delete multiple files and check notification', async () => {
-      await documentListPage.selectMultipleItems([recentFile2, recentFile3]);
+      await documentListPage.dataTable.selectMultipleItems([recentFile2, recentFile3]);
       await toolbar.clickMoreActionsDelete();
       const message = await page.getSnackBarMessage();
       expect(message).toContain(`Deleted 2 items`);
@@ -607,7 +607,7 @@ describe('Delete and undo delete', () => {
     // without adding a very big browser.sleep followed by a page.refresh
     // so for the moment we're testing that the restored file is not displayed in the Trash
     it('[C280537] undo delete of multiple files', async () => {
-      await documentListPage.selectMultipleItems([recentFile5, recentFile6]);
+      await documentListPage.dataTable.selectMultipleItems([recentFile5, recentFile6]);
       await toolbar.clickMoreActionsDelete();
       await page.clickSnackBarAction();
       await page.clickTrash();

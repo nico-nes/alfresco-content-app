@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ACADocumentListPage, LoginPage, BrowsingPage, SearchResultsPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { ACADocumentListPage, BrowsingPage, SearchResultsPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Empty list views', () => {
   const username = `user-${Utils.random()}`;
@@ -43,7 +44,7 @@ describe('Empty list views', () => {
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SITE_VISIBILITY, SITE_ROLES, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { SITE_VISIBILITY, SITE_ROLES, ACADocumentListPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Special permissions', () => {
   const username = `user-${Utils.random()}`;
@@ -61,7 +62,7 @@ describe('Special permissions', () => {
       await apis.user.search.waitForApi(username, { expect: 1 });
       await apis.user.shared.waitForApi({ expect: 1 });
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 
@@ -133,7 +134,7 @@ describe('Special permissions', () => {
       await apis.user.shared.waitForApi({ expect: 1 });
       await apis.user.search.waitForApi(username, { expect: 1 });
       await apis.admin.sites.deleteSiteMember(sitePrivate, username);
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 

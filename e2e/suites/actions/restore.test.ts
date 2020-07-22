@@ -24,8 +24,8 @@
  */
 
 import { browser } from 'protractor';
-import { LoginPage, BrowsingPage, APP_ROUTES, RepoClient, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, APP_ROUTES, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Restore from Trash', () => {
   const username = `user-${Utils.random()}`;
@@ -42,7 +42,7 @@ describe('Restore from Trash', () => {
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 
@@ -116,7 +116,7 @@ describe('Restore from Trash', () => {
     });
 
     it('[C217182] restore multiple items', async () => {
-      await documentListPage.selectMultipleItems([file, folder]);
+      await documentListPage.dataTable.selectMultipleItems([file, folder]);
       await toolbar.restoreButton.click();
       const text = await page.getSnackBarMessage();
       expect(text).toContain(`Restore successful`);
@@ -233,7 +233,7 @@ describe('Restore from Trash', () => {
       await apis.user.nodes.deleteNodeById(folder3Id, false);
       await apis.user.nodes.deleteNodeById(file5Id, false);
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 
@@ -248,13 +248,13 @@ describe('Restore from Trash', () => {
     });
 
     it('[C217183] one failure', async () => {
-      await documentListPage.selectMultipleItems([file1, file2]);
+      await documentListPage.dataTable.selectMultipleItems([file1, file2]);
       await toolbar.restoreButton.click();
       expect(await page.getSnackBarMessage()).toEqual(`Can't restore ${file1}, the original location no longer exists`);
     });
 
     it('[C217184] multiple failures', async () => {
-      await documentListPage.selectMultipleItems([file3, file4, file5]);
+      await documentListPage.dataTable.selectMultipleItems([file3, file4, file5]);
       await toolbar.restoreButton.click();
       expect(await page.getSnackBarMessage()).toEqual('2 items not restored because of issues with the restore location');
     });

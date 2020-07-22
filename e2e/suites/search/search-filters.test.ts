@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, SearchResultsPage, RepoClient, Utils, FILES, SITE_VISIBILITY, SITE_ROLES } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, SearchResultsPage, RepoClient, Utils, FILES, SITE_VISIBILITY, SITE_ROLES } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 const moment = require('moment');
 
@@ -92,7 +92,7 @@ describe('Search filters', () => {
 
     await apis.user1.search.waitForNodes('search-filters', { expect: 2 });
 
-    await loginPage.loginWith(user1);
+    await loginPage.login(user1, user1);
     done();
   });
 

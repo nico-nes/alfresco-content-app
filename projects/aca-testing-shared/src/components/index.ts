@@ -31,7 +31,6 @@ export * from './dialog';
 export * from './header/header';
 export * from './header/user-info';
 export * from './info-drawer';
-export * from './login/login';
 export * from './menu/menu';
 export * from './metadata-card/metadata-card';
 export * from './pagination/pagination';

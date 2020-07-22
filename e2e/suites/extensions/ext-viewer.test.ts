@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, Viewer, RepoClient, EXTENSIBILITY_CONFIGS, FILES, Utils } from '@alfresco/aca-testing-shared';
+import { ACADocumentListPage, BrowsingPage, Viewer, RepoClient, EXTENSIBILITY_CONFIGS, FILES, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Extensions - Viewer', () => {
   const username = `user-${Utils.random()}`;
@@ -69,6 +70,7 @@ describe('Extensions - Viewer', () => {
 
   const loginPage = new LoginPage();
   const page = new BrowsingPage();
+  const documentListPage = new ACADocumentListPage();
 
   const viewer = new Viewer();
   const { toolbar } = viewer;
@@ -78,9 +80,9 @@ describe('Extensions - Viewer', () => {
     pdfFileId = (await apis.user.upload.uploadFile(pdfFile.file_name)).entry.id;
     docxFileId = (await apis.user.upload.uploadFile(docxFile.file_name)).entry.id;
 
-    await loginPage.load();
+
     await Utils.setSessionStorageFromConfig(EXTENSIBILITY_CONFIGS.VIEWER);
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

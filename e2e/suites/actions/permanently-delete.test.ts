@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, ConfirmDialog, RepoClient, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, ConfirmDialog, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Permanently delete from Trash', () => {
   const username = `user-${Utils.random()}`;
@@ -62,7 +62,7 @@ describe('Permanently delete from Trash', () => {
     await apis.user.nodes.deleteNodesById(foldersIds, false);
     await apis.user.sites.deleteSite(site, false);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 
@@ -107,7 +107,7 @@ describe('Permanently delete from Trash', () => {
   });
 
   it('[C280417] delete multiple items', async () => {
-    await documentListPage.selectMultipleItems([file2, folder2]);
+    await documentListPage.dataTable.selectMultipleItems([file2, folder2]);
     await toolbar.permanentlyDeleteButton.click();
     await page.waitForDialog();
     await confirmDialog.deleteButton.click();

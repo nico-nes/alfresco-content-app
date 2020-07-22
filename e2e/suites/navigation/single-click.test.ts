@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, Viewer, RepoClient, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, Viewer, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Single click on item name', () => {
   const username = `user-${Utils.random()}`;
@@ -75,7 +75,7 @@ describe('Single click on item name', () => {
     await apis.user.favorites.addFavoriteById('folder', folder1Id);
     await apis.user.favorites.waitForApi({ expect: 2 + 1 });
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

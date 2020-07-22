@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { ACADocumentListPage, BrowsingPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Upload files', () => {
   const username = `user-${Utils.random()}`;
@@ -44,7 +45,7 @@ describe('Upload files', () => {
     await apis.admin.people.createUser({ username });
     folder1Id = (await apis.user.nodes.createFolder(folder1)).entry.id;
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

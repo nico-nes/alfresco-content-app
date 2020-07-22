@@ -24,7 +24,8 @@
  */
 
 import { browser } from 'protractor';
-import { LoginPage, BrowsingPage, Utils, RepoClient, APP_ROUTES } from '@alfresco/aca-testing-shared';
+import { BrowsingPage, Utils, RepoClient, APP_ROUTES } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Logout', () => {
   const page = new BrowsingPage();
@@ -32,15 +33,15 @@ describe('Logout', () => {
 
   const peopleApi = new RepoClient().people;
 
-  const johnDoe = `user-${Utils.random()}`;
+  const username = `user-${Utils.random()}`;
 
   beforeAll(async (done) => {
-    await peopleApi.createUser({ username: johnDoe });
+    await peopleApi.createUser({ username: username });
     done();
   });
 
   beforeEach(async (done) => {
-    await loginPage.loginWith(johnDoe);
+    await loginPage.login(username, username);
     done();
   });
 

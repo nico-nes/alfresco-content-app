@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, SearchResultsPage, RepoClient, Utils, SITE_VISIBILITY, SITE_ROLES } from '@alfresco/aca-testing-shared';
+import { SearchResultsPage, RepoClient, Utils, SITE_VISIBILITY, SITE_ROLES } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Search results - libraries', () => {
   const username = `user-${Utils.random()}`;
@@ -101,7 +102,7 @@ describe('Search results - libraries', () => {
     await apis.user.queries.waitForSites('lib', { expect: 2 });
     await apis.user.queries.waitForSites('my-site', { expect: 1 });
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

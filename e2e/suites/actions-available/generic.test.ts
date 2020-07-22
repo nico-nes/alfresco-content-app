@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, RepoClient, NodeContentTree, Utils, AdminActions, Menu } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, RepoClient, NodeContentTree, Utils, AdminActions, Menu } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Generic tests : ', () => {
   const random = Utils.random();
@@ -61,7 +61,7 @@ describe('Generic tests : ', () => {
 
     await userApi.nodes.createContent(content);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
   });
 
   afterAll(async () => {
@@ -169,7 +169,7 @@ describe('Generic tests : ', () => {
     });
 
     it('[C286269] Context menu appears when right clicking on a single item while having multiple items selected', async () => {
-      await documentListPage.selectMultipleItems([file2, folder1]);
+      await documentListPage.dataTable.selectMultipleItems([file2, folder1]);
       await documentListPage.rightClickOnRow(file1);
 
       expect(await documentListPage.dataTable.hasContextMenu()).toBe(true, `Context menu is not displayed for ${file1}`);
@@ -181,7 +181,7 @@ describe('Generic tests : ', () => {
     });
 
     it('[C280458] Unselect items with single click', async () => {
-      await documentListPage.selectMultipleItems([file1, file2, folder1, folder2]);
+      await documentListPage.dataTable.selectMultipleItems([file1, file2, folder1, folder2]);
       expect(await documentListPage.dataTable.getNumberOfSelectedRows()).toEqual(4, 'incorrect selected rows number');
 
       await documentListPage.selectRow(file1);

@@ -24,7 +24,8 @@
  */
 
 import { browser } from 'protractor';
-import { PAGE_TITLES, LoginPage, BrowsingPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { PAGE_TITLES, BrowsingPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Page titles', () => {
   const loginPage = new LoginPage();
@@ -37,18 +38,18 @@ describe('Page titles', () => {
 
   describe('on Login / Logout pages', () => {
     it('[C217155] on Login page', async () => {
-      await loginPage.load();
+
       expect(await browser.getTitle()).toContain('Sign in');
     });
 
     it('[C217156] after logout', async () => {
-      await loginPage.loginWithAdmin();
+      await loginPage.login(browser.params.ADMIN_USERNAME, browser.params.ADMIN_PASSWORD);
       await page.signOut();
       expect(await browser.getTitle()).toContain('Sign in');
     });
 
     it('[C280414] when pressing Back after Logout', async () => {
-      await loginPage.loginWithAdmin();
+      await loginPage.login(browser.params.ADMIN_USERNAME, browser.params.ADMIN_PASSWORD);
       await page.signOut();
       await browser.navigate().back();
       expect(await browser.getTitle()).toContain('Sign in');
@@ -58,7 +59,7 @@ describe('Page titles', () => {
   describe('on app pages', () => {
     beforeAll(async (done) => {
       fileId = (await nodesApi.createFile(file)).entry.id;
-      await loginPage.loginWithAdmin();
+      await loginPage.login(browser.params.ADMIN_USERNAME, browser.params.ADMIN_PASSWORD);
       done();
     });
 

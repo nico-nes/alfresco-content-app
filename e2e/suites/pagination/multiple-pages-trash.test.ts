@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, Utils, AdminActions, RepoClient } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, Utils, AdminActions, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Pagination on multiple pages on Trash', () => {
   const random = Utils.random();
@@ -50,7 +50,7 @@ describe('Pagination on multiple pages on Trash', () => {
     await userApi.nodes.deleteNodesById(filesDeletedIds, false);
     await userApi.trashcan.waitForApi({ expect: 101 });
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     await page.clickTrashAndWait();
   });
 

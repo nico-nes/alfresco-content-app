@@ -25,7 +25,8 @@
 
 import { browser } from 'protractor';
 
-import { APP_ROUTES, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { APP_ROUTES, ACADocumentListPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Personal Files', () => {
   const username = `user-${Utils.random()}`;
@@ -58,7 +59,7 @@ describe('Personal Files', () => {
 
   describe(`Admin user's personal files`, () => {
     beforeAll(async (done) => {
-      await loginPage.loginWithAdmin();
+      await loginPage.login(browser.params.ADMIN_USERNAME, browser.params.ADMIN_PASSWORD);
       done();
     });
 
@@ -75,7 +76,7 @@ describe('Personal Files', () => {
 
   describe(`Regular user's personal files`, () => {
     beforeAll(async (done) => {
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 

@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, SITE_ROLES, RepoClient, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, SITE_ROLES, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('New menu', () => {
   const username = `user-${Utils.random()}`;
@@ -50,7 +50,7 @@ describe('New menu', () => {
 
     await apis.user.sites.createSite(siteUser);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

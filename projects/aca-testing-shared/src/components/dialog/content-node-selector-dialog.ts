@@ -23,11 +23,18 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { by, browser, protractor } from 'protractor';
+import { by, browser, protractor, element } from 'protractor';
 import { GenericDialog } from '../dialog/generic-dialog';
-import { Utils, isPresentAndDisplayed, waitForStaleness, waitForPresence, isPresentAndEnabled, waitForClickable } from '../../utilities/utils';
+import {
+  Utils,
+  isPresentAndDisplayed,
+  waitForStaleness,
+  waitForPresence,
+  isPresentAndEnabled,
+  waitForClickable
+} from '../../utilities/utils';
 import { DropDownBreadcrumb } from '../breadcrumb/dropdown-breadcrumb';
-import { DataTable } from '../data-table/data-table';
+import { ACADocumentListPage } from '../document-list/aca-document-list.page';
 
 export class ContentNodeSelectorDialog extends GenericDialog {
   cancelButton = this.childElement(by.css('[data-automation-id="content-node-selector-actions-cancel"]'));
@@ -42,7 +49,7 @@ export class ContentNodeSelectorDialog extends GenericDialog {
   toolbarTitle = this.rootElem.element(by.css('.adf-toolbar-title'));
 
   breadcrumb = new DropDownBreadcrumb();
-  dataTable = new DataTable('.adf-content-node-selector-dialog');
+  dataTable = new ACADocumentListPage(element(by.css('adf-content-node-selector-dialog')));
 
   constructor() {
     super('.adf-content-node-selector-dialog');
@@ -66,7 +73,7 @@ export class ContentNodeSelectorDialog extends GenericDialog {
   }
 
   async selectDestination(folderName: string): Promise<void> {
-    const row = this.dataTable.getRowByName(folderName);
+    const row = this.dataTable.dataTablePage().getRow('Display name', folderName);
     await waitForClickable(row);
     await row.click();
     await waitForPresence(browser.element(by.css('.adf-is-selected')));

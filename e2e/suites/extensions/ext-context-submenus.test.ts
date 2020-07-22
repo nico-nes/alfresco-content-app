@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, EXTENSIBILITY_CONFIGS, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { ACADocumentListPage, BrowsingPage, EXTENSIBILITY_CONFIGS, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Extensions - Context submenu', () => {
   const username = `user-${Utils.random()}`;
@@ -58,9 +59,9 @@ describe('Extensions - Context submenu', () => {
     fileId = (await apis.user.nodes.createFile(file)).entry.id;
     folderId = (await apis.user.nodes.createFolder(folder)).entry.id;
 
-    await loginPage.load();
+
     await Utils.setSessionStorageFromConfig(EXTENSIBILITY_CONFIGS.CONTEXT_SUBMENUS);
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
 
     done();
   });

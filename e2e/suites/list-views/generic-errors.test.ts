@@ -24,7 +24,8 @@
  */
 
 import { browser } from 'protractor';
-import { LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { ACADocumentListPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Generic errors', () => {
   const username = `user-${Utils.random()}`;
@@ -53,7 +54,7 @@ describe('Generic errors', () => {
     file1Id = (await apis.user.nodes.createFile(file1, parentId)).entry.id;
     await apis.user.nodes.createFile(file2, parentId);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 
@@ -87,12 +88,12 @@ describe('Generic errors', () => {
     await documentListPage.doubleClickRow(parent);
     await documentListPage.doubleClickRow(file2);
     const URL = await browser.getCurrentUrl();
-    await loginPage.loginWith(username2);
+    await loginPage.login(username2, username2);
     await browser.get(URL);
 
     expect(await page.genericError.isDisplayed()).toBe(true, 'Generic error page not displayed');
     expect(await page.genericErrorTitle.getText()).toContain(`This item no longer exists or you don't have permission to view it.`);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
   });
 });

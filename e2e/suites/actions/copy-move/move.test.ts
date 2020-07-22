@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, ContentNodeSelectorDialog, RepoClient, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, ContentNodeSelectorDialog, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Move content', () => {
   const username = `user-${Utils.random()}`;
@@ -88,7 +88,7 @@ describe('Move content', () => {
     sourceIdFav = (await apis.user.nodes.createFolder(sourceFav)).entry.id;
     destinationIdFav = (await apis.user.nodes.createFolder(destinationFav)).entry.id;
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 
@@ -200,7 +200,7 @@ describe('Move content', () => {
     });
 
     it('[C291958] Move multiple items', async () => {
-      await documentListPage.selectMultipleItems([file2, file3]);
+      await documentListPage.dataTable.selectMultipleItems([file2, file3]);
       await toolbar.clickMoreActionsMove();
       await moveDialog.selectLocation('Personal Files');
       await moveDialog.selectDestination(destinationPF);
@@ -260,7 +260,7 @@ describe('Move content', () => {
     });
 
     it('[C291969] Move items into a library', async () => {
-      await documentListPage.selectMultipleItems([file4, folder2]);
+      await documentListPage.dataTable.selectMultipleItems([file4, folder2]);
       await toolbar.clickMoreActionsMove();
       await moveDialog.selectLocation('My Libraries');
       await moveDialog.documentListPage.doubleClickRow(siteName);
@@ -338,7 +338,7 @@ describe('Move content', () => {
     });
 
     it('[C280237] Move multiple items', async () => {
-      await documentListPage.selectMultipleItems([file2, file3]);
+      await documentListPage.dataTable.selectMultipleItems([file2, file3]);
       await toolbar.clickMoreActionsMove();
       await moveDialog.selectLocation('Personal Files');
       await moveDialog.selectDestination(destinationRF);
@@ -465,7 +465,7 @@ describe('Move content', () => {
     });
 
     it('[C280250] Move multiple items', async () => {
-      await documentListPage.selectMultipleItems([file2, file3]);
+      await documentListPage.dataTable.selectMultipleItems([file2, file3]);
       await toolbar.clickMoreActionsMove();
       await moveDialog.selectLocation('Personal Files');
       await moveDialog.selectDestination(destinationSF);
@@ -640,7 +640,7 @@ describe('Move content', () => {
     });
 
     it('[C280258] Move multiple items', async () => {
-      await documentListPage.selectMultipleItems([file2, file3]);
+      await documentListPage.dataTable.selectMultipleItems([file2, file3]);
       await toolbar.clickMoreActionsMove();
       await moveDialog.selectLocation('Personal Files');
       await moveDialog.selectDestination(destinationFav);
@@ -704,7 +704,7 @@ describe('Move content', () => {
     });
 
     it('[C291979] Move items into a library', async () => {
-      await documentListPage.selectMultipleItems([file4, folder2]);
+      await documentListPage.dataTable.selectMultipleItems([file4, folder2]);
       await toolbar.clickMoreActionsMove();
       await moveDialog.selectLocation('My Libraries');
       await moveDialog.documentListPage.doubleClickRow(siteName);

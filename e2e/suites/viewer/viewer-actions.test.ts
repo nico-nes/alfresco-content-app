@@ -24,7 +24,7 @@
  */
 
 import {
-  LoginPage,
+  ACADocumentListPage,
   BrowsingPage,
   FILES,
   RepoClient,
@@ -35,6 +35,7 @@ import {
   ManageVersionsDialog,
   UploadNewVersionDialog
 } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Viewer actions', () => {
   const username = `user-${Utils.random()}`;
@@ -106,7 +107,7 @@ describe('Viewer actions', () => {
       await apis.user.nodes.lockFile(fileForUploadNewVersionId);
       await apis.user.nodes.lockFile(fileForUploadNewVersionId2);
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 
@@ -333,7 +334,7 @@ describe('Viewer actions', () => {
       await apis.user.nodes.lockFile(fileForCancelEditingId);
       await apis.user.nodes.lockFile(fileForUploadNewVersionId);
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 
@@ -522,7 +523,7 @@ describe('Viewer actions', () => {
 
       await apis.user.search.waitForApi(username, { expect: 7 });
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 
@@ -718,7 +719,7 @@ describe('Viewer actions', () => {
       ]);
       await apis.user.shared.waitForApi({ expect: 7 });
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 
@@ -914,7 +915,7 @@ describe('Viewer actions', () => {
       ]);
       await apis.user.favorites.waitForApi({ expect: 7 });
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 

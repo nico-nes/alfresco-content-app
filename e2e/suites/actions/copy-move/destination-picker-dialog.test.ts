@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, ContentNodeSelectorDialog, RepoClient, Utils, AdminActions } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, ContentNodeSelectorDialog, RepoClient, Utils, AdminActions } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Destination picker dialog : ', () => {
   const random = Utils.random();
@@ -127,7 +127,7 @@ describe('Destination picker dialog : ', () => {
 
   describe('general', () => {
     beforeAll(async () => {
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
     });
 
     beforeEach(async () => {
@@ -186,11 +186,11 @@ describe('Destination picker dialog : ', () => {
 
   describe('multiple selection', () => {
     beforeAll(async () => {
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
     });
 
     beforeEach(async () => {
-      await documentListPage.selectMultipleItems([file, destination]);
+      await documentListPage.dataTable.selectMultipleItems([file, destination]);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();
     });
@@ -202,7 +202,7 @@ describe('Destination picker dialog : ', () => {
 
   describe('breadcrumb', () => {
     beforeAll(async () => {
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
     });
 
     beforeEach(async () => {
@@ -285,7 +285,7 @@ describe('Destination picker dialog : ', () => {
 
   describe('Users with different permissions', () => {
     it('[C263876] Consumer user cannot select the folder as destination', async () => {
-      await loginPage.loginWith(consumer);
+      await loginPage.login(consumer, consumer);
       await documentListPage.selectRow(file);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();
@@ -299,7 +299,7 @@ describe('Destination picker dialog : ', () => {
     });
 
     it('[C263877] Contributor user can select the folder as destination', async () => {
-      await loginPage.loginWith(contributor);
+      await loginPage.login(contributor, contributor);
       await documentListPage.selectRow(file);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();
@@ -313,7 +313,7 @@ describe('Destination picker dialog : ', () => {
     });
 
     it('[C263878] Collaborator user can select the folder as destination', async () => {
-      await loginPage.loginWith(collaborator);
+      await loginPage.login(collaborator, collaborator);
       await documentListPage.selectRow(file);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();
@@ -327,7 +327,7 @@ describe('Destination picker dialog : ', () => {
     });
 
     it('[C263892] Admin user - Personal Files breadcrumb main node', async () => {
-      await loginPage.loginWithAdmin();
+      await loginPage.login(browser.params.ADMIN_USERNAME, browser.params.ADMIN_PASSWORD);
       await documentListPage.selectRow(adminFolder);
       await page.toolbar.clickMoreActionsCopy();
       await dialog.waitForDialogToOpen();

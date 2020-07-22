@@ -24,7 +24,7 @@
  */
 
 import {
-  LoginPage,
+  ACADocumentListPage,
   BrowsingPage,
   SITE_VISIBILITY,
   SITE_ROLES,
@@ -33,7 +33,7 @@ import {
   Utils,
   clearTextWithBackspace
 } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Edit folder', () => {
   const username = `user-${Utils.random()}`;
@@ -113,7 +113,7 @@ describe('Edit folder', () => {
     await apis.user.favorites.addFavoriteById('folder', folderFavoriteToEditId);
     await apis.user.favorites.addFavoriteById('folder', folderFavoriteDuplicateId);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, FILES, RepoClient, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, FILES, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Edit offline', () => {
   const username = `user-${Utils.random()}`;
@@ -80,7 +80,7 @@ describe('Edit offline', () => {
       await apis.user.nodes.lockFile(fileLockedId);
       await apis.user.nodes.lockFile(fileLocked2Id);
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
     });
 
     beforeEach(async () => {
@@ -134,7 +134,7 @@ describe('Edit offline', () => {
       await apis.user.shared.shareFilesByIds([file1Id, fileLockedId, fileLocked2Id]);
       await apis.user.shared.waitForApi({ expect: 3 });
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
     });
 
     afterAll(async () => {
@@ -188,7 +188,7 @@ describe('Edit offline', () => {
 
       await apis.user.search.waitForApi(username, { expect: 3 });
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
     });
 
     afterAll(async () => {
@@ -241,7 +241,7 @@ describe('Edit offline', () => {
       await apis.user.favorites.addFavoritesByIds('file', [file1Id, fileLockedId, fileLocked2Id]);
       await apis.user.favorites.waitForApi({ expect: 3 });
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
     });
 
     afterAll(async () => {
@@ -294,7 +294,7 @@ describe('Edit offline', () => {
 
       await apis.user.search.waitForNodes('file-search', { expect: 3 });
 
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
     });
 
     afterAll(async () => {

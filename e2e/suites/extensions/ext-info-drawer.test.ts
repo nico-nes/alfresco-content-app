@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, InfoDrawer, RepoClient, EXTENSIBILITY_CONFIGS, Utils } from '@alfresco/aca-testing-shared';
+import { BrowsingPage, InfoDrawer, RepoClient, EXTENSIBILITY_CONFIGS, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Extensions - Info Drawer', () => {
   const username = `user-${Utils.random()}`;
@@ -76,9 +77,9 @@ describe('Extensions - Info Drawer', () => {
 
   describe('', () => {
     beforeAll(async (done) => {
-      await loginPage.load();
+
       await Utils.setSessionStorageFromConfig(EXTENSIBILITY_CONFIGS.INFO_DRAWER);
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 
@@ -137,9 +138,9 @@ describe('Extensions - Info Drawer', () => {
 
   describe('', () => {
     beforeAll(async (done) => {
-      await loginPage.load();
+
       await Utils.setSessionStorageFromConfig(EXTENSIBILITY_CONFIGS.INFO_DRAWER_EMPTY);
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       await page.clickPersonalFilesAndWait();
       done();
     });

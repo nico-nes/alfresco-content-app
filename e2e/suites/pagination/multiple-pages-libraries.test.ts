@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, Utils, AdminActions, RepoClient } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, Utils, AdminActions, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Pagination on multiple pages', () => {
   const random = Utils.random();
@@ -47,7 +47,7 @@ describe('Pagination on multiple pages', () => {
     await adminApiActions.createUser({ username });
     await userApi.sites.createSitesPrivate(sites);
     await userApi.sites.waitForApi({ expect: 101 });
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
   });
 
   afterAll(async () => {

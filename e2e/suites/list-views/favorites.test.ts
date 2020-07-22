@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SITE_VISIBILITY, SITE_ROLES, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { SITE_VISIBILITY, SITE_ROLES, ACADocumentListPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Favorites', () => {
   const username = `user-${Utils.random()}`;
@@ -70,7 +70,7 @@ describe('Favorites', () => {
     await apis.user.nodes.deleteNodeById(file4Id, false);
     await apis.user.trashcan.restore(file4Id);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

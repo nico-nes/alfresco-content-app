@@ -25,8 +25,8 @@
 
 import { browser } from 'protractor';
 
-import { SITE_VISIBILITY, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, SITE_VISIBILITY, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Breadcrumb', () => {
   const username = `user-${Utils.random()}`;
@@ -58,7 +58,7 @@ describe('Breadcrumb', () => {
   };
 
   beforeAll(async (done) => {
-    await apis.admin.people.createUser({ username });
+    await({ username });
     parentId = (await apis.user.nodes.createFolder(parent)).entry.id;
     subFolder1Id = (await apis.user.nodes.createFolder(subFolder1, parentId)).entry.id;
     subFolder2Id = (await apis.user.nodes.createFolder(subFolder2, subFolder1Id)).entry.id;
@@ -74,7 +74,7 @@ describe('Breadcrumb', () => {
     subFolder2Id = (await apis.user.nodes.createFolder(subFolder2, subFolder1Id)).entry.id;
     await apis.user.nodes.createFile(fileName1, subFolder2Id);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 
@@ -197,7 +197,7 @@ describe('Breadcrumb', () => {
     beforeAll(async (done) => {
       await apis.admin.people.createUser({ username: user2 });
       userFolderId = (await user2Api.nodes.createFolder(userFolder)).entry.id;
-      await loginPage.loginWithAdmin();
+      await loginPage.login(browser.params.ADMIN_USERNAME, browser.params.ADMIN_PASSWORD);
       done();
     });
 

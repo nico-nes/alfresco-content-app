@@ -23,8 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SITE_VISIBILITY, SITE_ROLES, LoginPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { SITE_VISIBILITY, SITE_ROLES, ACADocumentListPage, BrowsingPage, Utils, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Trash', () => {
   const username = `user-${Utils.random()}`;
@@ -93,7 +93,7 @@ describe('Trash', () => {
 
   describe('as admin', () => {
     beforeAll(async (done) => {
-      await loginPage.loginWithAdmin();
+      await loginPage.login(browser.params.ADMIN_USERNAME, browser.params.ADMIN_PASSWORD);
       done();
     });
 
@@ -122,7 +122,7 @@ describe('Trash', () => {
 
   describe('as user', () => {
     beforeAll(async (done) => {
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 

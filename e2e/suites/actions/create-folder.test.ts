@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, CreateOrEditFolderDialog, Utils, clearTextWithBackspace, RepoClient } from '@alfresco/aca-testing-shared';
+import { ACADocumentListPage, BrowsingPage, CreateOrEditFolderDialog, Utils, clearTextWithBackspace, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Create folder', () => {
   const username = `user-${Utils.random()}`;
@@ -62,7 +63,7 @@ describe('Create folder', () => {
     docLibUserSite = await apis.user.sites.getDocLibId(siteName);
     await apis.user.nodes.createFolder(duplicateFolderSite, docLibUserSite);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

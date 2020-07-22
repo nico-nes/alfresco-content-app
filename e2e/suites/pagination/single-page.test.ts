@@ -23,7 +23,8 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, BrowsingPage, SearchResultsPage, Utils, AdminActions, RepoClient } from '@alfresco/aca-testing-shared';
+import { BrowsingPage, SearchResultsPage, Utils, AdminActions, RepoClient } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Pagination on single page', () => {
   const random = Utils.random();
@@ -65,7 +66,7 @@ describe('Pagination on single page', () => {
       userApi.trashcan.waitForApi({ expect: 1 })
     ]);
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
   });
 
   afterAll(async () => {

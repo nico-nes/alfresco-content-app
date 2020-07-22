@@ -24,8 +24,8 @@
  */
 
 import { browser } from 'protractor';
-import { LoginPage, BrowsingPage, SITE_VISIBILITY, RepoClient, ShareDialog, Viewer, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { ACADocumentListPage, BrowsingPage, SITE_VISIBILITY, RepoClient, ShareDialog, Viewer, Utils } from '@alfresco/aca-testing-shared';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Share a file', () => {
   const username = `user-${Utils.random()}`;
@@ -109,7 +109,7 @@ describe('Share a file', () => {
     const { searchInput } = page.header;
 
     beforeAll(async (done) => {
-      await loginPage.loginWith(username);
+      await loginPage.login(username, username);
       done();
     });
 

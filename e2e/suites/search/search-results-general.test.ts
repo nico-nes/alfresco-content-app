@@ -23,8 +23,9 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, SearchResultsPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
+import { ACADocumentListPage, SearchResultsPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
 import { browser } from 'protractor';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Search results general', () => {
   const username = `user-${Utils.random()}`;
@@ -55,7 +56,7 @@ describe('Search results general', () => {
     await apis.user.search.waitForApi(username, { expect: 1 });
     await apis.user.queries.waitForSites(site, { expect: 1 });
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 

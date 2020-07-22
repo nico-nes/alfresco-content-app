@@ -23,9 +23,9 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, SearchResultsPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
-import { DocumentListPage } from '@alfresco/adf-testing';
+import { SearchDocumentListPage, SearchResultsPage, RepoClient, Utils } from '@alfresco/aca-testing-shared';
 const moment = require('moment');
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Search results - files and folders', () => {
   const username = `user-${Utils.random()}`;
@@ -55,7 +55,7 @@ describe('Search results - files and folders', () => {
   const page = new SearchResultsPage();
   const { searchInput } = page.header;
   const { breadcrumb } = page;
-  const documentListPage = new ACADocumentListPage();
+  const searchDocumentListPage = new SearchDocumentListPage();
 
   beforeAll(async (done) => {
     await apis.admin.people.createUser({ username });
@@ -69,7 +69,7 @@ describe('Search results - files and folders', () => {
     await apis.user.search.waitForApi(username, { expect: 2 });
     await apis.user.queries.waitForSites(site, { expect: 1 });
 
-    await loginPage.loginWith(username);
+    await loginPage.login(username, username);
     done();
   });
 
@@ -92,7 +92,7 @@ describe('Search results - files and folders', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor('test-');
-    await documentListPage.dataTable.waitForTableBody();
+    await searchDocumentListPage.searchDocumentListPage.waitForTableBody();
 
     expect(await page.breadcrumb.currentItem.getText()).toEqual('Search Results');
   });
@@ -101,57 +101,57 @@ describe('Search results - files and folders', () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor('test-');
-    await documentListPage.dataTable.waitForTableBody();
+    await searchDocumentListPage.searchDocumentListPage.waitForTableBody();
 
     const fileEntry = await apis.user.nodes.getNodeById(fileId);
     const modifiedDate = moment(fileEntry.entry.modifiedAt).format('MMM D, YYYY, h:mm:ss A');
     const modifiedBy = fileEntry.entry.modifiedByUser.displayName;
     const size = fileEntry.entry.content.sizeInBytes;
 
-    expect(await documentListPage.isItemPresent(file)).toBe(true, `${file} is not displayed`);
-    expect(await dataTable.getRowCellsCount(file)).toEqual(2, 'incorrect number of columns');
-    expect(await dataTable.getSearchResultLinesCount(file)).toEqual(4, 'incorrect number of lines for search result');
-    expect(await dataTable.getSearchResultNameAndTitle(file)).toBe(`${file} ( ${fileTitle} )`);
-    expect(await dataTable.getSearchResultDescription(file)).toBe(fileDescription);
-    expect(await dataTable.getSearchResultModified(file)).toBe(`Modified: ${modifiedDate} by ${modifiedBy} | Size: ${size} Bytes`);
-    expect(await dataTable.getSearchResultLocation(file)).toMatch(/Location:\s+Personal Files/);
+    expect(await searchDocumentListPage.isItemPresent(file)).toBe(true, `${file} is not displayed`);
+    expect(await searchDocumentListPage.getRowCellsCount(file)).toEqual(2, 'incorrect number of columns');
+    expect(await searchDocumentListPage.getSearchResultLinesCount(file)).toEqual(4, 'incorrect number of lines for search result');
+    expect(await searchDocumentListPage.getSearchResultNameAndTitle(file)).toBe(`${file} ( ${fileTitle} )`);
+    expect(await searchDocumentListPage.getSearchResultDescription(file)).toBe(fileDescription);
+    expect(await searchDocumentListPage.getSearchResultModified(file)).toBe(`Modified: ${modifiedDate} by ${modifiedBy} | Size: ${size} Bytes`);
+    expect(await searchDocumentListPage.getSearchResultLocation(file)).toMatch(/Location:\s+Personal Files/);
   });
 
   it('[C306867] Folder information', async () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor('test-');
-    await documentListPage.dataTable.waitForTableBody();
+    await searchDocumentListPage.searchDocumentListPage.waitForTableBody();
 
     const folderEntry = await apis.user.nodes.getNodeById(folderId);
     const modifiedDate = moment(folderEntry.entry.modifiedAt).format('MMM D, YYYY, h:mm:ss A');
     const modifiedBy = folderEntry.entry.modifiedByUser.displayName;
 
-    expect(await documentListPage.isItemPresent(folder)).toBe(true, `${folder} is not displayed`);
-    expect(await dataTable.getRowCellsCount(folder)).toEqual(2, 'incorrect number of columns');
-    expect(await dataTable.getSearchResultLinesCount(folder)).toEqual(4, 'incorrect number of lines for search result');
-    expect(await dataTable.getSearchResultNameAndTitle(folder)).toBe(`${folder} ( ${folderTitle} )`);
-    expect(await dataTable.getSearchResultDescription(folder)).toBe(folderDescription);
-    expect(await dataTable.getSearchResultModified(folder)).toBe(`Modified: ${modifiedDate} by ${modifiedBy}`);
-    expect(await dataTable.getSearchResultLocation(folder)).toMatch(/Location:\s+Personal Files/);
+    expect(await searchDocumentListPage.isItemPresent(folder)).toBe(true, `${folder} is not displayed`);
+    expect(await searchDocumentListPage.getRowCellsCount(folder)).toEqual(2, 'incorrect number of columns');
+    expect(await searchDocumentListPage.getSearchResultLinesCount(folder)).toEqual(4, 'incorrect number of lines for search result');
+    expect(await searchDocumentListPage.getSearchResultNameAndTitle(folder)).toBe(`${folder} ( ${folderTitle} )`);
+    expect(await searchDocumentListPage.getSearchResultDescription(folder)).toBe(folderDescription);
+    expect(await searchDocumentListPage.getSearchResultModified(folder)).toBe(`Modified: ${modifiedDate} by ${modifiedBy}`);
+    expect(await searchDocumentListPage.getSearchResultLocation(folder)).toMatch(/Location:\s+Personal Files/);
   });
 
   it('[C290029] Search file with special characters', async () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor(fileRussian);
-    await documentListPage.dataTable.waitForTableBody();
+    await searchDocumentListPage.searchDocumentListPage.waitForTableBody();
 
-    expect(await documentListPage.isItemPresent(fileRussian)).toBe(true, `${fileRussian} is not displayed`);
+    expect(await searchDocumentListPage.isItemPresent(fileRussian)).toBe(true, `${fileRussian} is not displayed`);
   });
 
   it('[C279177] Location column redirect - file in user Home', async () => {
     await searchInput.clickSearchButton();
     await searchInput.checkFilesAndFolders();
     await searchInput.searchFor(file);
-    await documentListPage.dataTable.waitForTableBody();
+    await searchDocumentListPage.searchDocumentListPage.waitForTableBody();
 
-    await documentListPage.clickItemLocation(file);
+    await searchDocumentListPage.clickItemLocation(file);
     expect(await breadcrumb.getAllItems()).toEqual(['Personal Files']);
   });
 });

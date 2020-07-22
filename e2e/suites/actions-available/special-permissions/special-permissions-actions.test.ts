@@ -23,7 +23,7 @@
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { LoginPage, RepoClient, Utils, AdminActions, FILES, SITE_ROLES } from '@alfresco/aca-testing-shared';
+import { RepoClient, Utils, AdminActions, FILES, SITE_ROLES } from '@alfresco/aca-testing-shared';
 import * as testData from './test-data-permissions';
 import { librariesTests } from './my-libraries';
 import { favoritesTests } from './favorites';
@@ -31,6 +31,7 @@ import { searchResultsTests } from './search-results';
 import { viewerTests } from './viewer';
 import { sharedFilesTests } from './shared-files';
 import { collaboratorTests, filesLockedByCurrentUser, filesLockedByOtherUser } from './other-permissions';
+import { LoginPage } from '@alfresco/adf-testing';
 
 describe('Special permissions : ', () => {
   const random = Utils.random();
@@ -152,7 +153,7 @@ describe('Special permissions : ', () => {
 
   describe('Consumer', () => {
     beforeAll(async () => {
-      await loginPage.loginWith(userConsumer);
+      await loginPage.login(userConsumer, userConsumer);
     });
 
     describe('on File Libraries', () => {
@@ -178,7 +179,7 @@ describe('Special permissions : ', () => {
 
   describe('Collaborator', () => {
     beforeAll(async () => {
-      await loginPage.loginWith(userCollaborator);
+      await loginPage.login(userCollaborator, userCollaborator);
     });
 
     collaboratorTests(sitePrivate);
@@ -186,7 +187,7 @@ describe('Special permissions : ', () => {
 
   describe('File locked - user is lock owner', () => {
     beforeAll(async () => {
-      await loginPage.loginWith(userDemoted);
+      await loginPage.login(userDemoted, userDemoted);
     });
 
     filesLockedByCurrentUser(sitePrivate);
@@ -194,7 +195,7 @@ describe('Special permissions : ', () => {
 
   describe('File locked by other user - user is manager', () => {
     beforeAll(async () => {
-      await loginPage.loginWith(userManager);
+      await loginPage.login(userManager, userManager);
     });
 
     filesLockedByOtherUser(sitePrivate);

@@ -64,7 +64,7 @@ export async function checkToolbarActions(item: string, expectedToolbarPrimary: 
 }
 
 export async function checkMultipleSelToolbarPrimary(items: string[], expectedToolbarPrimary: string[]): Promise<void> {
-  await documentListPage.selectMultipleItems(items);
+  await documentListPage.dataTable.selectMultipleItems(items);
 
   const actualPrimaryActions = await toolbar.getButtons();
   expect(actualPrimaryActions).toEqual(expectedToolbarPrimary);
@@ -75,7 +75,7 @@ export async function checkMultipleSelToolbarActions(
   expectedToolbarPrimary: string[],
   expectedToolbarMore: string[]
 ): Promise<void> {
-  await documentListPage.selectMultipleItems(items);
+  await documentListPage.dataTable.selectMultipleItems(items);
 
   const actualPrimaryActions = await toolbar.getButtons();
   expect(actualPrimaryActions).toEqual(expectedToolbarPrimary);
