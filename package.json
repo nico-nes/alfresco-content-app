@@ -89,7 +89,7 @@
     "adf-tslint-rules": "0.0.7",
     "ajv-cli": "^3.3.0",
     "codelyzer": "^6.0.0",
-    "commander": "^6.0.0",
+    "commander": "^6.1.0",
     "cpr": "^3.0.1",
     "cspell": "^4.1.0",
     "dotenv": "^8.2.0",
